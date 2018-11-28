@@ -147,13 +147,13 @@ public class WebUI {
 	// to check {distan ce} Represents 
 	@RequestMapping(
 			method=RequestMethod.GET,
-			path= "/playground/elements/{userPlayground}/{email}/near/{x}/{y}/{distan ce}" ,
+			path= "/playground/elements/{userPlayground}/{email}/near/{x}/{y}/{distance}" ,
 			produces=MediaType.APPLICATION_JSON_VALUE)
 	public ElementTO[] getAllNearElements (@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email,
 			@PathVariable("x") double x,
 			@PathVariable("y") double y,
-			@PathVariable("distan ce") double center,
+			@PathVariable("distance") double center,
 			@RequestParam(name="size", required=false, defaultValue="10") int size, 
 			@RequestParam(name="page", required=false, defaultValue="0") int page) throws Exception {
 		
@@ -319,13 +319,6 @@ public class WebUI {
 		}
 		return new ErrorMessage(errorMessage);
 	}
-	
-
-		
-
-	
-
-	
 	
 }
 
