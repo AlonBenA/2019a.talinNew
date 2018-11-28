@@ -27,6 +27,7 @@ import playground.logic.Location;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.UserEntity;
+import playground.logic.Services.PlaygroundActivityService;
 import playground.logic.Services.PlaygroundService;
 
 @RunWith(SpringRunner.class)
@@ -35,6 +36,8 @@ public class WebUITests {
 
 	@Autowired
 	private PlaygroundService playgroundService;
+	@Autowired
+	private PlaygroundActivityService activityService;
 
 	private RestTemplate restTemplate;
 
@@ -70,6 +73,9 @@ public class WebUITests {
 	public void teardown() {
 		// cleanup database
 		this.playgroundService.cleanup();
+		
+		// cleanup activities
+		this.activityService.cleanup();
 	}
 
 	// S
@@ -991,7 +997,6 @@ public class WebUITests {
 		String url = base_url + "/playground/activities/2019a.talin/myEmail@mail.com";
 
 		// And the database contains element with playground+id: 2019a.talin0
-		ElementEntity.resetID();
 		this.playgroundService.addNewElement(new ElementEntity());
 
 		// When I POST activity with
@@ -1002,7 +1007,6 @@ public class WebUITests {
 		// check that element exists
 		this.playgroundService.getElement(elementId, elementPlayground);
 
-		ActivityTO.resetID();
 		ActivityTO newActivityTO = new ActivityTO();
 		newActivityTO.setElementId(elementId);
 		newActivityTO.setElementPlayground(elementPlayground);
@@ -1010,7 +1014,7 @@ public class WebUITests {
 		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class);
 
 		// Then the response status is 2xx and body is:
-		ActivityEntity activityEntityExist = this.playgroundService.getActivity("0", "2019a.talin");
+		ActivityEntity activityEntityExist = this.activityService.getActivity(playground + "@@" + "0");
 		ActivityTO activityTOExist = new ActivityTO(activityEntityExist);
 		ActivityTO expectedTOActivity = this.jackson.readValue("{\"playground\":\"2019a.talin\", \"id\":\"0\","
 				+ " \"elementPlayground\":\"2019a.talin\", \"elementId\":\"0\","
@@ -1027,7 +1031,6 @@ public class WebUITests {
 		String url = base_url + "/playground/activities/2019a.talin/myEmail@mail.com";
 
 		// And the database contains element with playground+id: 2019a.talin0
-		ElementEntity.resetID();
 		this.playgroundService.addNewElement(new ElementEntity());
 
 		// When I POST activity with
@@ -1038,7 +1041,6 @@ public class WebUITests {
 		// check that element exists
 		this.playgroundService.getElement(elementId, elementPlayground);
 
-		ActivityTO.resetID();
 		ActivityTO newActivityTO = new ActivityTO();
 		newActivityTO.setElementId(elementId);
 		newActivityTO.setElementPlayground(elementPlayground);
@@ -1062,7 +1064,6 @@ public class WebUITests {
 		// check that element exists
 		this.playgroundService.getElement(elementId, elementPlayground);
 
-		ActivityTO.resetID();
 		ActivityTO newActivityTO = new ActivityTO();
 		newActivityTO.setElementId(elementId);
 		newActivityTO.setElementPlayground(elementPlayground);
