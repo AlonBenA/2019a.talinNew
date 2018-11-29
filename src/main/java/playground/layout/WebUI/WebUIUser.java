@@ -74,8 +74,9 @@ public class WebUIUser {
 		UserEntity userEntity = userService.addNewUser(
 				new UserEntity(newUserForm.getEmail(),newUserForm.getUsername(),
 						newUserForm.getAvatar(),newUserForm.getRole()));
-		
-		System.out.println(userEntity.getCode()); // "send" code
+
+		System.err.println("user: " + userEntity.getPlayground() + "@@" + userEntity.getEmail() + " code: "
+				+ userEntity.getCode()); // "send" code
 		return new UserTO(userEntity);
 	}
 	

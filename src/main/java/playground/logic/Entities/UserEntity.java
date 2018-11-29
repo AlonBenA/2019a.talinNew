@@ -28,8 +28,8 @@ public class UserEntity {
 		int low = 1000;
 		int high = 9999;
 		int result = r.nextInt(high-low) + low;
-		code = new StringBuilder(result);
-		
+		code = new StringBuilder();
+		code.append(result);
 	}
 
 	public String getEmail() {
