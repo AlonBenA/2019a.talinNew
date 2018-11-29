@@ -1,11 +1,9 @@
-package playground.layout;
+package playground.layout.WebUI;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,43 +15,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import playground.logic.Entities.ActivityEntity;
-import playground.logic.Entities.UserEntity;
+import playground.layout.ElementTO;
+import playground.layout.ErrorMessage;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
-import playground.logic.Services.PlaygroundService;
-import playground.logic.Services.PlaygroundUserService;
 
 @RestController
-public class WebUI {
+public class WebUIElement {
 	
-	private PlaygroundService playgroundService;
 	private PlaygroundElementService elementService;
-	private PlaygroundUserService userService;
-	////////////////////////////////////////////////////////
-	private String defaultUserName; // remove/comment
-	///////////////////////////////////////////////////////
+
 	
-
-	public PlaygroundService getPlaygroundService() {
-		return playgroundService;
-	}
-
 	@Autowired
-	public void setPlaygroundService(PlaygroundService playgroundService,
-			PlaygroundElementService elementService, PlaygroundUserService userService) {
-		this.playgroundService = playgroundService;
+	public void setPlaygroundService(PlaygroundElementService elementService) {
 		this.elementService = elementService;
-		this.userService = userService;
 	}
 
-	////////////////////////////////////////////////////////
-	@Value("${name.of.user.to.be.greeted:Anonymous}")			// remove/comment
-	public void setDefaultUserName(String defaultUserName) {	// remove/comment
-		this.defaultUserName = defaultUserName;					// remove/comment
-	}															// remove/comment
-	///////////////////////////////////////////////////////
 	
 	private void validateNull(String name) throws Exception {
 		if ("null".equals(name) || name == null) {
@@ -94,33 +72,6 @@ public class WebUI {
 		else throw new RuntimeException("Invalid Attribute for searching elements");
 	}
 	
-	//Sprint2: Write the /playground/activities/{userPlayground}/{email} 
-	@RequestMapping(
-			method=RequestMethod.POST,
-			path="/playground/activities/{userPlayground}/{email}",
-			produces=MediaType.APPLICATION_JSON_VALUE,
-			consumes=MediaType.APPLICATION_JSON_VALUE)
-	public Object activateElement (
-			@PathVariable("userPlayground") String userPlayground,
-			@PathVariable("email") String email, @RequestBody ActivityTO activityTo) throws Exception {
-		
-		//validate user
-		validateNull(email);
-		validateNull(userPlayground);
-		
-		boolean activityResult =  playgroundService.validateActivityType(activityTo.getType());
-		
-		if(activityResult) {
-			//update attributes that come from url
-			activityTo.setPlayerEmail(email);
-			activityTo.setPlayerPlayground(userPlayground);
-			ActivityEntity activityEntity = activityTo.convertFromActivityTOToActivityEntity();
-			ActivityEntity ac= playgroundService.addNewActivity(activityEntity);
-			return ac;
-		}
-		
-		else throw new RuntimeException("Invalid Activity Type");
-	}
 	
 	//Sprint2: Write the GET /playground/elements/{userPlayground}/{email}/all
 	@RequestMapping(
@@ -186,21 +137,6 @@ public class WebUI {
 		
 	}
 	
-	//Sprint2: Write the PUT /playground/users/{playground}/{email}
-	@RequestMapping(
-			method=RequestMethod.PUT,
-			path="/playground/users/{playground}/{email}",
-			consumes=MediaType.APPLICATION_JSON_VALUE)
-	public void updateUser (
-			@PathVariable("playground") String playground,
-			@PathVariable("email") String email,
-			@RequestBody UserTO updatedUser) throws Exception {
-		//set to elementTo the userPlayground and Email from URL
-		updatedUser.setEmail(email);
-		updatedUser.setPlayground(playground);
-		userService.updateUser(updatedUser.convertFromUserTOToUserEntity(), email, playground);
-
-	}
 	
 	//Sprint2: Write the POST /playground/elements/{userPlayground }/{email}
 	@RequestMapping(
@@ -233,47 +169,6 @@ public class WebUI {
 			@PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws ElementNotFoundException {
 		return new ElementTO(this.elementService.getElement(id, playground));	
-	}
-	
-	// Rest api 1 - Sapir 
-	@RequestMapping(
-			method=RequestMethod.POST,
-			path="/playground/users",
-			produces=MediaType.APPLICATION_JSON_VALUE,
-			consumes=MediaType.APPLICATION_JSON_VALUE)
-	public UserTO userSignup (@RequestBody NewUserForm newUserForm) {
-		UserEntity userEntity = userService.addNewUser(
-				new UserEntity(newUserForm.getEmail(),newUserForm.getUsername(),
-						newUserForm.getAvatar(),newUserForm.getRole()));
-		
-		System.out.println(userEntity.getCode()); // "send" code
-		return new UserTO(userEntity);
-	}
-	
-	// Rest api 2 - Sapir
-	@RequestMapping(
-			method=RequestMethod.GET,
-			path="/playground/users/confirm/{playground}/{email}/{code}",
-			produces=MediaType.APPLICATION_JSON_VALUE)
-	public UserTO userValidate (@PathVariable("playground") String userPlayground,@PathVariable("email") String email, @PathVariable("code") String code) throws Exception {
-		UserEntity userEntity = userService.getUser(email, userPlayground);
-		userEntity.verify(code);
-		if(!userEntity.isVerified())
-			throw new RuntimeException("Wrong code");
-		return new UserTO(userEntity);
-	}
-	
-	// Rest api 3 - Sapir
-	@RequestMapping(
-			method=RequestMethod.GET,
-			path="/playground/users/login/{playground}/{email}",
-			produces=MediaType.APPLICATION_JSON_VALUE)
-	public UserTO login (@PathVariable("playground") String playground,@PathVariable("email") String email) throws Exception {
-		UserEntity userEntity = userService.getUser(email, playground);
-		boolean flag = userEntity.isVerified();
-		if(!flag)
-			throw new RuntimeException("User not verified");
-		return new UserTO(userEntity);
 	}
 	
 	@ExceptionHandler//(UserNotFoundException.class)
