@@ -1006,7 +1006,7 @@ public class WebUITests {
 		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class);
 
 		// Then the response status is 2xx and body is:
-		ActivityEntity activityEntityExist = this.activityService.getActivity(playground + "@@" + "0");
+		ActivityEntity activityEntityExist = this.activityService.getActivity(elementPlayground + "@@" + "0");
 		ActivityTO activityTOExist = new ActivityTO(activityEntityExist);
 		ActivityTO expectedTOActivity = this.jackson.readValue("{\"playground\":\"2019a.talin\", \"id\":\"0\","
 				+ " \"elementPlayground\":\"2019a.talin\", \"elementId\":\"0\","
