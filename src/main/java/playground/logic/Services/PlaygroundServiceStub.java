@@ -20,7 +20,7 @@ import playground.logic.Entities.UserEntity;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
 
-@Service
+//@Service
 public class PlaygroundServiceStub implements PlaygroundService {
 	private Map<String, UserEntity> usersDatabase;
 	private Map<String, ElementEntity> elementsDatabase;

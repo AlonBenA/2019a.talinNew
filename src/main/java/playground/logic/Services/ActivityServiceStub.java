@@ -26,10 +26,10 @@ public class ActivityServiceStub implements PlaygroundActivityService {
 
 
 	@Override
-	public synchronized ActivityEntity getActivity(String activity_key) throws Exception {
-		ActivityEntity rv = this.activitiesDatabase.get(activity_key);
+	public synchronized ActivityEntity getActivity(String activity_id, String playground) throws Exception {
+		ActivityEntity rv = this.activitiesDatabase.get(playground + "@@" + activity_id);
 		if (rv == null) {
-			throw new RuntimeException("could not find activity by id: " + activity_key);
+			throw new RuntimeException("could not find activity by id: " + playground + "@@" + activity_id);
 		}
 		return rv;
 	}

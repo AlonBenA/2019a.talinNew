@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
+import playground.logic.Services.PlaygroundActivityService;
 import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundService;
 
@@ -28,14 +29,12 @@ import playground.logic.Services.PlaygroundService;
 public class WebUITestsActivity {
 
 	@Autowired
-	private PlaygroundService playgroundService;
+	private PlaygroundActivityService activityService;
 
 	@Autowired
 	private PlaygroundElementService elementService;
 
 	private RestTemplate restTemplate;
-
-//	private final String PLAYGROUND = "2019a.talin";
 
 	private String playground;
 	
@@ -66,7 +65,8 @@ public class WebUITestsActivity {
 	@After
 	public void teardown() {
 		// cleanup database
-		this.playgroundService.cleanup();
+		this.activityService.cleanup();
+		this.elementService.cleanup();
 	}
 
 	// T
@@ -95,7 +95,7 @@ public class WebUITestsActivity {
 		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class);
 
 		// Then the response status is 2xx and body is:
-		ActivityEntity activityEntityExist = this.playgroundService.getActivity("0", "2019a.talin");
+		ActivityEntity activityEntityExist = this.activityService.getActivity("0", "2019a.talin");
 		ActivityTO activityTOExist = new ActivityTO(activityEntityExist);
 		ActivityTO expectedTOActivity = this.jackson.readValue("{\"playground\":\"2019a.talin\", \"id\":\"0\","
 				+ " \"elementPlayground\":\"2019a.talin\", \"elementId\":\"0\","

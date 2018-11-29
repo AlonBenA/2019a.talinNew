@@ -12,7 +12,7 @@ public interface PlaygroundActivityService {
 	
 	public ActivityEntity addNewActivity(ActivityEntity activityEntity);
 	
-	public ActivityEntity getActivity(String activity_key) throws Exception;
+	public ActivityEntity getActivity(String activity_id, String playground) throws Exception;
 	
 	public void cleanup();
 	

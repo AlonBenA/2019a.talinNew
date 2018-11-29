@@ -16,24 +16,24 @@ import playground.layout.ErrorMessage;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
+import playground.logic.Services.PlaygroundActivityService;
 import playground.logic.Services.PlaygroundService;
 
 @RestController
 public class WebUIActivity {
 	
-	private PlaygroundService playgroundService;
-
-
-	public PlaygroundService getPlaygroundService() {
-		return playgroundService;
+	private PlaygroundActivityService activityService;
+	
+	public PlaygroundActivityService getActivityService() {
+		return activityService;
 	}
 
 	@Autowired
-	public void setPlaygroundService(PlaygroundService playgroundService) {
-		this.playgroundService = playgroundService;
+	public void setActivityService(PlaygroundActivityService activityService) {
+		this.activityService = activityService;
 	}
 
-	
+
 	private void validateNull(String name) throws Exception {
 		if ("null".equals(name) || name == null) {
 			throw new Exception("user not found");
@@ -55,14 +55,14 @@ public class WebUIActivity {
 		validateNull(email);
 		validateNull(userPlayground);
 		
-		boolean activityResult =  playgroundService.validateActivityType(activityTo.getType());
+		boolean activityResult =  activityService.validateActivityType(activityTo.getType());
 		
 		if(activityResult) {
 			//update attributes that come from url
 			activityTo.setPlayerEmail(email);
 			activityTo.setPlayerPlayground(userPlayground);
 			ActivityEntity activityEntity = activityTo.convertFromActivityTOToActivityEntity();
-			ActivityEntity ac= playgroundService.addNewActivity(activityEntity);
+			ActivityEntity ac= activityService.addNewActivity(activityEntity);
 			return ac;
 		}
 		

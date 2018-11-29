@@ -27,6 +27,7 @@ import playground.logic.Location;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.UserEntity;
+import playground.logic.Services.PlaygroundActivityService;
 import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundService;
 import playground.logic.Services.PlaygroundUserService;
@@ -35,14 +36,17 @@ import playground.logic.Services.PlaygroundUserService;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class WebUITests {
 
-	@Autowired
-	private PlaygroundService playgroundService;
+	//@Autowired
+	//private PlaygroundService playgroundService;
 	
 	@Autowired
 	private PlaygroundElementService elementService;
 	
 	@Autowired
 	private PlaygroundUserService userService;
+	
+	@Autowired
+	private PlaygroundActivityService activityService;
 
 	private RestTemplate restTemplate;
 
@@ -77,9 +81,10 @@ public class WebUITests {
 	@After
 	public void teardown() {
 		// cleanup database
-		this.playgroundService.cleanup();
+		//this.playgroundService.cleanup();
 		this.elementService.cleanup();
 		this.userService.cleanup();
+		this.activityService.cleanup();
 	}
 
 	// S
@@ -1020,7 +1025,7 @@ public class WebUITests {
 		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class);
 
 		// Then the response status is 2xx and body is:
-		ActivityEntity activityEntityExist = this.playgroundService.getActivity("0", "2019a.talin");
+		ActivityEntity activityEntityExist = this.activityService.getActivity("0", "2019a.talin");
 		ActivityTO activityTOExist = new ActivityTO(activityEntityExist);
 		ActivityTO expectedTOActivity = this.jackson.readValue("{\"playground\":\"2019a.talin\", \"id\":\"0\","
 				+ " \"elementPlayground\":\"2019a.talin\", \"elementId\":\"0\","
