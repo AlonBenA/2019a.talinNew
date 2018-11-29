@@ -29,6 +29,7 @@ import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundService;
+import playground.logic.Services.PlaygroundUserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -39,6 +40,9 @@ public class WebUITests {
 	
 	@Autowired
 	private PlaygroundElementService elementService;
+	
+	@Autowired
+	private PlaygroundUserService userService;
 
 	private RestTemplate restTemplate;
 
@@ -75,6 +79,7 @@ public class WebUITests {
 		// cleanup database
 		this.playgroundService.cleanup();
 		this.elementService.cleanup();
+		this.userService.cleanup();
 	}
 
 	// S
@@ -107,7 +112,7 @@ public class WebUITests {
 //				"username": "user2", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Player", "points": any positive integer}
 
-		UserEntity actualValue = this.playgroundService.getUser(email, playground);
+		UserEntity actualValue = this.userService.getUser(email, playground);
 		assertThat(actualValue).extracting("email", "playground", "username", "avatar", "role").containsExactly(email,
 				playground, username, avatar, role);
 	}
@@ -127,7 +132,7 @@ public class WebUITests {
 //				"username": "user2", "avatar": "https://goo.gl/images/WqDt96",
 //						"role": "Player", "points": 0, "code":"X"}]
 
-		this.playgroundService.addNewUser(new UserEntity(email, username, avatar, role));
+		this.userService.addNewUser(new UserEntity(email, username, avatar, role));
 
 //		When I POST http://localhost:8083/playground/users with 
 //		{"email":"usermail2@usermail.com", "username":"user2", 
@@ -163,8 +168,8 @@ public class WebUITests {
 //				"username": "user1", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Manager", "points": 0,	"code":"X"}]
 
-		this.playgroundService.addNewUser(new UserEntity(email, username, avatar, role));
-		this.playgroundService.getUser(email, playground).setCode(code);
+		this.userService.addNewUser(new UserEntity(email, username, avatar, role));
+		this.userService.getUser(email, playground).setCode(code);
 
 //		When I GET http://localhost:8083/playground/users/confirm/2019a.Talin/usermail1@usermail.com/X
 //		with headers:
@@ -192,7 +197,7 @@ public class WebUITests {
 //				"username": "user1", "avatar": "https://goo.gl/images/WqDt96",
 //						"role": "Manager", "points": 0, "code":null}
 
-		UserEntity actualValue = this.playgroundService.getUser(actualUser.getEmail(), actualUser.getPlayground());
+		UserEntity actualValue = this.userService.getUser(actualUser.getEmail(), actualUser.getPlayground());
 		assertThat(actualValue).extracting("email", "playground", "username", "avatar", "role", "code")
 				.containsExactly(email, playground, username, avatar, role, null);
 	}
@@ -213,8 +218,8 @@ public class WebUITests {
 //				"username": "user1", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Manager", "points": 0,	"code":"X"}]
 
-		this.playgroundService.addNewUser(new UserEntity(email, username, avatar, role));
-		this.playgroundService.getUser(email, playground).setCode(code);
+		this.userService.addNewUser(new UserEntity(email, username, avatar, role));
+		this.userService.getUser(email, playground).setCode(code);
 
 //		When I GET http://localhost:8083/playground/users/confirm/2019a.Talin/usermail1@usermail.com/Y
 //		with headers:
@@ -260,8 +265,8 @@ public class WebUITests {
 //				"username": "user1", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Manager", "points": 0,	"code":null}]
 
-		this.playgroundService.addNewUser(new UserEntity(email, username, avatar, role));
-		UserEntity userEntity = this.playgroundService.getUser(email, playground);
+		this.userService.addNewUser(new UserEntity(email, username, avatar, role));
+		UserEntity userEntity = this.userService.getUser(email, playground);
 		userEntity.setCode(code);
 		userEntity.verify(code);
 
@@ -299,7 +304,7 @@ public class WebUITests {
 //				"username": "user1", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Manager", "points": 0,	"code":"X"}]
 
-		this.playgroundService.addNewUser(new UserEntity(email, username, avatar, role));
+		this.userService.addNewUser(new UserEntity(email, username, avatar, role));
 
 //		When I GET http://localhost:8083/playground/users/login/2019a.Talin/usermail1@usermail.com
 //		with headers:
@@ -665,7 +670,7 @@ public class WebUITests {
 		// "role": "Player","points": 0,"code":null}
 		UserEntity userEnti = new UserEntity(email, username, avatar, role);
 		userEnti.setCode(null);
-		this.playgroundService.addNewUser(userEnti);
+		this.userService.addNewUser(userEnti);
 
 		// When I Put http://localhost:8083/playground/users/2019a.talin/talin@email.com
 		// And with body
@@ -693,7 +698,7 @@ public class WebUITests {
 		// "username":"user2","avatar":“https://moodle.afeka.ac.il/theme/image.jpg",
 		// "role": "Player","points": 0,"code":"1234"
 		// }
-		UserEntity actualUser = this.playgroundService.getUser(email, playground);
+		UserEntity actualUser = this.userService.getUser(email, playground);
 
 		assertThat(actualUser).extracting("email", "playground", "username", "avatar", "role", "code")
 				.containsExactly(email, playground, username, newAvatar, role, "null");

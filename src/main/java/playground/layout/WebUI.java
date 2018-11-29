@@ -23,12 +23,14 @@ import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundService;
+import playground.logic.Services.PlaygroundUserService;
 
 @RestController
 public class WebUI {
 	
 	private PlaygroundService playgroundService;
 	private PlaygroundElementService elementService;
+	private PlaygroundUserService userService;
 	////////////////////////////////////////////////////////
 	private String defaultUserName; // remove/comment
 	///////////////////////////////////////////////////////
@@ -40,9 +42,10 @@ public class WebUI {
 
 	@Autowired
 	public void setPlaygroundService(PlaygroundService playgroundService,
-			PlaygroundElementService elementService) {
+			PlaygroundElementService elementService, PlaygroundUserService userService) {
 		this.playgroundService = playgroundService;
 		this.elementService = elementService;
+		this.userService = userService;
 	}
 
 	////////////////////////////////////////////////////////
@@ -195,7 +198,7 @@ public class WebUI {
 		//set to elementTo the userPlayground and Email from URL
 		updatedUser.setEmail(email);
 		updatedUser.setPlayground(playground);
-		playgroundService.updateUser(updatedUser.convertFromUserTOToUserEntity(), email, playground);
+		userService.updateUser(updatedUser.convertFromUserTOToUserEntity(), email, playground);
 
 	}
 	
@@ -239,7 +242,7 @@ public class WebUI {
 			produces=MediaType.APPLICATION_JSON_VALUE,
 			consumes=MediaType.APPLICATION_JSON_VALUE)
 	public UserTO userSignup (@RequestBody NewUserForm newUserForm) {
-		UserEntity userEntity = playgroundService.addNewUser(
+		UserEntity userEntity = userService.addNewUser(
 				new UserEntity(newUserForm.getEmail(),newUserForm.getUsername(),
 						newUserForm.getAvatar(),newUserForm.getRole()));
 		
@@ -253,7 +256,7 @@ public class WebUI {
 			path="/playground/users/confirm/{playground}/{email}/{code}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
 	public UserTO userValidate (@PathVariable("playground") String userPlayground,@PathVariable("email") String email, @PathVariable("code") String code) throws Exception {
-		UserEntity userEntity = playgroundService.getUser(email, userPlayground);
+		UserEntity userEntity = userService.getUser(email, userPlayground);
 		userEntity.verify(code);
 		if(!userEntity.isVerified())
 			throw new RuntimeException("Wrong code");
@@ -266,7 +269,7 @@ public class WebUI {
 			path="/playground/users/login/{playground}/{email}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
 	public UserTO login (@PathVariable("playground") String playground,@PathVariable("email") String email) throws Exception {
-		UserEntity userEntity = playgroundService.getUser(email, playground);
+		UserEntity userEntity = userService.getUser(email, playground);
 		boolean flag = userEntity.isVerified();
 		if(!flag)
 			throw new RuntimeException("User not verified");
