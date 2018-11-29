@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundUserService;
+import playground.logic.jpa.JpaUserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -27,10 +28,12 @@ public class WebUITestsUser {
 
 	@Autowired
 	private PlaygroundUserService userService;
+	
+//					DB
+//	@Autowired
+//	private JpaUserService userService;
 
 	private RestTemplate restTemplate;
-
-//	private final String PLAYGROUND = "2019a.talin";
 
 	private String playground;
 	

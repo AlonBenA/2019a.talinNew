@@ -19,27 +19,26 @@ import playground.logic.Entities.UserEntity;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundUserService;
+import playground.logic.jpa.JpaUserService;
 
 @RestController
 public class WebUIUser {
 	
 	private PlaygroundUserService userService;
-	////////////////////////////////////////////////////////
-	private String defaultUserName; // remove/comment
-	///////////////////////////////////////////////////////
 	
-
 	@Autowired
 	public void setPlaygroundService(PlaygroundUserService userService) {
 		this.userService = userService;
 	}
-
-	////////////////////////////////////////////////////////
-	@Value("${name.of.user.to.be.greeted:Anonymous}")			// remove/comment
-	public void setDefaultUserName(String defaultUserName) {	// remove/comment
-		this.defaultUserName = defaultUserName;					// remove/comment
-	}															// remove/comment
-	///////////////////////////////////////////////////////
+	
+//			DB
+	
+//	private JpaUserService userService;
+//
+//	@Autowired
+//	public void setPlaygroundService(JpaUserService userService) {
+//		this.userService = userService;
+//	}
 	
 	private void validateNull(String name) throws Exception {
 		if ("null".equals(name) || name == null) {

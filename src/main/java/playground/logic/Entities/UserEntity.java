@@ -2,19 +2,26 @@ package playground.logic.Entities;
 
 import java.util.Random;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+//@Entity
+@Table(name = "USER")
 public class UserEntity {
 	private String email;
 	private String playground;
 	private String username;
 	private String avatar;
 	private String role;
-	private long points;
+	private Long points;
 	private StringBuilder code;
 
 	public UserEntity() {
-		this("","","","");
+		this("", "", "", "");
 	}
-	
+
 	public UserEntity(String email, String username, String avatar, String role) {
 		super();
 		setEmail(email);
@@ -22,16 +29,29 @@ public class UserEntity {
 		setUsername(username);
 		setAvatar(avatar);
 		setRole(role);
-		this.points = 0;
-//		this.code.append(1234);
+		this.points = 0L;
 		Random r = new Random();
 		int low = 1000;
 		int high = 9999;
-		int result = r.nextInt(high-low) + low;
+		int result = r.nextInt(high - low) + low;
 		code = new StringBuilder();
 		code.append(result);
 	}
 
+	@Id
+	public String getKey() {
+		return playground + "@@" + email;
+	}
+
+	public void setKey(String key) {
+		String[] tmp = key.split("@@");
+		this.playground = tmp[0];
+		this.email = tmp[1];
+	}
+
+//	public void setKey(String key) {}
+
+	@Transient
 	public String getEmail() {
 		return email;
 	}
@@ -40,6 +60,7 @@ public class UserEntity {
 		this.email = email;
 	}
 
+	@Transient
 	public String getPlayground() {
 		return playground;
 	}
@@ -72,102 +93,37 @@ public class UserEntity {
 		this.role = role;
 	}
 
-	public long getPoints() {
+	public Long getPoints() {
 		return points;
 	}
 
-	public void setPoints(long points) {
+	public void setPoints(Long points) {
 		this.points = points;
 	}
 
 	public String getCode() {
 		return code.toString();
 	}
-	
+
 	public void setCode(String code) {
 		this.code.delete(0, this.code.length());
 		this.code.append(code);
 	}
-	
+
 	public boolean verify(String code) {
-		if(code.equals(this.code.toString())) {
+		if (code.equals(this.code.toString())) {
 			this.code = null;
 //			this.code.delete(0, this.code.length());
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean isVerified() {
 //		if("".equals(code.toString()))
-		if(code == null)
+		if (code == null)
 			return true;
 		return false;
 	}
-/*
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((playground == null) ? 0 : playground.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		result = prime * result + ((avatar == null) ? 0 : avatar.hashCode());
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		return result;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UserEntity other = (UserEntity) obj;
-				
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		
-		if (playground == null) {
-			if (other.playground != null)
-				return false;
-		} else if (!playground.equals(other.playground))
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
-				
-		if (avatar == null) {
-			if (other.avatar != null)
-				return false;
-		} else if (!avatar.equals(other.avatar))
-			return false;
-		
-		if (role == null) {
-			if (other.role != null)
-				return false;
-		} else if (!role.equals(other.role))
-			return false;
-			
-		if (!(points == other.points))
-			return false;
-				
-		if (code == null) {
-			if (other.code != null)
-				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		
-		return true;
-	}
-	
-*/
+
 }
