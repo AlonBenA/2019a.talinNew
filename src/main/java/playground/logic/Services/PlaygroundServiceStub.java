@@ -20,7 +20,7 @@ import playground.logic.Entities.UserEntity;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
 
-//@Service
+@Service
 public class PlaygroundServiceStub implements PlaygroundService {
 	private Map<String, UserEntity> usersDatabase;
 	private Map<String, ElementEntity> elementsDatabase;
@@ -64,7 +64,7 @@ public class PlaygroundServiceStub implements PlaygroundService {
 	
 	@Override
 	public synchronized ActivityEntity addNewActivity(ActivityEntity activityEntity) {
-		this.activitiesDatabase.put(activityEntity.getPlayground() + "@@" + activityEntity.getId(), activityEntity);
+		this.activitiesDatabase.put(activityEntity.getPlayground() + activityEntity.getId(), activityEntity);
 		return activityEntity;
 	}
 
@@ -79,9 +79,9 @@ public class PlaygroundServiceStub implements PlaygroundService {
 
 	@Override
 	public synchronized ActivityEntity getActivity(String activity_id, String playground) throws Exception {
-		ActivityEntity rv = this.activitiesDatabase.get(playground + "@@" + activity_id);
+		ActivityEntity rv = this.activitiesDatabase.get(playground + activity_id);
 		if (rv == null) {
-			throw new RuntimeException("could not find activity by id: " + playground + "@@" + activity_id);
+			throw new RuntimeException("could not find activity by id: " + playground + activity_id);
 		}
 		return rv;
 	}

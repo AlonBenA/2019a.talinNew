@@ -4,22 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import org.springframework.beans.factory.annotation.Value;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-@Entity
-@Table(name = "ACTIVITIES")
 public class ActivityEntity {
 	
+	private static AtomicLong IDGiver = new AtomicLong(0);
 	private String playground;
-	private Long id;
+	private String id;
 	private String elementPlayground;
 	private String elementId;
 	private String type;
@@ -31,6 +22,7 @@ public class ActivityEntity {
 	{
 		super();
 		this.playground = "2019a.talin";
+		this.id = getID();
 		this.elementPlayground = "2019a.talin";
 		this.elementId = "0";
 		this.type = "feed";
@@ -44,12 +36,18 @@ public class ActivityEntity {
 			String playerPlayground, String playerEmail, Map<String, Object> attributes) {
 		super();
 		this.playground = "2019a.talin";
+		this.id = getID();
 		setElementPlayground(elementPlayground);
 		setElementId(elementId);
 		setType(type);
 		setPlayerPlayground(playerPlayground);
 		setPlayerEmail(playerEmail);
 		setAttributes(attributes);
+	}
+	
+	private String getID()
+	{
+		return IDGiver.getAndIncrement() +"";
 	}
 	
 	public String getPlayground() {
@@ -59,19 +57,12 @@ public class ActivityEntity {
 	public void setPlayground(String playground) {
 		this.playground = playground;
 	}
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
-	
-	@Id
-	public String getKey() {
-		return playground + "@@" + id;
-	}
-	
-	
 	public String getElementPlayground() {
 		return elementPlayground;
 	}
@@ -102,30 +93,11 @@ public class ActivityEntity {
 	public void setPlayerEmail(String playerEmail) {
 		this.playerEmail = playerEmail;
 	}
-	
-	@Transient
 	public Map<String, Object> getAttributes() {
 		return attributes;
 	}
 	public void setAttributes(Map<String, Object> attributes) {
 		this.attributes = attributes;
-	}
-	
-	@Lob
-	public String getMoreAttributesJson() {
-		try {
-			return new ObjectMapper().writeValueAsString(this.attributes);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public void setMoreAttributesJson(String json) {
-		try {
-			this.attributes = new ObjectMapper().readValue(json, Map.class);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	@Override

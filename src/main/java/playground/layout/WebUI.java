@@ -1,10 +1,6 @@
 package playground.layout;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -21,19 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import playground.logic.Location;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.UserEntity;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
-import playground.logic.Services.PlaygroundActivityService;
 import playground.logic.Services.PlaygroundService;
 
 @RestController
 public class WebUI {
 	
 	private PlaygroundService playgroundService;
-	private PlaygroundActivityService activityService;
 	////////////////////////////////////////////////////////
 	private String defaultUserName; // remove/comment
 	///////////////////////////////////////////////////////
@@ -44,10 +37,8 @@ public class WebUI {
 	}
 
 	@Autowired
-	public void setPlaygroundService(PlaygroundService playgroundService, 
-			PlaygroundActivityService activityService) {
+	public void setPlaygroundService(PlaygroundService playgroundService) {
 		this.playgroundService = playgroundService;
-		this.activityService = activityService;
 	}
 
 	////////////////////////////////////////////////////////
@@ -110,14 +101,14 @@ public class WebUI {
 		validateNull(email);
 		validateNull(userPlayground);
 		
-		boolean activityResult =  activityService.validateActivityType(activityTo.getType());
+		boolean activityResult =  playgroundService.validateActivityType(activityTo.getType());
 		
 		if(activityResult) {
 			//update attributes that come from url
 			activityTo.setPlayerEmail(email);
 			activityTo.setPlayerPlayground(userPlayground);
 			ActivityEntity activityEntity = activityTo.convertFromActivityTOToActivityEntity();
-			ActivityEntity ac= activityService.addNewActivity(activityEntity);
+			ActivityEntity ac= playgroundService.addNewActivity(activityEntity);
 			return ac;
 		}
 		
@@ -147,8 +138,8 @@ public class WebUI {
 	}
 	
 	
-	//Sprint2: Write the GET /playground/elements/{userPlayground}/{email}/near/{x}/{y}/{distan ce}
-	// to check {distan ce} Represents 
+	//Sprint2: Write the GET /playground/elements/{userPlayground}/{email}/near/{x}/{y}/{distance}
+	// to check {distance} Represents 
 	@RequestMapping(
 			method=RequestMethod.GET,
 			path= "/playground/elements/{userPlayground}/{email}/near/{x}/{y}/{distance}" ,
@@ -170,32 +161,6 @@ public class WebUI {
 
 			//throw new RuntimeException("Error while retrieving data");
 			
-			
-	}
-	
-	
-	public List<ElementTO> getListOfElementsTO()
-	{
-		Location location1 = new Location(10.0,10.0);
-		Location location2 = new Location(100.0,100.0);
-		String name1 = "Dog";
-		String name2 = "Cat";
-		String type1 = "Dog";
-		String type2 = "Cat";
-		Map<String,Object> attributes1  = new HashMap<>();
-		attributes1.put("Play", "Woof");
-		Map<String,Object> attributes2 = new HashMap<>();
-		attributes2.put("Play", "Meow");
-		String creatorPlayground = "2019a.Talin";
-		String creatorEmail = "AlonMail@Mail.com";
-		
-		List<ElementTO> elements = Arrays.asList(
-				new ElementTO(location1,name1, new Date(),type1,attributes1,creatorPlayground,creatorEmail),
-				new ElementTO(location2,name2, new Date(),type2,attributes2,creatorPlayground,creatorEmail),
-				new ElementTO()
-				);
-		
-		return elements;
 	}
 	
 	//Sprint2: Write the PUT /playground/elements/{userPlayground}/{email}/{playground}/{id}
@@ -274,7 +239,7 @@ public class WebUI {
 				new UserEntity(newUserForm.getEmail(),newUserForm.getUsername(),
 						newUserForm.getAvatar(),newUserForm.getRole()));
 		
-		//userEntity.getCode(); // send code???????????????
+		System.out.println(userEntity.getCode()); // "send" code
 		return new UserTO(userEntity);
 	}
 	

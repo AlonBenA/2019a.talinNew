@@ -51,7 +51,7 @@ public class ActivityTO {
 	public ActivityTO(ActivityEntity activityEntity)
 	{
 		setPlayground(activityEntity.getPlayground());
-		setId(activityEntity.getId().toString());
+		setId(activityEntity.getId());
 		setElementPlayground(activityEntity.getElementPlayground());
 		setElementId(activityEntity.getElementId());
 		setType(activityEntity.getType());
@@ -131,7 +131,7 @@ public class ActivityTO {
 	{
 		ActivityEntity activityEntity = new ActivityEntity();
 		activityEntity.setPlayground(playground);
-		activityEntity.setId(Long.valueOf(id));
+		activityEntity.setId(id);
 		activityEntity.setElementPlayground(elementPlayground);
 		activityEntity.setElementId(elementId);
 		activityEntity.setPlayerPlayground(playerPlayground);
