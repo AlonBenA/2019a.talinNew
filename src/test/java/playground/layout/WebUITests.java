@@ -27,6 +27,7 @@ import playground.logic.Location;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.UserEntity;
+import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundService;
 
 @RunWith(SpringRunner.class)
@@ -35,6 +36,9 @@ public class WebUITests {
 
 	@Autowired
 	private PlaygroundService playgroundService;
+	
+	@Autowired
+	private PlaygroundElementService elementService;
 
 	private RestTemplate restTemplate;
 
@@ -70,6 +74,7 @@ public class WebUITests {
 	public void teardown() {
 		// cleanup database
 		this.playgroundService.cleanup();
+		this.elementService.cleanup();
 	}
 
 	// S
@@ -343,7 +348,7 @@ public class WebUITests {
 						(name == null) ? "animal #" + value : name, exirationDate, type, attributes, creatorPlayground,
 						creatorEmail)) // ElementTO stream using constructor
 										// reference
-				.forEach(playgroundService::addNewElement);
+				.forEach(elementService::addNewElement);
 	}
 
 	// A
@@ -586,7 +591,7 @@ public class WebUITests {
 		elementEntity.setId(updateAnElementID);
 		elementEntity.setCreationDate(null);
 
-		this.playgroundService.addNewElement(elementEntity);
+		this.elementService.addNewElement(elementEntity);
 
 		ElementTO updatedElementTO = new ElementTO();
 		updatedElementTO.setId(updateAnElementID);
@@ -599,7 +604,7 @@ public class WebUITests {
 
 		this.restTemplate.put(url, updatedElementTO);
 
-		ElementEntity actualElement = this.playgroundService.getElement(updateAnElementID, playground);
+		ElementEntity actualElement = this.elementService.getElement(updateAnElementID, playground);
 
 		ElementEntity expectedElement = new ElementEntity();
 		expectedElement.setId(updateAnElementID);
@@ -768,7 +773,7 @@ public class WebUITests {
 		// Then the response status is 2xx
 		// and the database contains for playground+id:“2019a.talin0”
 
-		ElementEntity elementEntityExist = this.playgroundService.getElement(Id, playground);
+		ElementEntity elementEntityExist = this.elementService.getElement(Id, playground);
 
 		assertThat(elementEntityExist).extracting("name", "type", "location", "attributes").containsExactly(name, type,
 				new Location(x, y), attributes);
@@ -806,7 +811,7 @@ public class WebUITests {
 		newElement.setLocation(new Location(x, y));
 		newElement.setType(type);
 
-		this.playgroundService.addNewElement(newElement);
+		this.elementService.addNewElement(newElement);
 
 		// When I Get
 		// http://localhost:8083/playground/elements/2019a.talin/talin@email.com/2019a.talin/123
@@ -992,7 +997,7 @@ public class WebUITests {
 
 		// And the database contains element with playground+id: 2019a.talin0
 		ElementEntity.resetID();
-		this.playgroundService.addNewElement(new ElementEntity());
+		this.elementService.addNewElement(new ElementEntity());
 
 		// When I POST activity with
 		String elementId = "0";
@@ -1000,7 +1005,7 @@ public class WebUITests {
 		String type = "ACO";
 
 		// check that element exists
-		this.playgroundService.getElement(elementId, elementPlayground);
+		this.elementService.getElement(elementId, elementPlayground);
 
 		ActivityTO.resetID();
 		ActivityTO newActivityTO = new ActivityTO();
@@ -1028,7 +1033,7 @@ public class WebUITests {
 
 		// And the database contains element with playground+id: 2019a.talin0
 		ElementEntity.resetID();
-		this.playgroundService.addNewElement(new ElementEntity());
+		this.elementService.addNewElement(new ElementEntity());
 
 		// When I POST activity with
 		String elementId = "0";
@@ -1036,7 +1041,7 @@ public class WebUITests {
 		String type = "Play";
 
 		// check that element exists
-		this.playgroundService.getElement(elementId, elementPlayground);
+		this.elementService.getElement(elementId, elementPlayground);
 
 		ActivityTO.resetID();
 		ActivityTO newActivityTO = new ActivityTO();
@@ -1060,7 +1065,7 @@ public class WebUITests {
 		String type = "ACO";
 
 		// check that element exists
-		this.playgroundService.getElement(elementId, elementPlayground);
+		this.elementService.getElement(elementId, elementPlayground);
 
 		ActivityTO.resetID();
 		ActivityTO newActivityTO = new ActivityTO();

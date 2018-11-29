@@ -21,12 +21,14 @@ import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.UserEntity;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
+import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundService;
 
 @RestController
 public class WebUI {
 	
 	private PlaygroundService playgroundService;
+	private PlaygroundElementService elementService;
 	////////////////////////////////////////////////////////
 	private String defaultUserName; // remove/comment
 	///////////////////////////////////////////////////////
@@ -37,8 +39,10 @@ public class WebUI {
 	}
 
 	@Autowired
-	public void setPlaygroundService(PlaygroundService playgroundService) {
+	public void setPlaygroundService(PlaygroundService playgroundService,
+			PlaygroundElementService elementService) {
 		this.playgroundService = playgroundService;
+		this.elementService = elementService;
 	}
 
 	////////////////////////////////////////////////////////
@@ -70,11 +74,11 @@ public class WebUI {
 		validateNull(userPlayground);
 		
 		// validate attribute
-		boolean attributeNameResult =  playgroundService.validateElementAttribteName(attributeName);
+		boolean attributeNameResult =  elementService.validateElementAttribteName(attributeName);
 		
 		if(attributeNameResult) {
 			List<ElementTO> elementsWithAttribute = 
-					playgroundService.getAllElements(size, page) // list of entities
+					elementService.getAllElements(size, page) // list of entities
 					.stream() // stream of entities
 					.filter(element -> (attributeName.equals("name") ? element.getName().equals(value)
 							: element.getType().equals(value)))
@@ -126,7 +130,7 @@ public class WebUI {
 			@RequestParam(name="page", required=false, defaultValue="0") int page) throws Exception {
 			
 		try {		
-				return playgroundService.getAllElements(size, page) // list of entities
+				return elementService.getAllElements(size, page) // list of entities
 				.stream() // stream of entities
 				.map(ElementTO::new) // stream of boundaries
 				.collect(Collectors.toList())// list of boundaries
@@ -152,7 +156,7 @@ public class WebUI {
 			@RequestParam(name="size", required=false, defaultValue="10") int size, 
 			@RequestParam(name="page", required=false, defaultValue="0") int page) throws Exception {
 		
-			return playgroundService.getAllNearElements(x, y, center, size, page)
+			return elementService.getAllNearElements(x, y, center, size, page)
 					.stream()
 					.map(ElementTO::new)
 					.collect(Collectors.toList())
@@ -175,7 +179,7 @@ public class WebUI {
 			@PathVariable("id") String id,
 			@RequestBody ElementTO updatedElement) throws Exception {
 		
-		playgroundService.updateElement(updatedElement.convertFromElementTOToElementEntity(), playground, id);
+		elementService.updateElement(updatedElement.convertFromElementTOToElementEntity(), playground, id);
 		
 	}
 	
@@ -211,7 +215,7 @@ public class WebUI {
 		elementTO.setCreatorPlayground(userPlayground);
 		
 		return new ElementTO(
-				this.playgroundService.addNewElement(elementTO.convertFromElementTOToElementEntity()));
+				this.elementService.addNewElement(elementTO.convertFromElementTOToElementEntity()));
 	}
 	
 	
@@ -225,7 +229,7 @@ public class WebUI {
 			@PathVariable("email") String email,
 			@PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws ElementNotFoundException {
-		return new ElementTO(this.playgroundService.getElement(id, playground));	
+		return new ElementTO(this.elementService.getElement(id, playground));	
 	}
 	
 	// Rest api 1 - Sapir 
