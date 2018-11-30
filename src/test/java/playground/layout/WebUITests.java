@@ -589,35 +589,41 @@ public class WebUITests {
 	public void updateAnElementSuccessfully() throws Exception {
 		// Given Server is up
 
-		String updateAnElementID = "updateAnElementID";
-
-		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/" + playground + "/"
-				+ updateAnElementID;
 
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("Play", "Woof");
 
 		ElementEntity elementEntity = new ElementEntity();
-		elementEntity.setId(updateAnElementID);
 		elementEntity.setCreationDate(null);
 
-		this.elementService.addNewElement(elementEntity);
+		elementEntity = this.elementService.addNewElement(elementEntity);
+		
+		
+		
+		System.out.println("\n\n\n\n\n " + elementEntity.getId());
+		System.out.println(this.elementService.getElement(elementEntity.getId(),elementEntity.getPlayground()).toString());
 
 		ElementTO updatedElementTO = new ElementTO();
-		updatedElementTO.setId(updateAnElementID);
-		updatedElementTO.setPlayground(playground);
+		updatedElementTO.setId(elementEntity.getId());
+		updatedElementTO.setPlayground(elementEntity.getPlayground());
 		updatedElementTO.setLocation(new Location(10, 10));
 		updatedElementTO.setName("Rex");
 		updatedElementTO.setType("Dog");
 		updatedElementTO.setAttributes(attributes);
 		updatedElementTO.setCreationDate(null);
+		
+		
+		
+		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/" + elementEntity.getPlayground() + "/"
+				+ elementEntity.getId();
+
 
 		this.restTemplate.put(url, updatedElementTO);
 
-		ElementEntity actualElement = this.elementService.getElement(updateAnElementID, playground);
+		ElementEntity actualElement = this.elementService.getElement(elementEntity.getId(), playground);
 
 		ElementEntity expectedElement = new ElementEntity();
-		expectedElement.setId(updateAnElementID);
+		expectedElement.setId(elementEntity.getId());
 		expectedElement.setLocation(new Location(10, 10));
 		expectedElement.setName("Rex");
 		expectedElement.setType("Dog");
@@ -745,49 +751,47 @@ public class WebUITests {
 	}
 
 	// I
-	@Test
-	public void TestElementCreatedSuccessfully() throws Exception {
-		// Given Server is up
+		@Test
+		public void TestElementCreatedSuccessfully() throws Exception {
+			// Given Server is up
 
-		String url = base_url + "/playground/elements/{userPlayground}/{email}";
-		String Id = "123";
-		String email = "tali@mali.com";
-		String name = "cat";
-		double x = 1.0;
-		double y = 1.0;
-		String type = "animal";
-		Map<String, Object> attributes = new HashMap<>();
+			String url = base_url + "/playground/elements/{userPlayground}/{email}";
+			String email = "tali@mali.com";
+			String name = "cat";
+			double x = 1.0;
+			double y = 1.0;
+			String type = "animal";
+			Map<String, Object> attributes = new HashMap<>();
 
-		ElementTO newElement = new ElementTO();
-		newElement.setId(Id);
-		newElement.setName(name);
-		newElement.setLocation(new Location(x, y));
-		newElement.setType(type);
-		newElement.setAttributes(attributes);
+			ElementTO newElement = new ElementTO();
+			newElement.setName(name);
+			newElement.setLocation(new Location(x, y));
+			newElement.setType(type);
+			newElement.setAttributes(attributes);
 
-		// Given server is up
+			// Given server is up
 
-		// When I POST
-		// http://localhost:8083/playground/elements/2019a.talin/talin@email.com
-		// And with body
-		// {
-		// “name”: “cat”,
-		// “type”:”animal”
-		// “location”:{“x”:0.0,”y”:0.0},
-		// "attributes": {}
-		// }
-		// with headers:
-		// Accept: application/json
-		// Content-Type: application/json
-		this.restTemplate.postForObject(url, newElement, ElementTO.class, playground, email);
-		// Then the response status is 2xx
-		// and the database contains for playground+id:“2019a.talin0”
+			// When I POST
+			// http://localhost:8083/playground/elements/2019a.talin/talin@email.com
+			// And with body
+			// {
+			// “name”: “cat”,
+			// “type”:”animal”
+			// “location”:{“x”:0.0,”y”:0.0},
+			// "attributes": {}
+			// }
+			// with headers:
+			// Accept: application/json
+			// Content-Type: application/json
+			ElementTO elementAfterPost = this.restTemplate.postForObject(url, newElement, ElementTO.class, playground, email);
+			// Then the response status is 2xx
+			// and the database contains for playground+id:“2019a.talin0”
 
-		ElementEntity elementEntityExist = this.elementService.getElement(Id, playground);
+			ElementEntity elementEntityExist = this.elementService.getElement(elementAfterPost.getId(), playground);
 
-		assertThat(elementEntityExist).extracting("name", "type", "location", "attributes").containsExactly(name, type,
-				new Location(x, y), attributes);
-	}
+			assertThat(elementEntityExist).extracting("name", "type", "location", "attributes").containsExactly(name, type,
+					new Location(x, y), attributes);
+		}
 
 	// I
 	@Test
@@ -816,13 +820,14 @@ public class WebUITests {
 		String type = "animal";
 
 		ElementEntity newElement = new ElementEntity();
-		newElement.setId(id);
 		newElement.setName(name);
 		newElement.setLocation(new Location(x, y));
 		newElement.setType(type);
 
-		this.elementService.addNewElement(newElement);
+		newElement = this.elementService.addNewElement(newElement);
 
+		
+		id = newElement.getId();
 		// When I Get
 		// http://localhost:8083/playground/elements/2019a.talin/talin@email.com/2019a.talin/123
 		// with headers:
@@ -1006,11 +1011,13 @@ public class WebUITests {
 		String url = base_url + "/playground/activities/2019a.talin/myEmail@mail.com";
 
 		// And the database contains element with playground+id: 2019a.talin0
-		ElementEntity.resetID();
-		this.elementService.addNewElement(new ElementEntity());
+//		ElementEntity.resetID();
+		
+
+		ElementEntity ElementEntity = this.elementService.addNewElement(new ElementEntity());
 
 		// When I POST activity with
-		String elementId = "0";
+		String elementId = ElementEntity.getId();
 		String elementPlayground = "2019a.talin";
 		String type = "ACO";
 
@@ -1028,7 +1035,7 @@ public class WebUITests {
 		ActivityEntity activityEntityExist = this.activityService.getActivity("0", "2019a.talin");
 		ActivityTO activityTOExist = new ActivityTO(activityEntityExist);
 		ActivityTO expectedTOActivity = this.jackson.readValue("{\"playground\":\"2019a.talin\", \"id\":\"0\","
-				+ " \"elementPlayground\":\"2019a.talin\", \"elementId\":\"0\","
+				+ " \"elementPlayground\":\"2019a.talin\", \"elementId\":\""+elementId+"\","
 				+ " \"type\":\"ACO\", \"playerPlayground\":\"2019a.talin\","
 				+ " \"playerEmail\": \"myEmail@mail.com\"}", ActivityTO.class);
 
@@ -1042,7 +1049,7 @@ public class WebUITests {
 		String url = base_url + "/playground/activities/2019a.talin/myEmail@mail.com";
 
 		// And the database contains element with playground+id: 2019a.talin0
-		ElementEntity.resetID();
+		//ElementEntity.resetID();
 		this.elementService.addNewElement(new ElementEntity());
 
 		// When I POST activity with

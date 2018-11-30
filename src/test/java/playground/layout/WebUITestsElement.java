@@ -322,35 +322,41 @@ public class WebUITestsElement {
 	public void updateAnElementSuccessfully() throws Exception {
 		// Given Server is up
 
-		String updateAnElementID = "updateAnElementID";
-
-		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/" + playground + "/"
-				+ updateAnElementID;
 
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("Play", "Woof");
 
 		ElementEntity elementEntity = new ElementEntity();
-		elementEntity.setId(updateAnElementID);
 		elementEntity.setCreationDate(null);
 
-		this.elementService.addNewElement(elementEntity);
+		elementEntity = this.elementService.addNewElement(elementEntity);
+		
+		
+		
+		System.out.println("\n\n\n\n\n " + elementEntity.getId());
+		System.out.println(this.elementService.getElement(elementEntity.getId(),elementEntity.getPlayground()).toString());
 
 		ElementTO updatedElementTO = new ElementTO();
-		updatedElementTO.setId(updateAnElementID);
-		updatedElementTO.setPlayground(playground);
+		updatedElementTO.setId(elementEntity.getId());
+		updatedElementTO.setPlayground(elementEntity.getPlayground());
 		updatedElementTO.setLocation(new Location(10, 10));
 		updatedElementTO.setName("Rex");
 		updatedElementTO.setType("Dog");
 		updatedElementTO.setAttributes(attributes);
 		updatedElementTO.setCreationDate(null);
+		
+		
+		
+		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/" + elementEntity.getPlayground() + "/"
+				+ elementEntity.getId();
+
 
 		this.restTemplate.put(url, updatedElementTO);
 
-		ElementEntity actualElement = this.elementService.getElement(updateAnElementID, playground);
+		ElementEntity actualElement = this.elementService.getElement(elementEntity.getId(), playground);
 
 		ElementEntity expectedElement = new ElementEntity();
-		expectedElement.setId(updateAnElementID);
+		expectedElement.setId(elementEntity.getId());
 		expectedElement.setLocation(new Location(10, 10));
 		expectedElement.setName("Rex");
 		expectedElement.setType("Dog");
@@ -461,13 +467,14 @@ public class WebUITestsElement {
 		String type = "animal";
 
 		ElementEntity newElement = new ElementEntity();
-		newElement.setId(id);
 		newElement.setName(name);
 		newElement.setLocation(new Location(x, y));
 		newElement.setType(type);
 
-		this.elementService.addNewElement(newElement);
+		newElement = this.elementService.addNewElement(newElement);
 
+		
+		id = newElement.getId();
 		// When I Get
 		// http://localhost:8083/playground/elements/2019a.talin/talin@email.com/2019a.talin/123
 		// with headers:

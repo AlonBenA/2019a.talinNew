@@ -3,6 +3,7 @@ package playground.logic.Services;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -14,7 +15,20 @@ import playground.logic.Exceptions.ElementNotFoundException;
 
 
 @Service
-public class ElementServiceStub implements PlaygroundElementService  {
+public class ElementServiceStub implements PlaygroundElementService  {	
+	
+	private static AtomicLong IDGiver = new AtomicLong(0);
+	
+	
+	private String get_ID()
+	{
+		return IDGiver.getAndIncrement()+"";
+	}
+	
+	public static void resetID()
+	{
+		IDGiver = new AtomicLong(0);
+	}
 	
 	private Map<String, ElementEntity> elementsDatabase;
 	
@@ -25,7 +39,9 @@ public class ElementServiceStub implements PlaygroundElementService  {
 
 	@Override
 	public ElementEntity addNewElement(ElementEntity elementEntity) {
-		String key = elementEntity.getPlayground() + elementEntity.getId();
+		
+		elementEntity.setId(get_ID());
+		String key = elementEntity.getKey();
 		this.elementsDatabase.put(key, elementEntity);
 		return this.elementsDatabase.get(key);
 	
@@ -33,9 +49,12 @@ public class ElementServiceStub implements PlaygroundElementService  {
 
 	@Override
 	public synchronized ElementEntity getElement(String element_id, String element_Playground) throws ElementNotFoundException {
-		ElementEntity rv = this.elementsDatabase.get(element_Playground + element_id);
+		
+		String key = element_Playground + "@@" + element_id;
+		
+		ElementEntity rv = this.elementsDatabase.get(key);
 		if (rv == null) {
-			throw new ElementNotFoundException("could not find element by id: " + element_Playground + element_id);
+			throw new ElementNotFoundException("could not find element by id: " + key);
 		}
 		return rv;
 	}
@@ -60,9 +79,11 @@ public class ElementServiceStub implements PlaygroundElementService  {
 	@Override
 	public synchronized void updateElement(ElementEntity updatedElementEntity, String playground, String id)
 			throws Exception {
+		
+		String key = playground + "@@" + id;
 
-		if (this.elementsDatabase.containsKey(playground + id)) {
-			ElementEntity elementEntity = this.elementsDatabase.get(playground + id);
+		if (this.elementsDatabase.containsKey(key)) {
+			ElementEntity elementEntity = this.elementsDatabase.get(key);
 
 			if (elementEntity.getLocation() != null && !elementEntity.getLocation().equals(updatedElementEntity.getLocation())) {
 				elementEntity.setLocation(updatedElementEntity.getLocation());

@@ -22,7 +22,7 @@ import playground.logic.Location;
 @Table(name = "Elements")
 public class ElementEntity {
 
-	private static AtomicLong IDGiver = new AtomicLong(0);
+
 	private String playground; 
 	private String id;
 	private Location location;
@@ -38,7 +38,7 @@ public class ElementEntity {
 	public ElementEntity() {
 		super();
 		this.playground = "2019a.talin";
-		this.id = get_ID();
+		this.id = "0";
 		this.location = new Location(0, 0);
 		this.name = "Animal";
 		this.creationDate = new Date();
@@ -53,7 +53,7 @@ public class ElementEntity {
 			,Map<String,Object> attributes,String creatorPlayground, String creatorEmail)
 	{
 		this.playground = "2019a.talin";
-		this.id = get_ID();
+		this.id = "0";
 		setLocation(location);
 		setName(name);
 		this.creationDate = new Date();
@@ -65,15 +65,7 @@ public class ElementEntity {
 	}
 	
 	
-	private String get_ID()
-	{
-		return IDGiver.getAndIncrement()+"";
-	}
-	
-	public static void resetID()
-	{
-		IDGiver = new AtomicLong(0);
-	}
+
 	
 	
 	@Id
@@ -204,7 +196,7 @@ public class ElementEntity {
 
 	@Override
 	public String toString() {
-		return "ElementTO [playground=" + playground + ", id=" + id + ", location=" + location + ", name=" + name
+		return "ElementEntity [playground=" + playground + ", id=" + id + ", location=" + location + ", name=" + name
 				+ ", creationDate=" + creationDate + ", exirationDate=" + exirationDate + ", type=" + type
 				+ ", attributes=" + attributes + ", creatorPlayground=" + creatorPlayground + ", creatorEmail="
 				+ creatorEmail + "]";

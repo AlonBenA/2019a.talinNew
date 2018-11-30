@@ -76,11 +76,13 @@ public class WebUITestsActivity {
 		String url = base_url + "/playground/activities/2019a.talin/myEmail@mail.com";
 
 		// And the database contains element with playground+id: 2019a.talin0
-		ElementEntity.resetID();
-		this.elementService.addNewElement(new ElementEntity());
+//		ElementEntity.resetID();
+		
+
+		ElementEntity ElementEntity = this.elementService.addNewElement(new ElementEntity());
 
 		// When I POST activity with
-		String elementId = "0";
+		String elementId = ElementEntity.getId();
 		String elementPlayground = "2019a.talin";
 		String type = "ACO";
 
@@ -98,7 +100,7 @@ public class WebUITestsActivity {
 		ActivityEntity activityEntityExist = this.activityService.getActivity("0", "2019a.talin");
 		ActivityTO activityTOExist = new ActivityTO(activityEntityExist);
 		ActivityTO expectedTOActivity = this.jackson.readValue("{\"playground\":\"2019a.talin\", \"id\":\"0\","
-				+ " \"elementPlayground\":\"2019a.talin\", \"elementId\":\"0\","
+				+ " \"elementPlayground\":\"2019a.talin\", \"elementId\":\""+elementId+"\","
 				+ " \"type\":\"ACO\", \"playerPlayground\":\"2019a.talin\","
 				+ " \"playerEmail\": \"myEmail@mail.com\"}", ActivityTO.class);
 
@@ -112,7 +114,7 @@ public class WebUITestsActivity {
 		String url = base_url + "/playground/activities/2019a.talin/myEmail@mail.com";
 
 		// And the database contains element with playground+id: 2019a.talin0
-		ElementEntity.resetID();
+//		ElementEntity.resetID();
 		this.elementService.addNewElement(new ElementEntity());
 
 		// When I POST activity with
