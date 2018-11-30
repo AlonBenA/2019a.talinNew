@@ -397,7 +397,6 @@ public class WebUITestsElement {
 		// Given Server is up
 
 		String url = base_url + "/playground/elements/{userPlayground}/{email}";
-		String Id = "123";
 		String email = "tali@mali.com";
 		String name = "cat";
 		double x = 1.0;
@@ -406,7 +405,6 @@ public class WebUITestsElement {
 		Map<String, Object> attributes = new HashMap<>();
 
 		ElementTO newElement = new ElementTO();
-		newElement.setId(Id);
 		newElement.setName(name);
 		newElement.setLocation(new Location(x, y));
 		newElement.setType(type);
@@ -426,11 +424,11 @@ public class WebUITestsElement {
 		// with headers:
 		// Accept: application/json
 		// Content-Type: application/json
-		this.restTemplate.postForObject(url, newElement, ElementTO.class, playground, email);
+		ElementTO elementAfterPost = this.restTemplate.postForObject(url, newElement, ElementTO.class, playground, email);
 		// Then the response status is 2xx
 		// and the database contains for playground+id:“2019a.talin0”
 
-		ElementEntity elementEntityExist = this.elementService.getElement(Id, playground);
+		ElementEntity elementEntityExist = this.elementService.getElement(elementAfterPost.getId(), playground);
 
 		assertThat(elementEntityExist).extracting("name", "type", "location", "attributes").containsExactly(name, type,
 				new Location(x, y), attributes);
