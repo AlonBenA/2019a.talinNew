@@ -331,11 +331,6 @@ public class WebUITestsElement {
 
 		elementEntity = this.elementService.addNewElement(elementEntity);
 		
-		
-		
-		System.out.println("\n\n\n\n\n " + elementEntity.getId());
-		System.out.println(this.elementService.getElement(elementEntity.getId(),elementEntity.getPlayground()).toString());
-
 		ElementTO updatedElementTO = new ElementTO();
 		updatedElementTO.setId(elementEntity.getId());
 		updatedElementTO.setPlayground(elementEntity.getPlayground());
