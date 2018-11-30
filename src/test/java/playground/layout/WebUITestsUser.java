@@ -87,7 +87,7 @@ public class WebUITestsUser {
 						"{" + "\"email\":\"usermail2@usermail.com\",\"username\":\"user2\","
 								+ "\"avatar\":\"https://goo.gl/images/WqDt96\",\"role\":\"Player\"" + "}",
 						NewUserForm.class);
-		this.restTemplate.postForObject(url, newUserForm, NewUserForm.class);
+		UserTO userTo = this.restTemplate.postForObject(url, newUserForm, UserTO.class);
 
 //		  with headers:
 //		  	Accept: application/json
@@ -97,7 +97,7 @@ public class WebUITestsUser {
 //				"username": "user2", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Player", "points": any positive integer}
 
-		UserEntity actualValue = this.userService.getUser(email, playground);
+		UserEntity actualValue = this.userService.getUser(userTo.getEmail(),userTo.getPlayground());
 		assertThat(actualValue).extracting("email", "playground", "username", "avatar", "role").containsExactly(email,
 				playground, username, avatar, role);
 	}
