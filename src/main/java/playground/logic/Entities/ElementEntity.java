@@ -5,8 +5,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 import playground.logic.Location;
 
+
+//@Entity
+@Table(name = "Elements")
 public class ElementEntity {
 
 	private static AtomicLong IDGiver = new AtomicLong(0);
@@ -25,7 +38,7 @@ public class ElementEntity {
 	public ElementEntity() {
 		super();
 		this.playground = "2019a.talin";
-		this.id = getID();
+		this.id = get_ID();
 		this.location = new Location(0, 0);
 		this.name = "Animal";
 		this.creationDate = new Date();
@@ -40,7 +53,7 @@ public class ElementEntity {
 			,Map<String,Object> attributes,String creatorPlayground, String creatorEmail)
 	{
 		this.playground = "2019a.talin";
-		this.id = getID();
+		this.id = get_ID();
 		setLocation(location);
 		setName(name);
 		this.creationDate = new Date();
@@ -52,7 +65,7 @@ public class ElementEntity {
 	}
 	
 	
-	private String getID()
+	private String get_ID()
 	{
 		return IDGiver.getAndIncrement()+"";
 	}
@@ -61,6 +74,18 @@ public class ElementEntity {
 	{
 		IDGiver = new AtomicLong(0);
 	}
+	
+	
+	@Id
+	public String getKey() {
+		return playground + "@@" + id;
+	}
+	
+
+	public void setKey(String key) {
+		
+	}
+	
 	
 	public String getPlayground() {
 		return playground;
@@ -74,11 +99,34 @@ public class ElementEntity {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	
+	@Transient
 	public Location getLocation() {
 		return location;
 	}
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+	
+	@Lob
+	public String getLocationJson() {
+		try {
+			return new ObjectMapper().writeValueAsString(this.location);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	
+	public void setLocationJson(String Locationjson) {
+		try {
+			ObjectMapper OM = new ObjectMapper();
+			this.location = OM.readValue(Locationjson, Location.class);
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	public String getName() {
 		return name;
@@ -86,30 +134,61 @@ public class ElementEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreationDate() {
 		return creationDate;
 	}
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getExirationDate() {
 		return exirationDate;
 	}
 	public void setExirationDate(Date exirationDate) {
 		this.exirationDate = exirationDate;
 	}
+	
+	
 	public String getType() {
 		return type;
 	}
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+	
+	@Transient
 	public Map<String, Object> getAttributes() {
 		return attributes;
 	}
+	
 	public void setAttributes(Map<String, Object> attributes) {
 		this.attributes = attributes;
 	}
+	
+	@Lob
+	public String getAttributesJson() {
+		try {
+			return new ObjectMapper().writeValueAsString(this.attributes);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	
+	public void setAttributesJson(String json) {
+		try {
+			this.attributes = new ObjectMapper().readValue(json, Map.class);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	
 	public String getCreatorPlayground() {
 		return creatorPlayground;
 	}
