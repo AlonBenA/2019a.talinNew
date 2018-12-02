@@ -1,7 +1,6 @@
 package playground.logic.jpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import playground.jpadal.UserDao;
@@ -23,26 +22,26 @@ public class JpaUserService implements PlaygroundUserService{
 	
 	@Override
 	public UserEntity addNewUser(UserEntity userEntity) {
-//		if (!this.users.existsById(userEntity.getKey())) 
-//			return this.users.save(userEntity);
-//		throw new UserAlreadyExistsException("message exisits with: " + userEntity.getKey()); 
+		if (!this.users.existsById(userEntity.getKey())) 
+			return this.users.save(userEntity);
+		throw new UserAlreadyExistsException("message exists with: " + userEntity.getKey()); 
 		
-		throw new UserAlreadyExistsException("message exisits with: "); // remove
+//		throw new UserAlreadyExistsException("message exists with: "); // remove
 	}
 
 	@Override
 	public UserEntity getUser(String email, String playground) throws UserNotFoundException {
-//		String key = playground+"@@"+email;
-//		return this.users.findById(key)
-//				.orElseThrow(()->new UserNotFoundException("no user found for: " + key));
+		String key = playground+"@@"+email;
+		return this.users.findById(key)
+				.orElseThrow(()->new UserNotFoundException("no user found for: " + key));
 		
-		throw new UserAlreadyExistsException("message exisits with: "); // remove
+//		throw new UserAlreadyExistsException("message exists with: "); // remove
 	}
 
 	@Override
 	@Transactional
 	public void updateUser(UserEntity updatedUserEntity, String email, String playground) throws Exception {
-		/*UserEntity existing = getUser(email, playground);
+		UserEntity existing = getUser(email, playground);
 		
 		if (updatedUserEntity.getUsername() != null) {
 			existing.setUsername(updatedUserEntity.getUsername());
@@ -56,13 +55,13 @@ public class JpaUserService implements PlaygroundUserService{
 			existing.setRole(updatedUserEntity.getRole());
 		}
 		
-		this.users.save(existing);*/
+		this.users.save(existing);
 	}
 
 	@Override
 	@Transactional
 	public void cleanup() {
-//		this.users.deleteAll();
+		this.users.deleteAll();
 	}
 	
 }

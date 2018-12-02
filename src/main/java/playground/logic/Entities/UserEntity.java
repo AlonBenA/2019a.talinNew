@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-//@Entity
+@Entity
 @Table(name = "USER")
 public class UserEntity {
 	private String email;
@@ -119,6 +119,7 @@ public class UserEntity {
 		return false;
 	}
 
+	@Transient
 	public boolean isVerified() {
 //		if("".equals(code.toString()))
 		if (code == null)
