@@ -14,7 +14,7 @@ import playground.logic.Entities.ElementEntity;
 import playground.logic.Exceptions.ElementNotFoundException;
 
 
-@Service
+//@Service
 public class ElementServiceStub implements PlaygroundElementService  {	
 	
 	private static AtomicLong IDGiver = new AtomicLong(0);

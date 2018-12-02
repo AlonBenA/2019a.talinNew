@@ -341,11 +341,12 @@ public class WebUITests {
 
 	private void setElementsDatabase(int numberOFElements) {
 
-		Date exirationDate = null;
+
 		String type = "animal";
 		Map<String, Object> attributes = new HashMap<>();
 		String creatorPlayground = "2019a.talin";
 		String creatorEmail = "2019a.talin@Gmail.com";
+		Date exirationDate = null;
 		final String name;
 
 		// location,value,exirationDate,type,attributes,creatorPlayground,creatorEmail

@@ -65,8 +65,6 @@ public class ElementEntity {
 	}
 	
 	
-
-	
 	
 	@Id
 	public String getKey() {
@@ -75,6 +73,10 @@ public class ElementEntity {
 	
 
 	public void setKey(String key) {
+		
+		String[] split = key.split("@@");
+		setPlayground(split[0]);
+		setId(split[1]);
 		
 	}
 	
@@ -85,10 +87,12 @@ public class ElementEntity {
 	public void setPlayground(String playground) {
 		this.playground = playground;
 	}
+	
 	@Transient
 	public String getId() {
 		return id;
 	}
+	@Transient
 	public void setId(String id) {
 		this.id = id;
 	}
