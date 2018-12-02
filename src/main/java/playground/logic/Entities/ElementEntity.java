@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import playground.logic.Location;
 
 
-//@Entity
+@Entity
 @Table(name = "Elements")
 public class ElementEntity {
 
@@ -78,13 +78,14 @@ public class ElementEntity {
 		
 	}
 	
-	
+	@Transient
 	public String getPlayground() {
 		return playground;
 	}
 	public void setPlayground(String playground) {
 		this.playground = playground;
 	}
+	@Transient
 	public String getId() {
 		return id;
 	}
