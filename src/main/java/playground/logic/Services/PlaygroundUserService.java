@@ -9,6 +9,8 @@ public interface PlaygroundUserService {
 
 	public UserEntity getUser(String email, String playground) throws UserNotFoundException;
 
+	public UserEntity validateUser(UserEntity userEntity, String code) throws UserNotFoundException;
+	
 	public void updateUser(UserEntity updatedUserEntity, String email, String playground) throws Exception;
 
 	public void cleanup();

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundUserService;
-import playground.logic.jpa.JpaUserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -146,16 +145,16 @@ public class WebUITestsUser {
 		String username = "user1";
 		String avatar = "https://goo.gl/images/WqDt96";
 		String role = "Manager";
-		String code = 1234 + "";
+		String code;
 //		Given Server is up
 //		And the database contains 
 //		[{"email": "usermail1@usermail.com", "playground": "2019a.Talin",
 //				"username": "user1", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Manager", "points": 0,	"code":"X"}]
-
-		this.userService.addNewUser(new UserEntity(email, username, avatar, role));
-		this.userService.getUser(email, playground).setCode(code);
-
+		UserEntity userEntity = new UserEntity(email, username, avatar, role);
+		code = userEntity.getCode();
+		this.userService.addNewUser(userEntity);
+		
 //		When I GET http://localhost:8083/playground/users/confirm/2019a.Talin/usermail1@usermail.com/X
 //		with headers:
 //			Accept: application/json
@@ -183,6 +182,7 @@ public class WebUITestsUser {
 //						"role": "Manager", "points": 0, "code":null}
 
 		UserEntity actualValue = this.userService.getUser(actualUser.getEmail(), actualUser.getPlayground());
+		System.err.println(actualValue.getCode());
 		assertThat(actualValue).extracting("email", "playground", "username", "avatar", "role", "code")
 				.containsExactly(email, playground, username, avatar, role, null);
 	}
@@ -202,9 +202,10 @@ public class WebUITestsUser {
 //		[{"email": "usermail1@usermail.com", "playground": "2019a.Talin",
 //				"username": "user1", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Manager", "points": 0,	"code":"X"}]
-
-		this.userService.addNewUser(new UserEntity(email, username, avatar, role));
-		this.userService.getUser(email, playground).setCode(code);
+		UserEntity userEntity = new UserEntity(email, username, avatar, role);
+		userEntity.setCode(code);
+		this.userService.addNewUser(userEntity);
+//		this.userService.getUser(email, playground).setCode(code);
 
 //		When I GET http://localhost:8083/playground/users/confirm/2019a.Talin/usermail1@usermail.com/Y
 //		with headers:
@@ -242,18 +243,15 @@ public class WebUITestsUser {
 		String username = "user1";
 		String avatar = "https://goo.gl/images/WqDt96";
 		String role = "Manager";
-		String code = 1234 + "";
 
 //		Given Server is up
 //		And the database contains 
 //		[{"email": "usermail1@usermail.com", "playground": "2019a.Talin",
 //				"username": "user1", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Manager", "points": 0,	"code":null}]
-
-		this.userService.addNewUser(new UserEntity(email, username, avatar, role));
-		UserEntity userEntity = this.userService.getUser(email, playground);
-		userEntity.setCode(code);
-		userEntity.verify(code);
+		UserEntity userEntity = new UserEntity(email, username, avatar, role);
+		this.userService.addNewUser(userEntity);
+		this.userService.validateUser(userEntity, userEntity.getCode());
 
 //		When I GET http://localhost:8083/playground/users/login/2019a.Talin/usermail1@usermail.com
 //		with headers:
@@ -369,7 +367,7 @@ public class WebUITestsUser {
 		UserEntity actualUser = this.userService.getUser(email, playground);
 
 		assertThat(actualUser).extracting("email", "playground", "username", "avatar", "role", "code")
-				.containsExactly(email, playground, username, newAvatar, role, "null");
+				.containsExactly(email, playground, username, newAvatar, role, null);
 	}
 
 	// I

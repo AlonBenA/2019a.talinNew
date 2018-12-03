@@ -1,6 +1,7 @@
 package playground.logic.jpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import playground.jpadal.UserDao;
@@ -9,7 +10,7 @@ import playground.logic.Exceptions.UserAlreadyExistsException;
 import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundUserService;
 
-//@Service
+@Service
 public class JpaUserService implements PlaygroundUserService{
 	private UserDao users;
 	
@@ -21,12 +22,12 @@ public class JpaUserService implements PlaygroundUserService{
 	
 	
 	@Override
+	@Transactional
 	public UserEntity addNewUser(UserEntity userEntity) {
 		if (!this.users.existsById(userEntity.getKey())) 
 			return this.users.save(userEntity);
 		throw new UserAlreadyExistsException("message exists with: " + userEntity.getKey()); 
 		
-//		throw new UserAlreadyExistsException("message exists with: "); // remove
 	}
 
 	@Override
@@ -35,7 +36,20 @@ public class JpaUserService implements PlaygroundUserService{
 		return this.users.findById(key)
 				.orElseThrow(()->new UserNotFoundException("no user found for: " + key));
 		
-//		throw new UserAlreadyExistsException("message exists with: "); // remove
+	}
+	
+	@Override
+	public UserEntity validateUser(UserEntity userEntity, String code) throws UserNotFoundException {
+		UserEntity existingUser = this.users.findById(userEntity.getKey()).get();
+		if (existingUser != null) {
+			existingUser.verify(code);
+			if(existingUser.isVerified()) 
+				return this.users.save(existingUser);
+				
+			throw new RuntimeException("Wrong code");
+		}
+		throw new UserNotFoundException("no user found for: " + userEntity.getKey());
+		
 	}
 
 	@Override
@@ -63,5 +77,8 @@ public class JpaUserService implements PlaygroundUserService{
 	public void cleanup() {
 		this.users.deleteAll();
 	}
+
+
+
 	
 }

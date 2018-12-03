@@ -16,7 +16,8 @@ public class UserEntity {
 	private String avatar;
 	private String role;
 	private Long points;
-	private StringBuilder code;
+//	private StringBuilder code;
+	private String code;
 
 	public UserEntity() {
 		this("", "", "", "");
@@ -34,8 +35,9 @@ public class UserEntity {
 		int low = 1000;
 		int high = 9999;
 		int result = r.nextInt(high - low) + low;
-		code = new StringBuilder();
-		code.append(result);
+		code = result + "";
+//		code = new StringBuilder();
+//		code.append(result);
 	}
 
 	@Id
@@ -49,7 +51,6 @@ public class UserEntity {
 		this.email = tmp[1];
 	}
 
-//	public void setKey(String key) {}
 
 	@Transient
 	public String getEmail() {
@@ -102,16 +103,19 @@ public class UserEntity {
 	}
 
 	public String getCode() {
-		return code.toString();
+//		return code.toString();
+		return code;
 	}
 
 	public void setCode(String code) {
-		this.code.delete(0, this.code.length());
-		this.code.append(code);
+//		this.code.delete(0, this.code.length());
+//		this.code.append(code);
+		this.code = code;
 	}
 
 	public boolean verify(String code) {
-		if (code.equals(this.code.toString())) {
+//		if (code.equals(this.code.toString())) {
+		if (code.equals(this.code)) {
 			this.code = null;
 //			this.code.delete(0, this.code.length());
 			return true;
@@ -122,9 +126,9 @@ public class UserEntity {
 	@Transient
 	public boolean isVerified() {
 //		if("".equals(code.toString()))
-		if (code == null)
-			return true;
-		return false;
+		if (code != null)
+			return false;
+		return true;
 	}
 
 }

@@ -11,7 +11,7 @@ import playground.logic.Entities.UserEntity;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
 
-@Service
+//@Service
 public class UserServiceStub implements PlaygroundUserService {
 	private Map<String, UserEntity> usersDatabase;
 	
@@ -40,6 +40,20 @@ public class UserServiceStub implements PlaygroundUserService {
 			throw new RuntimeException("could not find user by id: " + key);
 		}
 		return userEntity;
+	}
+	
+	@Override
+	public UserEntity validateUser(UserEntity userEntity, String code) throws UserNotFoundException {
+		UserEntity existingUser = this.usersDatabase.get(userEntity.getKey());
+		if (existingUser != null) {
+			existingUser.verify(code);
+			if(existingUser.isVerified()) 
+				return this.usersDatabase.put(existingUser.getKey(), existingUser);
+				
+			throw new RuntimeException("Wrong code");
+		}
+		throw new UserNotFoundException("no user found for: " + userEntity.getKey());
+		
 	}
 	
 	

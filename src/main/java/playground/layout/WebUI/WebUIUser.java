@@ -31,14 +31,6 @@ public class WebUIUser {
 		this.userService = userService;
 	}
 	
-//			DB
-	
-//	private JpaUserService userService;
-//
-//	@Autowired
-//	public void setPlaygroundService(JpaUserService userService) {
-//		this.userService = userService;
-//	}
 	
 	private void validateNull(String name) throws Exception {
 		if ("null".equals(name) || name == null) {
@@ -85,11 +77,9 @@ public class WebUIUser {
 			path="/playground/users/confirm/{playground}/{email}/{code}",
 			produces=MediaType.APPLICATION_JSON_VALUE)
 	public UserTO userValidate (@PathVariable("playground") String userPlayground,@PathVariable("email") String email, @PathVariable("code") String code) throws Exception {
-		UserEntity userEntity = userService.getUser(email, userPlayground);
-		userEntity.verify(code);
-		if(!userEntity.isVerified())
-			throw new RuntimeException("Wrong code");
-		return new UserTO(userEntity);
+		UserEntity not_Verified_UserEntity = userService.getUser(email, userPlayground);
+		UserEntity verified_UserEntity = userService.validateUser(not_Verified_UserEntity, code);
+		return new UserTO(verified_UserEntity);
 	}
 	
 	// Rest api 3 - Sapir
