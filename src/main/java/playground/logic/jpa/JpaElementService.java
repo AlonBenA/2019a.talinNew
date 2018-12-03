@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import playground.jpadal.ElementDao;
-import playground.jpadal.GeneratedNumber;
 import playground.jpadal.NumbersDao;
 import playground.logic.Entities.ElementEntity;
+import playground.logic.Entities.GeneratedNumber;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
 
