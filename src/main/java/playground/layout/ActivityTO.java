@@ -2,16 +2,10 @@ package playground.layout;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.springframework.beans.factory.annotation.Value;
-
 import playground.logic.Entities.ActivityEntity;
-import playground.logic.Entities.ElementEntity;
 
 public class ActivityTO {
 	
-	private static AtomicLong IDGiver = new AtomicLong(0);
 	private String playground;
 	private String id;
 	private String elementPlayground;
@@ -25,7 +19,7 @@ public class ActivityTO {
 	{
 		super();
 		this.playground = "2019a.talin";
-		this.id = getID();
+		this.id = "0";
 		this.elementPlayground = "2019a.talin";
 		this.elementId = "0";
 		this.type = "feed";
@@ -39,7 +33,7 @@ public class ActivityTO {
 			String playerPlayground, String playerEmail, Map<String, Object> attributes) {
 		super();
 		this.playground = "2019a.talin";
-		this.id = elementId;
+		this.id = "0";
 		setElementPlayground(elementPlayground);
 		setElementId(elementId);
 		setType(type);
@@ -58,16 +52,6 @@ public class ActivityTO {
 		setPlayerPlayground(activityEntity.getPlayerPlayground());
 		setPlayerEmail(activityEntity.getPlayerEmail());
 		setAttributes(activityEntity.getAttributes());
-	}
-	
-	private String getID()
-	{
-		return IDGiver.getAndIncrement() + "";
-	}
-	
-	public static void resetID()
-	{
-		IDGiver = new AtomicLong(0);
 	}
 	
 	public String getPlayground() {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import playground.logic.Entities.ActivityEntity;
 
 
-@Service
+//@Service
 public class ActivityServiceStub implements PlaygroundActivityService {
 	private Map<String, ActivityEntity> activitiesDatabase;
 

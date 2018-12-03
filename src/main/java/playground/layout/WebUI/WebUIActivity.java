@@ -10,14 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import playground.layout.ActivityTO;
 import playground.layout.ErrorMessage;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundActivityService;
-import playground.logic.Services.PlaygroundService;
 
 @RestController
 public class WebUIActivity {
@@ -62,8 +60,8 @@ public class WebUIActivity {
 			activityTo.setPlayerEmail(email);
 			activityTo.setPlayerPlayground(userPlayground);
 			ActivityEntity activityEntity = activityTo.convertFromActivityTOToActivityEntity();
-			ActivityEntity ac= activityService.addNewActivity(activityEntity);
-			return ac;
+			return new ActivityTO(
+					this.activityService.addNewActivity(activityEntity));
 		}
 		
 		else throw new RuntimeException("Invalid Activity Type");
