@@ -192,15 +192,6 @@ public class WebUIElement {
 		return new ErrorMessage(errorMessage);
 	}
 	
-	@ExceptionHandler//(ElementAlreadyExistException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ErrorMessage handleException (ElementAlreadyExistException e) {
-		String errorMessage = e.getMessage();
-		if (errorMessage == null) {
-			errorMessage = "There is no relevant message";
-		}
-		return new ErrorMessage(errorMessage);
-	}
 }
 
 
