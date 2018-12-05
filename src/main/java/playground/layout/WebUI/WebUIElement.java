@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import playground.layout.ElementTO;
 import playground.layout.ErrorMessage;
+import playground.logic.Exceptions.ElementAlreadyExistException;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
@@ -191,6 +192,15 @@ public class WebUIElement {
 		return new ErrorMessage(errorMessage);
 	}
 	
+	@ExceptionHandler//(ElementAlreadyExistException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ErrorMessage handleException (ElementAlreadyExistException e) {
+		String errorMessage = e.getMessage();
+		if (errorMessage == null) {
+			errorMessage = "There is no relevant message";
+		}
+		return new ErrorMessage(errorMessage);
+	}
 }
 
 
