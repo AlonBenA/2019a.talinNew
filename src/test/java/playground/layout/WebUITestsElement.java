@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import playground.logic.Location;
 import playground.logic.Entities.ElementEntity;
+import playground.logic.Exceptions.ElementAlreadyExistException;
 import playground.logic.Services.PlaygroundElementService;
 
 @RunWith(SpringRunner.class)
@@ -91,7 +92,14 @@ public class WebUITestsElement {
 						(name == null) ? "animal #" + value : name, exirationDate, type, attributes, creatorPlayground,
 						creatorEmail)) // ElementTO stream using constructor
 										// reference
-				.forEach(elementService::addNewElement);
+				.forEach(t -> {
+					try {
+						elementService.addNewElement(t);
+					} catch (ElementAlreadyExistException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				});
 	}
 
 	// A
@@ -352,7 +360,9 @@ public class WebUITestsElement {
 
 		ElementEntity expectedElement = new ElementEntity();
 		expectedElement.setId(elementEntity.getId());
-		expectedElement.setLocation(new Location(10, 10));
+		//expectedElement.setLocation(new Location(10, 10));
+		expectedElement.setX(10.0);
+		expectedElement.setY(10.0);
 		expectedElement.setName("Rex");
 		expectedElement.setType("Dog");
 		Map<String, Object> attributesForexpectedElement = new HashMap<String, Object>();
@@ -431,8 +441,8 @@ public class WebUITestsElement {
 
 		ElementEntity elementEntityExist = this.elementService.getElement(elementAfterPost.getId(), playground);
 
-		assertThat(elementEntityExist).extracting("name", "type", "location", "attributes").containsExactly(name, type,
-				new Location(x, y), attributes);
+		assertThat(elementEntityExist).extracting("name", "type", "x","y", "attributes").containsExactly(name, type,
+				x,y, attributes);
 	}
 
 	// I
@@ -463,7 +473,10 @@ public class WebUITestsElement {
 
 		ElementEntity newElement = new ElementEntity();
 		newElement.setName(name);
-		newElement.setLocation(new Location(x, y));
+		//newElement.setLocation(new Location(x, y));
+		newElement.setX(x);
+		newElement.setX(y);
+
 		newElement.setType(type);
 
 		newElement = this.elementService.addNewElement(newElement);
@@ -506,7 +519,7 @@ public class WebUITestsElement {
 		// http://localhost:8083/playground/elements/2019a.talin/null/2019a.talin/0
 		// with headers:
 		// Accept: application/json
-		ElementTO actualElement = this.restTemplate.getForObject(url, ElementTO.class, playground, email, playground,
+		this.restTemplate.getForObject(url, ElementTO.class, playground, email, playground,
 				id);
 		// Then the response status is <> 2xx
 	}

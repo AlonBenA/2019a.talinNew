@@ -3,11 +3,12 @@ package playground.logic.Services;
 import java.util.List;
 
 import playground.logic.Entities.ElementEntity;
+import playground.logic.Exceptions.ElementAlreadyExistException;
 import playground.logic.Exceptions.ElementNotFoundException;
 
 public interface PlaygroundElementService {
 	
-	public ElementEntity addNewElement(ElementEntity elementEntity);
+	public ElementEntity addNewElement(ElementEntity elementEntity) throws ElementAlreadyExistException;
 	
 	public ElementEntity getElement(String element_id,String element_Playground) throws ElementNotFoundException;
 	

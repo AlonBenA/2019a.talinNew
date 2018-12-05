@@ -57,7 +57,7 @@ public class ElementTO {
 	{
 		this.playground = elementEntity.getPlayground();
 		this.id = elementEntity.getId();
-		this.location = elementEntity.getLocation();
+		this.location = new Location(elementEntity.getX(),elementEntity.getY());
 		this.name = elementEntity.getName();
 		this.creationDate = elementEntity.getCreationDate();
 		this.exirationDate = elementEntity.getExirationDate();
@@ -140,7 +140,8 @@ public class ElementTO {
 		elementEntity.setCreatorEmail(creatorEmail);
 		elementEntity.setCreatorPlayground(creatorPlayground);
 		elementEntity.setExirationDate(exirationDate);
-		elementEntity.setLocation(location);
+		elementEntity.setX(location.getX());
+		elementEntity.setY(location.getY());
 		elementEntity.setName(name);
 		elementEntity.setPlayground(creatorPlayground);
 		elementEntity.setType(type);	
@@ -154,6 +155,9 @@ public class ElementTO {
 				+ ", creationDate=" + creationDate + ", exirationDate=" + exirationDate + ", type=" + type
 				+ ", attributes=" + attributes + ", creatorPlayground=" + creatorPlayground + ", creatorEmail="
 				+ creatorEmail + "]";
-	}	
+	}
+	
+	
+	
 	
 }

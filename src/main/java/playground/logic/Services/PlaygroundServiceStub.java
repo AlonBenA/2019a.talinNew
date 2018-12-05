@@ -146,8 +146,8 @@ public class PlaygroundServiceStub implements PlaygroundService {
 	public synchronized List<ElementEntity> getAllNearElements(double x, double y, double distance, int size,
 			int page) {
 		return this.elementsDatabase.values().stream() // stream of entities
-				.filter(ent -> Math.abs(ent.getLocation().getX() - x) < distance)
-				.filter(ent -> Math.abs(ent.getLocation().getY() - y) < distance).skip(size * page).limit(size)
+				.filter(ent -> Math.abs(ent.getX() - x) < distance)
+				.filter(ent -> Math.abs(ent.getY() - y) < distance).skip(size * page).limit(size)
 				.collect(Collectors.toList());
 	}
 
@@ -158,8 +158,12 @@ public class PlaygroundServiceStub implements PlaygroundService {
 		if (this.elementsDatabase.containsKey(playground + id)) {
 			ElementEntity elementEntity = this.elementsDatabase.get(playground + id);
 
-			if (elementEntity.getLocation() != null && !elementEntity.getLocation().equals(updatedElementEntity.getLocation())) {
-				elementEntity.setLocation(updatedElementEntity.getLocation());
+			if (elementEntity.getX() != null && !elementEntity.getX().equals(updatedElementEntity.getX())) {
+				elementEntity.setX(updatedElementEntity.getX());
+			}
+			
+			if (elementEntity.getY() != null && !elementEntity.getY().equals(updatedElementEntity.getY())) {
+				elementEntity.setY(updatedElementEntity.getY());
 			}
 
 			if (elementEntity.getName() != null && !elementEntity.getName().equals(updatedElementEntity.getName())) {

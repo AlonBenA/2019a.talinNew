@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import playground.jpadal.ElementDao;
 import playground.jpadal.NumbersDao;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.GeneratedNumber;
+import playground.logic.Exceptions.ElementAlreadyExistException;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
 
@@ -37,7 +39,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional
-	public ElementEntity addNewElement(ElementEntity elementEntity) {
+	public ElementEntity addNewElement(ElementEntity elementEntity) throws ElementAlreadyExistException {
 		
 		if(!elements.existsById(elementEntity.getKey()))
 		{
@@ -48,7 +50,7 @@ public class JpaElementService implements PlaygroundElementService {
 			return this.elements.save(elementEntity);
 
 		}else {
-			throw new RuntimeException("elementEntity exisits with: " + elementEntity.getKey());
+			throw new ElementAlreadyExistException("elementEntity exisits with: " + elementEntity.getKey());
 		}
 		
 	}
@@ -68,21 +70,40 @@ public class JpaElementService implements PlaygroundElementService {
 	@Override
 	@Transactional(readOnly=true)
 	public List<ElementEntity> getAllElements(int size, int page) {
-		List<ElementEntity> allList = new ArrayList<>();
-
-		this.elements.findAll()
-			.forEach(allList::add);
 		
-		return allList
-				.stream() // stream of entities
-				.skip(size*page)
-				.limit(size)
-				.collect(Collectors.toList());
+		return 
+		this.elements.findAll(PageRequest.of(page, size, Direction.DESC, "creationDate"))
+			.getContent();
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public List<ElementEntity> getAllNearElements(double x, double y, double distance, int size, int page) {
+		
+		Double upperX = (x+distance);
+		Double lowerX = (x-distance);
+		Double upperY = (y+distance);
+		Double lowerY = (y-distance);				
+		
+		return this.elements.findAllByXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX,lowerX,upperY,lowerY
+				,PageRequest.of(
+				page, 
+				size, 
+				Direction.DESC, 
+				"creationDate"))
+		.getContent();
+
+		
+		/*
+				this.messages
+					.findAllByMoreAttributesJsonLike(
+						"%\"abc\":" + value + "%", 
+						PageRequest.of(
+							page, 
+							size, 
+							Direction.DESC, 
+							"creationDate"));
+
 		List<ElementEntity> allList = new ArrayList<>();
 
 		this.elements.findAll()
@@ -90,11 +111,26 @@ public class JpaElementService implements PlaygroundElementService {
 		
 		return allList
 				.stream() // stream of entities
-				.filter(ent -> Math.abs(ent.getLocation().getX() - x) < distance)
-				.filter(ent -> Math.abs(ent.getLocation().getY() - y) < distance)
+				.filter(ent -> Math.abs(ent.getX() - x) < distance)
+				.filter(ent -> Math.abs(ent.getY() - y) < distance)
 				.skip(size * page)
 				.limit(size)
 				.collect(Collectors.toList());
+		
+
+		return this.elements.findAllByLocationJsonIsNotNullAndLocationJsonLessThanAndLocationJsonGreaterThanAndLocationJsonLessThanAndLocationJsonGreaterThan(
+				"%\"x\":" + upperX + "%",
+				"%\"x\":" + lowerX + "%",
+				"%\"y\":" + upperY + "%",
+				"%\"y\":" + lowerY + "%",
+				PageRequest.of(
+						page, 
+						size, 
+						Direction.DESC, 
+						"creationDate"))
+				.getContent();
+	
+		*/	
 				
 	}
 
@@ -108,8 +144,12 @@ public class JpaElementService implements PlaygroundElementService {
 		
 		
 		
-		if (updatedElementEntity.getLocation() != null) {
-			existing.setLocation(updatedElementEntity.getLocation());
+		if (updatedElementEntity.getX() != null) {
+			existing.setX(updatedElementEntity.getX());
+		}
+		
+		if (updatedElementEntity.getY() != null) {
+			existing.setY(updatedElementEntity.getY());
 		}
 		
 		

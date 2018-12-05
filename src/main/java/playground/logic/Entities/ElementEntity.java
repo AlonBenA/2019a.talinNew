@@ -25,7 +25,6 @@ public class ElementEntity {
 
 	private String playground; 
 	private String id;
-	private Location location;
 	private String name;
 	private Date creationDate;
 	private Date exirationDate;
@@ -33,13 +32,16 @@ public class ElementEntity {
 	private Map<String,Object> attributes;
 	private String creatorPlayground;
 	private String creatorEmail;
+	private Double x;
+	private Double y;
 	
 	
 	public ElementEntity() {
 		super();
 		this.playground = "2019a.talin";
 		this.id = "0";
-		this.location = new Location(0, 0);
+		this.x = 0.0;
+		this.y = 0.0;
 		this.name = "Animal";
 		this.creationDate = new Date();
 		this.exirationDate = null;
@@ -54,7 +56,9 @@ public class ElementEntity {
 	{
 		this.playground = "2019a.talin";
 		this.id = "0";
-		setLocation(location);
+		//setLocation(location);
+		this.x = location.getX();
+		this.y = location.getY();
 		setName(name);
 		this.creationDate = new Date();
 		setExirationDate(exirationDate);
@@ -98,6 +102,8 @@ public class ElementEntity {
 	}
 	
 	
+	
+	/*
 	@Transient
 	public Location getLocation() {
 		return location;
@@ -125,6 +131,10 @@ public class ElementEntity {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	
+	
+	*/
 	public String getName() {
 		return name;
 	}
@@ -199,12 +209,20 @@ public class ElementEntity {
 		this.creatorEmail = creatorEmail;
 	}
 
-	@Override
-	public String toString() {
-		return "ElementEntity [playground=" + playground + ", id=" + id + ", location=" + location + ", name=" + name
-				+ ", creationDate=" + creationDate + ", exirationDate=" + exirationDate + ", type=" + type
-				+ ", attributes=" + attributes + ", creatorPlayground=" + creatorPlayground + ", creatorEmail="
-				+ creatorEmail + "]";
+	public Double getX() {
+		return x;
+	}
+
+	public void setX(Double x) {
+		this.x = x;
+	}
+
+	public Double getY() {
+		return y;
+	}
+
+	public void setY(Double y) {
+		this.y = y;
 	}
 
 	@Override
@@ -217,10 +235,11 @@ public class ElementEntity {
 		result = prime * result + ((creatorPlayground == null) ? 0 : creatorPlayground.hashCode());
 		result = prime * result + ((exirationDate == null) ? 0 : exirationDate.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((playground == null) ? 0 : playground.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((x == null) ? 0 : x.hashCode());
+		result = prime * result + ((y == null) ? 0 : y.hashCode());
 		return result;
 	}
 
@@ -263,11 +282,6 @@ public class ElementEntity {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (location == null) {
-			if (other.location != null)
-				return false;
-		} else if (!location.equals(other.location))
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -283,8 +297,28 @@ public class ElementEntity {
 				return false;
 		} else if (!type.equals(other.type))
 			return false;
+		if (x == null) {
+			if (other.x != null)
+				return false;
+		} else if (!x.equals(other.x))
+			return false;
+		if (y == null) {
+			if (other.y != null)
+				return false;
+		} else if (!y.equals(other.y))
+			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ElementEntity [playground=" + playground + ", id=" + id + ", name=" + name + ", creationDate="
+				+ creationDate + ", exirationDate=" + exirationDate + ", type=" + type + ", attributes=" + attributes
+				+ ", creatorPlayground=" + creatorPlayground + ", creatorEmail=" + creatorEmail + ", x=" + x + ", y="
+				+ y + "]";
+	}
+
+
 	
 	
 	
