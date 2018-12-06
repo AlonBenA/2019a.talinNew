@@ -330,7 +330,7 @@ public class WebUITestsUser {
 		String role = "Player";
 		String newAvatar = "https://moodle.afeka.ac.il/theme/image.jpg";
 		// Given server is up
-		// And the database contains And the user database contains {"email":
+		// And the database contains the user database contains {"email":
 		// ”talin@email.com”,"playground": "2019a.Talin",
 		// "username": "user2","avatar": "https://goo.gl/images/WqDt96",
 		// "role": "Player","points": 0,"code":null}
@@ -362,7 +362,7 @@ public class WebUITestsUser {
 		// And the database contains for email: ”talin@email.com” the object
 		// {"email": ”talin@email.com”,"playground": "2019a.Talin",
 		// "username":"user2","avatar":“https://moodle.afeka.ac.il/theme/image.jpg",
-		// "role": "Player","points": 0,"code":"1234"
+		// "role": "Player","points": 0,"code":null
 		// }
 		UserEntity actualUser = this.userService.getUser(email, playground);
 

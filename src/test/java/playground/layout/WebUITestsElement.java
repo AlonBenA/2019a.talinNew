@@ -429,7 +429,7 @@ public class WebUITestsElement {
 		// {
 		// “name”: “cat”,
 		// “type”:”animal”
-		// “location”:{“x”:0.0,”y”:0.0},
+		// “location”:{“x”:1.0,”y”:1.0},
 		// "attributes": {}
 		// }
 		// with headers:
@@ -437,8 +437,15 @@ public class WebUITestsElement {
 		// Content-Type: application/json
 		ElementTO elementAfterPost = this.restTemplate.postForObject(url, newElement, ElementTO.class, playground, email);
 		// Then the response status is 2xx
-		// and the database contains for playground+id:“2019a.talin0”
-
+		// and the database contains for playground+id:“2019a.talin"+x
+		// {
+		// “playground”: 2019a.talin”
+		// “ id”: x
+		// "x": 1,
+		// "y": 1
+		// "name": "Animal", "type": "Animal", "attributes": {},
+		// "creatorPlayground":"2019a.talin", "creatorEmail":"Talin@email.com"
+		// }
 		ElementEntity elementEntityExist = this.elementService.getElement(elementAfterPost.getId(), playground);
 
 		assertThat(elementEntityExist).extracting("name", "type", "x","y", "attributes").containsExactly(name, type,
@@ -452,10 +459,10 @@ public class WebUITestsElement {
 		// And the database contains
 		// {
 		// “playground”: 2019a.talin”
-		// “ id”: 123
+		// “ id”: x
 		// "location": {
-		// "x": 0,
-		// "y": 0
+		// "x": 1,
+		// "y": 1
 		// },
 		// "name": "cat",
 		// "type": "Animal",
@@ -464,7 +471,7 @@ public class WebUITestsElement {
 		// "creatorEmail":”Talin@email.com"
 		// }
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/{playground}/{id}";
-		String id = "123";
+		String id ;
 		String email = "tali@mali.com";
 		String name = "cat";
 		double x = 0.0;
@@ -484,7 +491,7 @@ public class WebUITestsElement {
 		
 		id = newElement.getId();
 		// When I Get
-		// http://localhost:8083/playground/elements/2019a.talin/talin@email.com/2019a.talin/123
+		// http://localhost:8083/playground/elements/2019a.talin/talin@email.com/2019a.talin/x
 		// with headers:
 		// Accept: application/json
 
@@ -495,7 +502,7 @@ public class WebUITestsElement {
 
 		// {
 		// “playground”: 2019a.talin”
-		// “ id”: 123
+		// “ id”: x
 		// "location": {
 		// "x": 0,
 		// "y": 0
