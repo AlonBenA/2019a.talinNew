@@ -460,10 +460,8 @@ public class WebUITestsElement {
 		// {
 		// “playground”: 2019a.talin”
 		// “ id”: x
-		// "location": {
 		// "x": 1,
 		// "y": 1
-		// },
 		// "name": "cat",
 		// "type": "Animal",
 		// "attributes": {},
@@ -474,15 +472,15 @@ public class WebUITestsElement {
 		String id ;
 		String email = "tali@mali.com";
 		String name = "cat";
-		double x = 0.0;
-		double y = 0.0;
+		double x = 1.0;
+		double y = 1.0;
 		String type = "animal";
 
 		ElementEntity newElement = new ElementEntity();
 		newElement.setName(name);
 		//newElement.setLocation(new Location(x, y));
 		newElement.setX(x);
-		newElement.setX(y);
+		newElement.setY(y);
 
 		newElement.setType(type);
 
@@ -504,8 +502,8 @@ public class WebUITestsElement {
 		// “playground”: 2019a.talin”
 		// “ id”: x
 		// "location": {
-		// "x": 0,
-		// "y": 0
+		// "x": 1,
+		// "y": 1
 		// },
 		// "name": "Animal", "type": "Animal", "attributes": {},
 		// "creatorPlayground":"2019a.talin", "creatorEmail":"Talin@email.com"
