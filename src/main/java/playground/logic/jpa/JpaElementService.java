@@ -16,14 +16,6 @@ import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 @Service
 public class JpaElementService implements PlaygroundElementService {
 			
@@ -91,46 +83,7 @@ public class JpaElementService implements PlaygroundElementService {
 				size, 
 				Direction.DESC, 
 				"creationDate"))
-		.getContent();
-
-		
-		/*
-				this.messages
-					.findAllByMoreAttributesJsonLike(
-						"%\"abc\":" + value + "%", 
-						PageRequest.of(
-							page, 
-							size, 
-							Direction.DESC, 
-							"creationDate"));
-
-		List<ElementEntity> allList = new ArrayList<>();
-
-		this.elements.findAll()
-			.forEach(allList::add);
-		
-		return allList
-				.stream() // stream of entities
-				.filter(ent -> Math.abs(ent.getX() - x) < distance)
-				.filter(ent -> Math.abs(ent.getY() - y) < distance)
-				.skip(size * page)
-				.limit(size)
-				.collect(Collectors.toList());
-		
-
-		return this.elements.findAllByLocationJsonIsNotNullAndLocationJsonLessThanAndLocationJsonGreaterThanAndLocationJsonLessThanAndLocationJsonGreaterThan(
-				"%\"x\":" + upperX + "%",
-				"%\"x\":" + lowerX + "%",
-				"%\"y\":" + upperY + "%",
-				"%\"y\":" + lowerY + "%",
-				PageRequest.of(
-						page, 
-						size, 
-						Direction.DESC, 
-						"creationDate"))
-				.getContent();
-	
-		*/	
+		.getContent();	
 				
 	}
 
@@ -138,11 +91,8 @@ public class JpaElementService implements PlaygroundElementService {
 	@Transactional
 	public void updateElement(ElementEntity updatedElementEntity, String playground, String id) throws Exception {
 		
-		String element_key = playground + "@@" +id;
-		
 		ElementEntity existing = getElement(id, playground);
-		
-		
+			
 		
 		if (updatedElementEntity.getX() != null) {
 			existing.setX(updatedElementEntity.getX());
@@ -150,8 +100,7 @@ public class JpaElementService implements PlaygroundElementService {
 		
 		if (updatedElementEntity.getY() != null) {
 			existing.setY(updatedElementEntity.getY());
-		}
-		
+		}	
 		
 		if (updatedElementEntity.getName() != null) {
 			existing.setName(updatedElementEntity.getName());
