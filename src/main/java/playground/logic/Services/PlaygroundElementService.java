@@ -1,7 +1,7 @@
 package playground.logic.Services;
 
-import java.util.List;
 
+import java.util.List;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Exceptions.ElementAlreadyExistException;
 import playground.logic.Exceptions.ElementNotFoundException;
@@ -21,5 +21,7 @@ public interface PlaygroundElementService {
 	public boolean validateElementAttribteName(String name);
 	
 	public void cleanup();
+
+	public List<ElementEntity> getElementsWithAttribute(String attributeName, String value, int size, int page);
 
 }

@@ -149,6 +149,31 @@ public class JpaElementService implements PlaygroundElementService {
 		
 		this.elements.deleteAll();
 	}
+
+	@Override
+	public List<ElementEntity> getElementsWithAttribute(String attributeName, String value, int size, int page) {
+		// if attribute is "name"
+		if(attributeName.equals("name")) {
+			return this.elements.findAllByNameLike(
+					value,
+					PageRequest.of(
+					page, 
+					size, 
+					Direction.DESC, 
+					"creationDate"))
+			.getContent();	
+		}else {
+			// attribute is "type"
+			return this.elements.findAllByTypeLike(
+					value,
+					PageRequest.of(
+					page, 
+					size, 
+					Direction.DESC, 
+					"creationDate"))
+			.getContent();	
+		}
+	}
 	
 	
 	

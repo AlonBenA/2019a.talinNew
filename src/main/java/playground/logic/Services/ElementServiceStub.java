@@ -150,4 +150,10 @@ public class ElementServiceStub implements PlaygroundElementService  {
 		
 	}
 
+	@Override
+	public List<ElementEntity> getElementsWithAttribute(String attributeName, String value, int size, int page) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

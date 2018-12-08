@@ -19,6 +19,13 @@ public interface ElementDao extends PagingAndSortingRepository<ElementEntity, St
 			@Param("lowerY") Double lowerY, 
 			Pageable pageable);
 
+	public Page<ElementEntity> findAllByNameLike(
+			@Param("value") String value, 
+			Pageable pageable);
+	
+	public Page<ElementEntity> findAllByTypeLike(
+			@Param("value") String value, 
+			Pageable pageable);
 }
 
 

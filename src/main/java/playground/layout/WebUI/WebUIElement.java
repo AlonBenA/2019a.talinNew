@@ -1,8 +1,7 @@
 package playground.layout.WebUI;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import playground.layout.ElementTO;
 import playground.layout.ErrorMessage;
-import playground.logic.Exceptions.ElementAlreadyExistException;
+import playground.logic.Exceptions.ElementAttributeNotValidException;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
@@ -59,18 +57,13 @@ public class WebUIElement {
 		boolean attributeNameResult =  elementService.validateElementAttribteName(attributeName);
 		
 		if(attributeNameResult) {
-			List<ElementTO> elementsWithAttribute = 
-					elementService.getAllElements(size, page) // list of entities
-					.stream() // stream of entities
-					.filter(element -> (attributeName.equals("name") ? element.getName().equals(value)
-							: element.getType().equals(value)))
-					.map(ElementTO::new) // stream of boundaries
-					.collect(Collectors.toList());// list of boundaries
-				
-			return elementsWithAttribute.toArray(new ElementTO[0]);
-		}
-		
-		else throw new RuntimeException("Invalid Attribute for searching elements");
+			return elementService.getElementsWithAttribute(attributeName, value, size, page)
+			.stream()
+			.map(ElementTO::new)
+			.collect(Collectors.toList())
+			.toArray(new ElementTO[0]);				
+		}	
+		else throw new ElementAttributeNotValidException("Invalid Attribute for searching elements");
 	}
 	
 	
