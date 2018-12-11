@@ -27,10 +27,6 @@ public class WebUITestsUser {
 
 	@Autowired
 	private PlaygroundUserService userService;
-	
-//					DB
-//	@Autowired
-//	private JpaUserService userService;
 
 	private RestTemplate restTemplate;
 
@@ -66,7 +62,7 @@ public class WebUITestsUser {
 		this.userService.cleanup();
 	}
 
-	// S
+	
 	@Test
 	public void testUserSignupSuccessfully() throws Exception {
 		String url = base_url + "/playground/users";
@@ -101,7 +97,7 @@ public class WebUITestsUser {
 				playground, username, avatar, role);
 	}
 
-	// S
+	
 	@Test(expected = Exception.class)
 	public void testUserSignupWithDuplicateKey() throws Exception {
 		String url = base_url + "/playground/users";
@@ -137,7 +133,7 @@ public class WebUITestsUser {
 
 	}
 
-	// S
+	
 	@Test
 	public void testValidateSuccessfully() throws Exception {
 		String url = base_url + "/playground/users/confirm/{playground}/{email}/{code}";
@@ -187,7 +183,7 @@ public class WebUITestsUser {
 				.containsExactly(email, playground, username, avatar, role, null);
 	}
 
-	// S
+	
 	@Test(expected = Exception.class)
 	public void testValidateWithInvalidCode() throws Exception {
 		String url = base_url + "/playground/users/confirm/{playground}/{email}/{code}";
@@ -205,7 +201,6 @@ public class WebUITestsUser {
 		UserEntity userEntity = new UserEntity(email, username, avatar, role);
 		userEntity.setCode(code);
 		this.userService.addNewUser(userEntity);
-//		this.userService.getUser(email, playground).setCode(code);
 
 //		When I GET http://localhost:8083/playground/users/confirm/2019a.Talin/usermail1@usermail.com/Y
 //		with headers:
@@ -217,7 +212,7 @@ public class WebUITestsUser {
 
 	}
 
-	// S
+	
 	@Test(expected = Exception.class)
 	public void testValidateWithUnregisteredUser() throws Exception {
 		String url = base_url + "/playground/users/confirm/{playground}/{email}/{code}";
@@ -235,7 +230,7 @@ public class WebUITestsUser {
 
 	}
 
-	// S
+	
 	@Test
 	public void testLoginSuccessfully() throws Exception {
 		String url = base_url + "/playground/users/login/{playground}/{email}";
@@ -272,7 +267,7 @@ public class WebUITestsUser {
 		assertThat(actualUser).extracting("email", "playground").containsExactly(email, playground);
 	}
 
-	// S
+	
 	@Test(expected = Exception.class)
 	public void testLoginWithUnconfirmedUser() throws Exception {
 		String url = base_url + "/playground/users/login/{playground}/{email}";
@@ -299,7 +294,7 @@ public class WebUITestsUser {
 
 	}
 
-	// S
+	
 	@Test(expected = Exception.class)
 	public void testLoginWithUnregisteredUser() throws Exception {
 		String url = base_url + "/playground/users/login/{playground}/{email}";
