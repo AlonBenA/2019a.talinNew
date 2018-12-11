@@ -1,4 +1,4 @@
-package playground.layout;
+/*package playground.layout;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -379,9 +379,9 @@ public class WebUITests {
 		int DefaultSize = 10;
 		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/all";
 
-		/*
+		
 		 * Given Server is up And the database contains 10 Elements
-		 */
+		 
 
 		setElementsDatabase(100);
 
@@ -400,9 +400,9 @@ public class WebUITests {
 		int size = 3;
 		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/all" + "?size=" + size;
 
-		/*
+		
 		 * Given Server is up And the database contains 10 Elements
-		 */
+		 
 		setElementsDatabase(10);
 
 		// when
@@ -423,9 +423,9 @@ public class WebUITests {
 		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/all" + "?size=" + size + "&page="
 				+ page;
 
-		/*
+		
 		 * Given Server is up And the database contains 10 Elements
-		 */
+		 
 		setElementsDatabase(10);
 
 		// when
@@ -445,9 +445,9 @@ public class WebUITests {
 		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/all" + "?size=" + size + "&page="
 				+ page;
 
-		/*
+		
 		 * Given Server is up And the database contains 20 Elements
-		 */
+		 
 		setElementsDatabase(20);
 
 		// when
@@ -465,9 +465,9 @@ public class WebUITests {
 
 		String url = base_url + "/playground/elements/null/talin@email.com/all";
 
-		/*
+		
 		 * Given Server is up And the database contains 20 Elements
-		 */
+		 
 		setElementsDatabase(20);
 
 		// When I Get /playground/elements/null/talin@email.com/all?size=-6&page=1
@@ -486,9 +486,9 @@ public class WebUITests {
 
 		String url = base_url + "/playground/elements/2019a.talin/Tali@email.com/near/" + x + "/" + y + "/" + distance;
 
-		/*
+		
 		 * Given Server is up And the database contains 10 Elements
-		 */
+		 
 		setElementsDatabase(100);
 
 		// when
@@ -514,9 +514,9 @@ public class WebUITests {
 		String url = base_url + "/playground/elements/2019a.talin/Tali@email.com/near/" + x + "/" + y + "/" + distance
 				+ "?size=" + size;
 
-		/*
+		
 		 * Given Server is up And the database contains 10 Elements
-		 */
+		 
 		setElementsDatabase(100);
 
 		// when
@@ -542,9 +542,9 @@ public class WebUITests {
 		String url = base_url + "/playground/elements/2019a.talin/Tali@email.com/near/" + x + "/" + y + "/" + distance
 				+ "?size=" + size + "&page=" + page;
 
-		/*
+		
 		 * Given Server is up And the database contains 10 Elements
-		 */
+		 
 		setElementsDatabase(20);
 
 		// when
@@ -570,9 +570,9 @@ public class WebUITests {
 		String url = base_url + "/playground/elements/2019a.talin/Tali@email.com/near/" + x + "/" + y + "/" + distance
 				+ "?size=" + size + "&page=" + page;
 
-		/*
+		
 		 * Given Server is up And the database contains 10 Elements
-		 */
+		 
 
 		setElementsDatabase(1);
 
@@ -890,9 +890,9 @@ public class WebUITests {
 		int DefaultSize = 10;
 		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat";
 
-		/*
+		
 		 * Given Server is up And the database contains 20 elements with the name cat
-		 */
+		 
 
 		setElementsDatabase(20);
 
@@ -909,9 +909,9 @@ public class WebUITests {
 
 		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat";
 
-		/*
+		
 		 * Given Server is up
-		 */
+		 
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class);
@@ -927,9 +927,9 @@ public class WebUITests {
 
 		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/Momo/cat";
 
-		/*
+		
 		 * Given Server is up
-		 */
+		 
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class);
@@ -945,9 +945,9 @@ public class WebUITests {
 		int size = 3;
 		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat" + "?size=" + size;
 
-		/*
+		
 		 * Given Server is up And the database contains 10 elements with the name cat
-		 */
+		 
 		setElementsDatabase(10);
 
 		// when
@@ -967,9 +967,9 @@ public class WebUITests {
 		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat" + "?size=" + size
 				+ "&page=" + page;
 
-		/*
+		
 		 * Given Server is up And the database contains 10 elements with the name cat
-		 */
+		 
 		setElementsDatabase(10);
 
 		// when
@@ -990,9 +990,9 @@ public class WebUITests {
 		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat" + "?size=" + size
 				+ "&page=" + page;
 
-		/*
+		
 		 * Given Server is up And the database contains 10 elements with the name cat
-		 */
+		 
 		setElementsDatabase(10);
 
 		// when
@@ -1008,9 +1008,9 @@ public class WebUITests {
 		// when
 		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat";
 
-		/*
+		
 		 * Given Server is up
-		 */
+		 
 
 		// When
 		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class, -6, 1);
@@ -1097,3 +1097,4 @@ public class WebUITests {
 		// Then the response status is <> 2xx
 	}
 }
+*/
