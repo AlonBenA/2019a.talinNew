@@ -78,6 +78,7 @@ public class JpaElementService implements PlaygroundElementService {
 		Double lowerY = (y-distance);
 		Date today = new Date();
 		
+		//if it's a Client
 		return this.elements.findAllByExirationDateIsNullAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThanOrExirationDateAfterAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX,lowerX,upperY,lowerY
 				,today,upperX,lowerX,upperY,lowerY
 				,PageRequest.of(
