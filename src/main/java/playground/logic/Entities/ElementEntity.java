@@ -101,40 +101,6 @@ public class ElementEntity {
 		this.id = id;
 	}
 	
-	
-	
-	/*
-	@Transient
-	public Location getLocation() {
-		return location;
-	}
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-	
-	@Lob
-	public String getLocationJson() {
-		try {
-			return new ObjectMapper().writeValueAsString(this.location);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	
-	public void setLocationJson(String Locationjson) {
-		try {
-			ObjectMapper OM = new ObjectMapper();
-			this.location = OM.readValue(Locationjson, Location.class);
-			
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	
-	
-	*/
 	public String getName() {
 		return name;
 	}

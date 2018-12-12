@@ -12,11 +12,11 @@ public interface PlaygroundElementService {
 	
 	public ElementEntity getElement(String element_id,String element_Playground) throws ElementNotFoundException;
 	
-	public List<ElementEntity> getAllElements(int size, int page);
+	public List<ElementEntity> getAllElements(String userPlayground,String email,int size, int page);
 	
-	public List<ElementEntity> getAllNearElements(double x,double y, double distance,int size,int page);
+	public List<ElementEntity> getAllNearElements(String userPlayground,String email,double x,double y, double distance,int size,int page);
 	
-	public void updateElement(ElementEntity updatedElementEntity,String playground,String id) throws Exception;
+	public void updateElement(String userPlayground,String email,ElementEntity updatedElementEntity,String playground,String id) throws Exception;
 	
 	public boolean validateElementAttribteName(String name);
 	

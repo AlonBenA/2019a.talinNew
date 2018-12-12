@@ -86,7 +86,7 @@ public class WebUI {
 		
 		if(attributeNameResult) {
 			List<ElementTO> elementsWithAttribute = 
-					elementService.getAllElements(size, page) // list of entities
+					elementService.getAllElements(userPlayground,email,size, page) // list of entities
 					.stream() // stream of entities
 					.filter(element -> (attributeName.equals("name") ? element.getName().equals(value)
 							: element.getType().equals(value)))
@@ -138,7 +138,7 @@ public class WebUI {
 			@RequestParam(name="page", required=false, defaultValue="0") int page) throws Exception {
 			
 		try {		
-				return elementService.getAllElements(size, page) // list of entities
+				return elementService.getAllElements(userPlayground,email,size, page) // list of entities
 				.stream() // stream of entities
 				.map(ElementTO::new) // stream of boundaries
 				.collect(Collectors.toList())// list of boundaries
@@ -164,7 +164,7 @@ public class WebUI {
 			@RequestParam(name="size", required=false, defaultValue="10") int size, 
 			@RequestParam(name="page", required=false, defaultValue="0") int page) throws Exception {
 		
-			return elementService.getAllNearElements(x, y, center, size, page)
+			return elementService.getAllNearElements(userPlayground,email,x, y, center, size, page)
 					.stream()
 					.map(ElementTO::new)
 					.collect(Collectors.toList())
@@ -187,7 +187,7 @@ public class WebUI {
 			@PathVariable("id") String id,
 			@RequestBody ElementTO updatedElement) throws Exception {
 		
-		elementService.updateElement(updatedElement.convertFromElementTOToElementEntity(), playground, id);
+		elementService.updateElement(userPlayground,email,updatedElement.convertFromElementTOToElementEntity(), playground, id);
 		
 	}
 	

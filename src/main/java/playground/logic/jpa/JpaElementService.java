@@ -1,7 +1,6 @@
 package playground.logic.jpa;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import playground.logic.Entities.GeneratedNumber;
 import playground.logic.Exceptions.ElementAlreadyExistException;
 import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
+import java.util.Date;
 
 
 @Service
@@ -61,7 +61,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<ElementEntity> getAllElements(int size, int page) {
+	public List<ElementEntity> getAllElements(String userPlayground,String email,int size, int page) {
 		
 		return 
 		this.elements.findAll(PageRequest.of(page, size, Direction.DESC, "creationDate"))
@@ -70,26 +70,39 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<ElementEntity> getAllNearElements(double x, double y, double distance, int size, int page) {
+	public List<ElementEntity> getAllNearElements(String userPlayground,String email,double x, double y, double distance, int size, int page) {
 		
 		Double upperX = (x+distance);
 		Double lowerX = (x-distance);
 		Double upperY = (y+distance);
-		Double lowerY = (y-distance);				
+		Double lowerY = (y-distance);
+		Date today = new Date();
 		
-		return this.elements.findAllByXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX,lowerX,upperY,lowerY
+		return this.elements.findAllByExirationDateIsNullAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThanOrExirationDateAfterAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX,lowerX,upperY,lowerY
+				,today,upperX,lowerX,upperY,lowerY
+				,PageRequest.of(
+				page, 
+				size, 
+				Direction.DESC, 
+				"creationDate"))
+		.getContent();
+		/*
+		 * if it's a Manager
+		 * 		return this.elements.findAllByXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX,lowerX,upperY,lowerY
 				,PageRequest.of(
 				page, 
 				size, 
 				Direction.DESC, 
 				"creationDate"))
 		.getContent();	
+		 * 
+		 */
 				
 	}
 
 	@Override
 	@Transactional
-	public void updateElement(ElementEntity updatedElementEntity, String playground, String id) throws Exception {
+	public void updateElement(String userPlayground,String email,ElementEntity updatedElementEntity, String playground, String id) throws Exception {
 		
 		ElementEntity existing = getElement(id, playground);
 			

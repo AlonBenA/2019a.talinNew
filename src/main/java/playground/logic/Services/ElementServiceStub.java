@@ -60,14 +60,14 @@ public class ElementServiceStub implements PlaygroundElementService  {
 	}
 
 	@Override
-	public synchronized List<ElementEntity> getAllElements(int size, int page) {
+	public synchronized List<ElementEntity> getAllElements(String userPlayground,String email,int size, int page) {
 		return this.elementsDatabase.values() // collection of entities
 				.stream() // stream of entities
 				.skip(size * page).limit(size).collect(Collectors.toList());
 	}
 
 	@Override
-	public synchronized List<ElementEntity> getAllNearElements(double x, double y, double distance, int size,
+	public synchronized List<ElementEntity> getAllNearElements(String userPlayground,String email,double x, double y, double distance, int size,
 			int page) {
 		return this.elementsDatabase.values().stream() // stream of entities
 				.filter(ent -> Math.abs(ent.getX() - x) < distance)
@@ -77,7 +77,7 @@ public class ElementServiceStub implements PlaygroundElementService  {
 
 
 	@Override
-	public synchronized void updateElement(ElementEntity updatedElementEntity, String playground, String id)
+	public synchronized void updateElement(String userPlayground,String email,ElementEntity updatedElementEntity, String playground, String id)
 			throws Exception {
 		
 		String key = playground + "@@" + id;
