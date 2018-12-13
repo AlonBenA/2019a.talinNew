@@ -32,12 +32,6 @@ public class WebUIUser {
 	}
 	
 	
-	private void validateNull(String name) throws Exception {
-		if ("null".equals(name) || name == null) {
-			throw new Exception("user not found");
-		}
-	}
-
 	
 	//Sprint2: Write the PUT /playground/users/{playground}/{email}
 	@RequestMapping(

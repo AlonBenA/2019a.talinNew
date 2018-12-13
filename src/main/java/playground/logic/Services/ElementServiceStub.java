@@ -38,7 +38,7 @@ public class ElementServiceStub implements PlaygroundElementService  {
 	}
 
 	@Override
-	public ElementEntity addNewElement(ElementEntity elementEntity) {
+	public ElementEntity addNewElement(String userPlayground, String email,ElementEntity elementEntity) {
 		
 		elementEntity.setId(get_ID());
 		String key = elementEntity.getKey();
@@ -48,7 +48,7 @@ public class ElementServiceStub implements PlaygroundElementService  {
 	}
 
 	@Override
-	public synchronized ElementEntity getElement(String element_id, String element_Playground) throws ElementNotFoundException {
+	public synchronized ElementEntity getElement(String userPlayground, String email,String element_id, String element_Playground) throws ElementNotFoundException {
 		
 		String key = element_Playground + "@@" + element_id;
 		

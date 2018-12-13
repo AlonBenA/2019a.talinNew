@@ -145,7 +145,7 @@ public class WebUIElement {
 		elementTO.setCreatorPlayground(userPlayground);
 		
 		return new ElementTO(
-				this.elementService.addNewElement(elementTO.convertFromElementTOToElementEntity()));
+				this.elementService.addNewElement(userPlayground,email,elementTO.convertFromElementTOToElementEntity()));
 	}
 	
 	
@@ -159,7 +159,7 @@ public class WebUIElement {
 			@PathVariable("email") String email,
 			@PathVariable("playground") String playground,
 			@PathVariable("id") String id) throws ElementNotFoundException {
-		return new ElementTO(this.elementService.getElement(id, playground));	
+		return new ElementTO(this.elementService.getElement(userPlayground,email,id, playground));	
 	}
 	
 	@ExceptionHandler//(UserNotFoundException.class)

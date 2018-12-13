@@ -94,7 +94,7 @@ public class WebUITestsElement {
 										// reference
 				.forEach(t -> {
 					try {
-						elementService.addNewElement(t);
+						elementService.addNewElement(creatorPlayground,creatorEmail,t);
 					} catch (ElementAlreadyExistException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -335,7 +335,7 @@ public class WebUITestsElement {
 		ElementEntity elementEntity = new ElementEntity();
 		elementEntity.setCreationDate(null);
 
-		elementEntity = this.elementService.addNewElement(elementEntity);
+		elementEntity = this.elementService.addNewElement(elementEntity.getCreatorPlayground(),elementEntity.getCreatorEmail(),elementEntity);
 		
 		ElementTO updatedElementTO = new ElementTO();
 		updatedElementTO.setId(elementEntity.getId());
@@ -352,7 +352,7 @@ public class WebUITestsElement {
 
 		this.restTemplate.put(url, updatedElementTO,elementEntity.getPlayground(),elementEntity.getId());
 
-		ElementEntity actualElement = this.elementService.getElement(elementEntity.getId(), playground);
+		ElementEntity actualElement = this.elementService.getElement(elementEntity.getCreatorPlayground(),elementEntity.getCreatorEmail(),elementEntity.getId(), playground);
 
 		ElementEntity expectedElement = new ElementEntity();
 		expectedElement.setId(elementEntity.getId());
@@ -442,7 +442,7 @@ public class WebUITestsElement {
 		// "name": "Animal", "type": "Animal", "attributes": {},
 		// "creatorPlayground":"2019a.talin", "creatorEmail":"Talin@email.com"
 		// }
-		ElementEntity elementEntityExist = this.elementService.getElement(elementAfterPost.getId(), playground);
+		ElementEntity elementEntityExist = this.elementService.getElement(elementAfterPost.getCreatorPlayground(),elementAfterPost.getCreatorEmail(),elementAfterPost.getId(), playground);
 
 		assertThat(elementEntityExist).extracting("name", "type", "x","y", "attributes").containsExactly(name, type,
 				x,y, attributes);
@@ -480,7 +480,7 @@ public class WebUITestsElement {
 
 		newElement.setType(type);
 
-		newElement = this.elementService.addNewElement(newElement);
+		newElement = this.elementService.addNewElement(newElement.getPlayground(),newElement.getCreatorEmail(),newElement);
 
 		
 		id = newElement.getId();

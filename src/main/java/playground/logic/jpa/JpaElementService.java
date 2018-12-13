@@ -29,7 +29,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional
-	public ElementEntity addNewElement(ElementEntity elementEntity) throws ElementAlreadyExistException {
+	public ElementEntity addNewElement(String userPlayground, String email,ElementEntity elementEntity) throws ElementAlreadyExistException {
 		
 		if(!elements.existsById(elementEntity.getKey()))
 		{
@@ -47,7 +47,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public ElementEntity getElement(String element_id, String element_Playground) throws ElementNotFoundException {
+	public ElementEntity getElement(String userPlayground, String email,String element_id, String element_Playground) throws ElementNotFoundException {
 		// set key for element 
 		String element_key = element_Playground + "@@" +element_id;
 		
@@ -103,7 +103,7 @@ public class JpaElementService implements PlaygroundElementService {
 	@Transactional
 	public void updateElement(String userPlayground,String email,ElementEntity updatedElementEntity, String playground, String id) throws Exception {
 		
-		ElementEntity existing = getElement(id, playground);
+		ElementEntity existing = getElement( userPlayground,  email,id, playground);
 			
 		
 		if (updatedElementEntity.getX() != null) {

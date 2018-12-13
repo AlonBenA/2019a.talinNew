@@ -8,9 +8,9 @@ import playground.logic.jpa.ElementNotFoundException;
 
 public interface PlaygroundElementService {
 	
-	public ElementEntity addNewElement(ElementEntity elementEntity) throws ElementAlreadyExistException;
+	public ElementEntity addNewElement(String userPlayground, String email, ElementEntity elementEntity) throws ElementAlreadyExistException;
 	
-	public ElementEntity getElement(String element_id,String element_Playground) throws ElementNotFoundException;
+	public ElementEntity getElement(String userPlayground, String email,String element_id,String element_Playground) throws ElementNotFoundException;
 	
 	public List<ElementEntity> getAllElements(String userPlayground,String email,int size, int page);
 	
