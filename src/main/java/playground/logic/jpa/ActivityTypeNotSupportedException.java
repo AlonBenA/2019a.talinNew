@@ -1,4 +1,4 @@
-package playground.logic.Exceptions;
+package playground.logic.jpa;
 
 public class ActivityTypeNotSupportedException extends RuntimeException {
 	private static final long serialVersionUID = -3727493402514143970L;

@@ -24,11 +24,11 @@ import playground.layout.NewUserForm;
 import playground.layout.UserTO;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.UserEntity;
-import playground.logic.Exceptions.ElementNotFoundException;
-import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundService;
 import playground.logic.Services.PlaygroundUserService;
+import playground.logic.jpa.ElementNotFoundException;
+import playground.logic.jpa.UserNotFoundException;
 
 //@RestController
 public class WebUI {

@@ -1,7 +1,7 @@
 package playground.logic.Services;
 
 import playground.logic.Entities.UserEntity;
-import playground.logic.Exceptions.UserNotFoundException;
+import playground.logic.jpa.UserNotFoundException;
 
 public interface PlaygroundUserService {
 

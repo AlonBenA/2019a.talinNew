@@ -1,4 +1,4 @@
-package playground.logic.Exceptions;
+package playground.logic.jpa;
 
 public class UserNotFoundException extends Exception {
 	private static final long serialVersionUID = 604729857716229974L;

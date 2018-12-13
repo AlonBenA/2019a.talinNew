@@ -17,8 +17,8 @@ import playground.logic.Location;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.UserEntity;
-import playground.logic.Exceptions.ElementNotFoundException;
-import playground.logic.Exceptions.UserNotFoundException;
+import playground.logic.jpa.ElementNotFoundException;
+import playground.logic.jpa.UserNotFoundException;
 
 //@Service
 public class PlaygroundServiceStub implements PlaygroundService {

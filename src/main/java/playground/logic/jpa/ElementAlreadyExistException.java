@@ -1,4 +1,4 @@
-package playground.logic.Exceptions;
+package playground.logic.jpa;
 
 public class ElementAlreadyExistException extends Exception{
 	private static final long serialVersionUID = 3013530531289685076L;

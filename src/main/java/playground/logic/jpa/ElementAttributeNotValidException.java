@@ -1,4 +1,4 @@
-package playground.logic.Exceptions;
+package playground.logic.jpa;
 
 public class ElementAttributeNotValidException extends Exception {
 	private static final long serialVersionUID = 7279715516750584372L;

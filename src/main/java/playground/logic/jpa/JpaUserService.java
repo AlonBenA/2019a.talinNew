@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import playground.jpadal.UserDao;
 import playground.logic.Entities.UserEntity;
-import playground.logic.Exceptions.UserAlreadyExistsException;
-import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundUserService;
 
 @Service

@@ -25,8 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import playground.logic.Location;
 import playground.logic.Entities.ElementEntity;
-import playground.logic.Exceptions.ElementAlreadyExistException;
 import playground.logic.Services.PlaygroundElementService;
+import playground.logic.jpa.ElementAlreadyExistException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

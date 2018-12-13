@@ -1,4 +1,4 @@
-package playground.logic.Exceptions;
+package playground.logic.jpa;
 
 public class ElementNotFoundException extends Exception {
 	private static final long serialVersionUID = 6587409435612889698L;

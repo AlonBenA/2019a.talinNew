@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import playground.logic.Entities.ElementEntity;
-import playground.logic.Exceptions.ElementNotFoundException;
+import playground.logic.jpa.ElementNotFoundException;
 
 
 //@Service

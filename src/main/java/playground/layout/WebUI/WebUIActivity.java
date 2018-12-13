@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import playground.layout.ActivityTO;
 import playground.layout.ErrorMessage;
 import playground.logic.Entities.ActivityEntity;
-import playground.logic.Exceptions.ActivityTypeNotSupportedException;
-import playground.logic.Exceptions.ElementNotFoundException;
-import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundActivityService;
+import playground.logic.jpa.ActivityTypeNotSupportedException;
+import playground.logic.jpa.ElementNotFoundException;
+import playground.logic.jpa.UserNotFoundException;
 
 @RestController
 public class WebUIActivity {

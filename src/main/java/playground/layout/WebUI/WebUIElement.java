@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import playground.layout.ElementTO;
 import playground.layout.ErrorMessage;
-import playground.logic.Exceptions.ElementAttributeNotValidException;
-import playground.logic.Exceptions.ElementNotFoundException;
-import playground.logic.Exceptions.UserNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
+import playground.logic.jpa.ElementAttributeNotValidException;
+import playground.logic.jpa.ElementNotFoundException;
+import playground.logic.jpa.UserNotFoundException;
 
 @RestController
 public class WebUIElement {

@@ -8,8 +8,8 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import playground.logic.Entities.UserEntity;
-import playground.logic.Exceptions.ElementNotFoundException;
-import playground.logic.Exceptions.UserNotFoundException;
+import playground.logic.jpa.ElementNotFoundException;
+import playground.logic.jpa.UserNotFoundException;
 
 //@Service
 public class UserServiceStub implements PlaygroundUserService {

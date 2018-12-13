@@ -10,8 +10,6 @@ import playground.jpadal.ElementDao;
 import playground.jpadal.NumbersDao;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.GeneratedNumber;
-import playground.logic.Exceptions.ElementAlreadyExistException;
-import playground.logic.Exceptions.ElementNotFoundException;
 import playground.logic.Services.PlaygroundElementService;
 import java.util.Date;
 

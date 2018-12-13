@@ -1,4 +1,4 @@
-package playground.logic.Exceptions;
+package playground.logic.jpa;
 
 public class UserAlreadyExistsException extends RuntimeException {
 	private static final long serialVersionUID = 874896183523912962L;

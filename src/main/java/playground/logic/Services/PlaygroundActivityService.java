@@ -5,8 +5,8 @@ import java.util.List;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.UserEntity;
-import playground.logic.Exceptions.ElementNotFoundException;
-import playground.logic.Exceptions.UserNotFoundException;
+import playground.logic.jpa.ElementNotFoundException;
+import playground.logic.jpa.UserNotFoundException;
 
 public interface PlaygroundActivityService {
 	
