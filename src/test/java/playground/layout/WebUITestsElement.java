@@ -107,7 +107,9 @@ public class WebUITestsElement {
 	public void testGetAllElementsUsingPaginationWithDefaultSizeOfFirstPageSuccessfully() throws Exception {
 
 		int DefaultSize = 10;
-		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/all";
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/all";
 
 		/*
 		 * Given Server is up And the database contains 10 Elements
@@ -116,7 +118,7 @@ public class WebUITestsElement {
 		setElementsDatabase(100);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,userPlayground,userEmail);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(DefaultSize);
@@ -128,7 +130,9 @@ public class WebUITestsElement {
 	public void TestGetSomeElementsUsingPaginationSuccessfully() throws Exception {
 
 		int size = 3;
-		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/all?size={size}";
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/all?size={size}";
 
 		/*
 		 * Given Server is up And the database contains 10 Elements
@@ -136,7 +140,7 @@ public class WebUITestsElement {
 		setElementsDatabase(10);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,size);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,userPlayground,userEmail,size);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(size);
@@ -149,8 +153,9 @@ public class WebUITestsElement {
 
 		int size = 3;
 		int page = 100;
-
-		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/all?size={size}&page={page}";
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/all?size={size}&page={page}";
 
 		/*
 		 * Given Server is up And the database contains 10 Elements
@@ -158,7 +163,7 @@ public class WebUITestsElement {
 		setElementsDatabase(10);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,size,page);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,userPlayground,userEmail,size,page);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(0);
@@ -170,8 +175,9 @@ public class WebUITestsElement {
 
 		int size = 6;
 		int page = 1;
-
-		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/all?size={size}&page={page}";
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/all?size={size}&page={page}";
 
 		/*
 		 * Given Server is up And the database contains 20 Elements
@@ -179,7 +185,7 @@ public class WebUITestsElement {
 		setElementsDatabase(20);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,size,page);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,userPlayground,userEmail,size,page);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(size);
@@ -190,8 +196,9 @@ public class WebUITestsElement {
 	public void testGetAllElementsWithIinvalidPageSize() {
 		// when
 
-
-		String url = base_url + "/playground/elements/null/talin@email.com/all";
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/all";
 
 		/*
 		 * Given Server is up And the database contains 20 Elements
@@ -199,7 +206,7 @@ public class WebUITestsElement {
 		setElementsDatabase(20);
 
 		// When I Get /playground/elements/null/talin@email.com/all?size=-6&page=1
-		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class, -6, 1);
+		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class,userPlayground,userEmail, -6, 1);
 
 		// Then the response status is <> 2xx
 	}
@@ -211,8 +218,9 @@ public class WebUITestsElement {
 		int y = 10;
 		int distance = 10;
 		int DefaultSize = 10;
-
-		String url = base_url + "/playground/elements/2019a.talin/Tali@email.com/near/{x}/{y}/{distance}";
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}";
 
 		/*
 		 * Given Server is up And the database contains 10 Elements
@@ -220,7 +228,7 @@ public class WebUITestsElement {
 		setElementsDatabase(100);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,x,y,distance);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,userPlayground,userEmail,x,y,distance);
 
 		// how to check near Elements
 		// Then the response status is 2xx and body contains 10 near Elements
@@ -237,9 +245,10 @@ public class WebUITestsElement {
 		int y = 5;
 		int distance = 10;
 		int size = 3;
-
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
 		
-		String url = base_url + "/playground/elements/2019a.talin/Tali@email.com/near/{x}/{y}/{distance}?size={size}";
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}?size={size}";
 
 		/*
 		 * Given Server is up And the database contains 10 Elements
@@ -247,8 +256,8 @@ public class WebUITestsElement {
 		setElementsDatabase(100);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class
-				,x,y,distance,size);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,userPlayground,userEmail,
+				x,y,distance,size);
 
 		// how to check near Elements
 		// Then the response status is 2xx and body contains 3 near Elements
@@ -266,8 +275,9 @@ public class WebUITestsElement {
 		int distance = 10;
 		int size = 5;
 		int page = 1;
-
-		String url =  base_url + "/playground/elements/2019a.talin/Tali@email.com/near/{x}/{y}/{distance}?size={size}&page={page}";
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		String url =  base_url + "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}?size={size}&page={page}";
 
 		/*
 		 * Given Server is up And the database contains 10 Elements
@@ -275,7 +285,7 @@ public class WebUITestsElement {
 		setElementsDatabase(20);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,x,y,distance,size,page);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,userPlayground,userEmail,x,y,distance,size,page);
 
 		// how to check near Elements
 		// Then the response status is 2xx and body contains 3 near Elements
@@ -293,8 +303,9 @@ public class WebUITestsElement {
 		int distance = 10;
 		int size = 3;
 		int page = 100;
-
-		String url =  base_url + "/playground/elements/2019a.talin/Tali@email.com/near/{x}/{y}/{distance}?size={size}&page={page}";
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		String url =  base_url + "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}?size={size}&page={page}";
 
 
 		/*
@@ -303,7 +314,7 @@ public class WebUITestsElement {
 
 		setElementsDatabase(1);
 
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class,userPlayground,userEmail
 				,x,y,distance,size,page);
 
 		// then
@@ -317,17 +328,20 @@ public class WebUITestsElement {
 		int x = 5;
 		int y = 4;
 		int distance = 10;
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}";
 
-		String url = base_url + "/playground/elements/null/Tali@email.com/near/{x}/{y}/{distance}";
-
-		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class,x,y,distance, -6, 1);
+		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class,userPlayground,userEmail,x,y,distance, -6, 1);
 	}
 
 	// A
 	@Test
 	public void updateAnElementSuccessfully() throws Exception {
 		// Given Server is up
-
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
 
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("Play", "Woof");
@@ -348,9 +362,9 @@ public class WebUITestsElement {
 		
 		
 		
-		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/{Playground}/{Id}";
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/{Playground}/{Id}";
 
-		this.restTemplate.put(url, updatedElementTO,elementEntity.getPlayground(),elementEntity.getId());
+		this.restTemplate.put(url, updatedElementTO,userPlayground,userEmail,elementEntity.getPlayground(),elementEntity.getId());
 
 		ElementEntity actualElement = this.elementService.getElement(elementEntity.getCreatorPlayground(),elementEntity.getCreatorEmail(),elementEntity.getId(), playground);
 
@@ -377,7 +391,10 @@ public class WebUITestsElement {
 	// A
 	@Test(expected = Exception.class)
 	public void testUpdateNonExistingElement() throws Exception {
-		String url = base_url + "/playground/elements/2019a.talin/talin@email.com/2019a.talin/{ID}";
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/2019a.talin/{ID}";
 		String ID = "0";
 
 		Map<String, Object> attributesForEntityInDataBase = new HashMap<String, Object>();
@@ -392,7 +409,7 @@ public class WebUITestsElement {
 		updatedElementTO.setAttributes(attributesForEntityInDataBase);
 		updatedElementTO.setCreationDate(null);
 
-		this.restTemplate.put(url, updatedElementTO, ID);
+		this.restTemplate.put(url, updatedElementTO,userPlayground,userEmail, ID);
 
 		// Then the response status <> 2xx
 	}

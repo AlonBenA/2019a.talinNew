@@ -21,6 +21,11 @@ public interface ElementDao extends PagingAndSortingRepository<ElementEntity, St
 			Pageable pageable);
 	
 	
+	public Page<ElementEntity> findAllByExirationDateIsNullOrExirationDateAfter(
+			@Param("today") Date today,
+			Pageable pageable);
+	
+	
 	public Page<ElementEntity> findAllByExirationDateIsNullAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThanOrExirationDateAfterAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(
 			@Param("upperX") Double upperX,
 			@Param("lowerX") Double lowerX, 

@@ -61,9 +61,22 @@ public class JpaElementService implements PlaygroundElementService {
 	@Transactional(readOnly=true)
 	public List<ElementEntity> getAllElements(String userPlayground,String email,int size, int page) {
 		
+		////if it's a Client
+		Date today = new Date();
+		return this.elements.findAllByExirationDateIsNullOrExirationDateAfter(
+				today
+				,PageRequest.of(
+				page, 
+				size, 
+				Direction.DESC, 
+				"creationDate"))
+		.getContent();
+		/*
+		//if it's a Manager
 		return 
 		this.elements.findAll(PageRequest.of(page, size, Direction.DESC, "creationDate"))
 			.getContent();
+		*/
 	}
 
 	@Override
