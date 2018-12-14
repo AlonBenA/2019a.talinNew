@@ -68,7 +68,7 @@ public class UserServiceStub implements PlaygroundUserService {
 	
 
 	@Override
-	public synchronized void updateUser(UserEntity updatedUserEntity,String email,String playground) throws Exception {
+	public synchronized void updateUser(String playground,String email, UserEntity updatedUserEntity) throws Exception {
 
 		if (this.usersDatabase.containsKey(playground + email)) {
 			UserEntity userEntity = this.usersDatabase.get(playground + email);
