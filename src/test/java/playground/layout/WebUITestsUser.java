@@ -90,7 +90,7 @@ public class WebUITestsUser {
 //		 Then the response status is 2xx and body is 
 //		 {"email": "usermail2@usermail.com", "playground": "2019a.Talin", 
 //				"username": "user2", "avatar": "https://goo.gl/images/WqDt96", 
-//						"role": "Player", "points": any positive integer}
+//						"role": "Player", "points": "Y", "code":"X"}]
 
 		UserEntity actualValue = this.userService.getUser(userTo.getPlayground(), userTo.getEmail());
 		assertThat(actualValue).extracting("email", "playground", "username", "avatar", "role").containsExactly(email,
