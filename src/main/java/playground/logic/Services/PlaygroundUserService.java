@@ -13,7 +13,7 @@ public interface PlaygroundUserService {
 	
 	public UserEntity userLogin(String playground, String email) throws UserNotFoundException;
 	
-	public void updateUser(UserEntity updatedUserEntity, String email, String playground) throws Exception;
+	public void updateUser( String playground, String email,UserEntity updatedUserEntity) throws Exception;
 
 	public void cleanup();
 }

@@ -76,7 +76,7 @@ public class WebUIUser {
 		//set to elementTo the userPlayground and Email from URL
 		updatedUser.setEmail(email);
 		updatedUser.setPlayground(playground);
-		userService.updateUser(updatedUser.convertFromUserTOToUserEntity(), email, playground);
+		userService.updateUser(playground, email, updatedUser.convertFromUserTOToUserEntity());
 
 	}
 	

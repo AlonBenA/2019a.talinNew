@@ -326,6 +326,7 @@ public class WebUITestsUser {
 		String username = "user2";
 		String avatar = "https://goo.gl/images/WqDt96";
 		String role = "Player";
+
 		String newAvatar = "https://moodle.afeka.ac.il/theme/image.jpg";
 		// Given server is up
 		// And the database contains the user database contains {"email":

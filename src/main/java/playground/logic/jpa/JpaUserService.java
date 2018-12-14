@@ -65,8 +65,8 @@ public class JpaUserService implements PlaygroundUserService{
 
 	@Override
 	@Transactional
-	public void updateUser(UserEntity updatedUserEntity, String email, String playground) throws Exception {
-		UserEntity existing = getUser(email, playground);
+	public void updateUser(String playground,String email, UserEntity updatedUserEntity  ) throws Exception {
+		UserEntity existing = getUser(playground,email );
 		
 		if (updatedUserEntity.getUsername() != null) {
 			existing.setUsername(updatedUserEntity.getUsername());
