@@ -33,7 +33,7 @@ public class UserServiceStub implements PlaygroundUserService {
 	}
 
 	@Override
-	public synchronized UserEntity getUser(String email, String playground) throws UserNotFoundException {
+	public synchronized UserEntity getUser(String playground, String email) throws UserNotFoundException {
 		String key = playground + email;
 		UserEntity userEntity = this.usersDatabase.get(key);
 		if (userEntity == null) {
@@ -55,6 +55,15 @@ public class UserServiceStub implements PlaygroundUserService {
 		throw new UserNotFoundException("no user found for: " + userEntity.getKey());
 		
 	}
+	
+	/////////////////////////////////////////////////////
+	@Override
+	public UserEntity userLogin(String playground, String email) throws UserNotFoundException {
+		// TODO
+		return null;
+	
+	}
+	/////////////////////////////////////////////////////
 	
 	
 

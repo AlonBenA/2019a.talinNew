@@ -92,7 +92,7 @@ public class WebUITestsUser {
 //				"username": "user2", "avatar": "https://goo.gl/images/WqDt96", 
 //						"role": "Player", "points": any positive integer}
 
-		UserEntity actualValue = this.userService.getUser(userTo.getEmail(),userTo.getPlayground());
+		UserEntity actualValue = this.userService.getUser(userTo.getPlayground(), userTo.getEmail());
 		assertThat(actualValue).extracting("email", "playground", "username", "avatar", "role").containsExactly(email,
 				playground, username, avatar, role);
 	}
@@ -177,7 +177,7 @@ public class WebUITestsUser {
 //				"username": "user1", "avatar": "https://goo.gl/images/WqDt96",
 //						"role": "Manager", "points": 0, "code":null}
 
-		UserEntity actualValue = this.userService.getUser(actualUser.getEmail(), actualUser.getPlayground());
+		UserEntity actualValue = this.userService.getUser(actualUser.getPlayground(), actualUser.getEmail());
 		System.err.println(actualValue.getCode());
 		assertThat(actualValue).extracting("email", "playground", "username", "avatar", "role", "code")
 				.containsExactly(email, playground, username, avatar, role, null);
@@ -258,13 +258,16 @@ public class WebUITestsUser {
 //		{
 //				"email": "usermail1@usermail.com"
 //		    	"playground": "2019a.Talin",
-//		  		"username": any valid user name,
-//		   		"avatar": any valid url,
-//		    	"role": Manager/Player,
+//		  		"username": "user1",
+//		   		"avatar": "https://goo.gl/images/WqDt96",
+//		    	"role": "Manager",
 //		   	 	"points": any positive integer
 //		}
 
-		assertThat(actualUser).extracting("email", "playground").containsExactly(email, playground);
+//		assertThat(actualUser).extracting("email", "playground", "username").containsExactly(email, playground);
+		assertThat(actualUser).extracting("email", "playground", "username", "avatar", "role")
+		.containsExactly(email, playground, username, avatar, role);
+
 	}
 
 	
@@ -359,7 +362,7 @@ public class WebUITestsUser {
 		// "username":"user2","avatar":“https://moodle.afeka.ac.il/theme/image.jpg",
 		// "role": "Player","points": 0,"code":null
 		// }
-		UserEntity actualUser = this.userService.getUser(email, playground);
+		UserEntity actualUser = this.userService.getUser(playground, email);
 
 		assertThat(actualUser).extracting("email", "playground", "username", "avatar", "role", "code")
 				.containsExactly(email, playground, username, newAvatar, role, null);

@@ -22,14 +22,17 @@ public class JpaUserService implements PlaygroundUserService{
 	@Override
 	@Transactional
 	public UserEntity addNewUser(UserEntity userEntity) {
-		if (!this.users.existsById(userEntity.getKey())) 
+		if (!this.users.existsById(userEntity.getKey())) {
+			System.err.println("user: " + userEntity.getPlayground() + "@@" + userEntity.getEmail() + " code: "
+					+ userEntity.getCode()); // "send" code
 			return this.users.save(userEntity);
+		}
 		throw new UserAlreadyExistsException("message exists with: " + userEntity.getKey()); 
 		
 	}
 
 	@Override
-	public UserEntity getUser(String email, String playground) throws UserNotFoundException {
+	public UserEntity getUser(String playground, String email) throws UserNotFoundException {
 		String key = playground+"@@"+email;
 		return this.users.findById(key)
 				.orElseThrow(()->new UserNotFoundException("no user found for: " + key));
@@ -38,7 +41,7 @@ public class JpaUserService implements PlaygroundUserService{
 	
 	@Override
 	public UserEntity validateUser(UserEntity userEntity, String code) throws UserNotFoundException {
-		UserEntity existingUser = this.users.findById(userEntity.getKey()).get();
+		UserEntity existingUser = getUser(userEntity.getPlayground(),userEntity.getEmail());
 		if (existingUser != null) {
 			existingUser.verify(code);
 			if(existingUser.isVerified()) 
@@ -49,6 +52,16 @@ public class JpaUserService implements PlaygroundUserService{
 		throw new UserNotFoundException("no user found for: " + userEntity.getKey());
 		
 	}
+	
+	/////////////////////////////////////////////////////
+	@Override
+	public UserEntity userLogin(String playground, String email) throws UserNotFoundException,RuntimeException {
+		UserEntity existingUser = getUser(playground,email);
+		if(!existingUser.isVerified())
+			throw new RuntimeException("User not verified");
+		return existingUser;
+	}
+	/////////////////////////////////////////////////////
 
 	@Override
 	@Transactional
