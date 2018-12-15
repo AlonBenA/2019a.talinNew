@@ -56,16 +56,12 @@ public class WebUIActivity {
 		
 		boolean activityResult =  activityService.validateActivityType(activityTo.getType());
 		
-		if(activityResult) {
-			//update attributes that come from url
-			activityTo.setPlayerEmail(email);
-			activityTo.setPlayerPlayground(userPlayground);
-			ActivityEntity activityEntity = activityTo.convertFromActivityTOToActivityEntity();
-			return new ActivityTO(
-					this.activityService.addNewActivity(activityEntity));
-		}
-		
-		else throw new ActivityTypeNotSupportedException("Invalid Activity Type");
+		//update attributes that come from url
+		activityTo.setPlayerEmail(email);
+		activityTo.setPlayerPlayground(userPlayground);
+		ActivityEntity activityEntity = activityTo.convertFromActivityTOToActivityEntity();
+		return new ActivityTO(
+				this.activityService.addNewActivity(userPlayground, email, activityEntity));
 	}
 	
 	

@@ -29,7 +29,7 @@ public class JpaActivityService implements PlaygroundActivityService {
 
 	@Override
 	@Transactional
-	public ActivityEntity addNewActivity(ActivityEntity activityEntity) {
+	public ActivityEntity addNewActivity(String userPlayground, String userEmail, ActivityEntity activityEntity) {
 		if (!activities.existsById(activityEntity.getKey())) {
 			// check if the element to activate exists
 			String element_key = activityEntity.getElementPlayground() + "@@" + activityEntity.getElementId();
@@ -50,7 +50,7 @@ public class JpaActivityService implements PlaygroundActivityService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public ActivityEntity getActivity(String activity_id, String playground) {
+	public ActivityEntity getActivity(String userPlayground, String userEmail, String activity_id, String playground) {
 		// set key for element
 		String activity_key = playground + "@@" + activity_id;
 		return this.activities.findById(activity_key)
@@ -67,8 +67,7 @@ public class JpaActivityService implements PlaygroundActivityService {
 			break;
 
 		default:
-			result = false;
-			break;
+			throw new ActivityTypeNotSupportedException("Invalid Activity Type");
 		}
 
 		return result;

@@ -421,7 +421,7 @@ public class WebUITestsElement {
 		// Given Server is up
 
 		String url = base_url + "/playground/elements/{userPlayground}/{email}";
-		String email = "tali@mali.com";
+		String email = "tali@mail.com";
 		String name = "cat";
 		double x = 1.0;
 		double y = 1.0;
@@ -483,7 +483,7 @@ public class WebUITestsElement {
 		// }
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/{playground}/{id}";
 		String id ;
-		String email = "tali@mali.com";
+		String email = "tali@mail.com";
 		String name = "cat";
 		double x = 1.0;
 		double y = 1.0;
@@ -531,7 +531,7 @@ public class WebUITestsElement {
 		// Given Server is up
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/{playground}/{id}";
 		String id = "123";
-		String email = "tali@mali.com";
+		String email = "tali@mail.com";
 
 		// When I GET
 		// http://localhost:8083/playground/elements/2019a.talin/null/2019a.talin/0
@@ -547,7 +547,8 @@ public class WebUITestsElement {
 	public void testGetEementsWithThisAttributeValueUsingDefaultPagination() throws Exception {
 
 		int DefaultSize = 10;
-		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat";
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
+		String email = "tali@mail.com";
 
 		/*
 		 * Given Server is up And the database contains 20 elements with the name cat
@@ -556,7 +557,7 @@ public class WebUITestsElement {
 		setElementsDatabase(20);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(DefaultSize);
@@ -566,14 +567,14 @@ public class WebUITestsElement {
 	@Test
 	public void testGetElementsWithAttributeValueThatNotExistsUsingDefaultPagination() throws Exception {
 
-		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat";
-
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
+		String email = "tali@mail.com";
 		/*
 		 * Given Server is up
 		 */
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
 
 		// then
 		assertThat(actualElement).isEmpty();
@@ -583,15 +584,15 @@ public class WebUITestsElement {
 	@Test(expected = Exception.class)
 	public void testGetElementsWithInvalidAttributeUsingDefaultPagination() throws Exception {
 		int DefaultSize = 10;
-
-		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/Momo/cat";
+		String email = "tali@mail.com";
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/Momo/cat";
 
 		/*
 		 * Given Server is up
 		 */
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
 
 		// then
 		assertThat(actualElement).hasSize(DefaultSize);
@@ -602,7 +603,8 @@ public class WebUITestsElement {
 	public void testGetElementsWithThisAttributeValueUsingPaginationSuccessfully() throws Exception {
 
 		int size = 3;
-		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat" + "?size=" + size;
+		String email = "tali@mail.com";
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat" + "?size=" + size;
 
 		/*
 		 * Given Server is up And the database contains 10 elements with the name cat
@@ -610,7 +612,7 @@ public class WebUITestsElement {
 		setElementsDatabase(10);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(size);
@@ -622,8 +624,8 @@ public class WebUITestsElement {
 
 		int size = 6;
 		int page = 100;
-
-		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat" + "?size=" + size
+		String email = "tali@mail.com";
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat" + "?size=" + size
 				+ "&page=" + page;
 
 		/*
@@ -632,7 +634,7 @@ public class WebUITestsElement {
 		setElementsDatabase(10);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
 
 		// then
 		assertThat(actualElement).isEmpty();
@@ -645,8 +647,8 @@ public class WebUITestsElement {
 		int size = 6;
 		int page = 1;
 		int numOfElements = 10;
-
-		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat" + "?size=" + size
+		String email = "tali@mail.com";
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat" + "?size=" + size
 				+ "&page=" + page;
 
 		/*
@@ -655,7 +657,7 @@ public class WebUITestsElement {
 		setElementsDatabase(10);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(numOfElements - size);
@@ -664,15 +666,17 @@ public class WebUITestsElement {
 	// T
 	@Test(expected = Exception.class)
 	public void testGetElementsWithThisAttributeValueWithInvalidPageSize() {
+		String email = "tali@mail.com";
 		// when
-		String url = base_url + "/playground/elements/2019a.talin/myEmail@mail.com/search/name/cat";
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
 
 		/*
 		 * Given Server is up
 		 */
 
 		// When
-		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class, -6, 1);
+		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class,
+				playground, email, -6, 1);
 
 		// Then the response status is <> 2xx
 	}

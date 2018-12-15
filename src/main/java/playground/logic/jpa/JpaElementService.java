@@ -148,24 +148,9 @@ public class JpaElementService implements PlaygroundElementService {
 	}
 
 	@Override
-	public boolean validateElementAttribteName(String name) {
-		boolean result;
-
-		switch (name) {
-		case "name":
-			result = true;
-			break;
-
-		case "type":
-			result = true;
-			break;
-
-		default:
-			result = false;
-			break;
-		}
-
-		return result;
+	public void validateElementAttribteName(String name) throws ElementAttributeNotValidException {
+		if(!name.equals("name") && !name.equals("type"))
+			throw new ElementAttributeNotValidException("Invalid Attribute for searching elements");
 	}
 
 	@Override

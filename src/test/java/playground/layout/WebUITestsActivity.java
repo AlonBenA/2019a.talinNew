@@ -1,7 +1,13 @@
 package playground.layout;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.Email;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +27,6 @@ import playground.logic.Services.PlaygroundElementService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class WebUITestsActivity {
-
 	@Autowired
 	private PlaygroundActivityService activityService;
 
@@ -31,6 +36,7 @@ public class WebUITestsActivity {
 	private RestTemplate restTemplate;
 
 	private String playground;
+
 	
 	@Value("${playground}")	//set playground as "2019a.talin"
 	private void setPlayground(String playground) {
@@ -39,7 +45,7 @@ public class WebUITestsActivity {
 
 	@LocalServerPort
 	private int port;
-
+	
 	private String base_url;
 
 
@@ -61,13 +67,18 @@ public class WebUITestsActivity {
 		this.elementService.cleanup();
 	}
 
+	
 	@Test
 	public void testActivateElementSuccessfully() throws Exception {
+		
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		
 		// Given Server is up
-		String url = base_url + "/playground/activities/2019a.talin/myEmail@mail.com";
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
 
 		// And the database contains element with playground+id: 2019a.talin0
-		ElementEntity elementEntity = this.elementService.addNewElement(new ElementEntity());
+		ElementEntity elementEntity = this.elementService.addNewElement(userPlayground, userEmail, new ElementEntity());
 
 		// When I POST activity with
 		String elementId = elementEntity.getId();
@@ -75,16 +86,17 @@ public class WebUITestsActivity {
 		String type = "ACO";
 
 		// check that element exists
-		this.elementService.getElement(elementId, elementPlayground);
+		this.elementService.getElement(userPlayground, userEmail, elementId, elementPlayground);
 
 		ActivityTO newActivityTO = new ActivityTO();
 		newActivityTO.setElementId(elementId);
 		newActivityTO.setElementPlayground(elementPlayground);
 		newActivityTO.setType(type);
-		ActivityTO activityAfterPost = this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class);
+		ActivityTO activityAfterPost = this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, 
+				userPlayground, userEmail);
 
 		// Then the response status is 2xx and body is:
-		ActivityEntity activityEntityExist = this.activityService.getActivity(activityAfterPost.getId(),
+		ActivityEntity activityEntityExist = this.activityService.getActivity(userPlayground, userEmail, activityAfterPost.getId(),
 				playground);
 		
 		assertThat(activityEntityExist).extracting("elementId", "elementPlayground", "type").
@@ -92,13 +104,19 @@ public class WebUITestsActivity {
 	}
 
 
+
 	@Test(expected = Exception.class)
 	public void testActivateElementWithInvalidActivityType() throws Exception {
+		
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin";
+		
+		
 		// Given Server is up
-		String url = base_url + "/playground/activities/2019a.talin/myEmail@mail.com";
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
 
 		// And the database contains element with playground+id: 2019a.talin0
-		ElementEntity elementEntity = this.elementService.addNewElement(new ElementEntity());
+		ElementEntity elementEntity = this.elementService.addNewElement(userPlayground, userEmail, new ElementEntity());
 
 		// When I POST activity with
 		String elementId = elementEntity.getId();
@@ -106,13 +124,13 @@ public class WebUITestsActivity {
 		String type = "Play";
 
 		// check that element exists
-		this.elementService.getElement(elementId, elementPlayground);
+		this.elementService.getElement(userPlayground, userEmail, elementId, elementPlayground);
 
 		ActivityTO newActivityTO = new ActivityTO();
 		newActivityTO.setElementId(elementId);
 		newActivityTO.setElementPlayground(elementPlayground);
 		newActivityTO.setType(type);
-		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class);
+		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
 
 		// Then the response status is <> 2xx
 	}
@@ -120,22 +138,26 @@ public class WebUITestsActivity {
 
 	@Test(expected = Exception.class)
 	public void testActivatingNotExistingElement() throws Exception {
+		
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin";
+		
 		// Given Server is up
-		String url = base_url + "/playground/activities/2019a.talin/myEmail@mail.com";
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
 
 		// When I POST activity with
 		String elementId = "0";
 		String elementPlayground = playground;
-		String type = "ACO";
+		String type = "ECHO";
 
 		// check that element exists
-		this.elementService.getElement(elementId, elementPlayground);
+		this.elementService.getElement(userPlayground, userEmail, elementId, elementPlayground);
 
 		ActivityTO newActivityTO = new ActivityTO();
 		newActivityTO.setElementId(elementId);
 		newActivityTO.setElementPlayground(elementPlayground);
 		newActivityTO.setType(type);
-		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class);
+		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
 
 		// Then the response status is <> 2xx
 	}

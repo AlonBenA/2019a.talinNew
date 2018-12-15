@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import playground.logic.Entities.ElementEntity;
+import playground.logic.jpa.ElementAttributeNotValidException;
 import playground.logic.jpa.ElementNotFoundException;
 
 
@@ -119,7 +120,7 @@ public class ElementServiceStub implements PlaygroundElementService  {
 	}
 
 	@Override
-	public synchronized boolean validateElementAttribteName(String name) {
+	public synchronized void validateElementAttribteName(String name) throws ElementAttributeNotValidException {
 		boolean result;
 
 		switch (name) {
@@ -133,10 +134,8 @@ public class ElementServiceStub implements PlaygroundElementService  {
 
 		default:
 			result = false;
-			break;
+			throw new ElementAttributeNotValidException("Element's attribute to search not valid");
 		}
-
-		return result;
 	}
 	
 	public synchronized Map<String, ElementEntity> getElementsDatabase() {

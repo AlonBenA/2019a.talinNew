@@ -54,16 +54,13 @@ public class WebUIElement {
 		validateNull(userPlayground);
 		
 		// validate attribute
-		boolean attributeNameResult =  elementService.validateElementAttribteName(attributeName);
+		elementService.validateElementAttribteName(attributeName);
 		
-		if(attributeNameResult) {
-			return elementService.getElementsWithAttribute(attributeName, value, size, page)
-			.stream()
-			.map(ElementTO::new)
-			.collect(Collectors.toList())
-			.toArray(new ElementTO[0]);				
-		}	
-		else throw new ElementAttributeNotValidException("Invalid Attribute for searching elements");
+		return elementService.getElementsWithAttribute(attributeName, value, size, page)
+		.stream()
+		.map(ElementTO::new)
+		.collect(Collectors.toList())
+		.toArray(new ElementTO[0]);				
 	}
 	
 	
