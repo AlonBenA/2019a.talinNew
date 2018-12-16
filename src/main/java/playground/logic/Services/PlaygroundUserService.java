@@ -11,7 +11,7 @@ public interface PlaygroundUserService {
 
 	public UserEntity validateUser(UserEntity userEntity, String code) throws UserNotFoundException;
 	
-	public UserEntity userLogin(String playground, String email) throws UserNotFoundException;
+	public UserEntity userLogin(String playground, String email) throws RuntimeException;
 	
 	public void updateUser( String playground, String email,UserEntity updatedUserEntity) throws Exception;
 

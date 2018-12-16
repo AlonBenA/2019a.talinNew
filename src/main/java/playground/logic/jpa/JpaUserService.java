@@ -55,10 +55,10 @@ public class JpaUserService implements PlaygroundUserService{
 	
 	/////////////////////////////////////////////////////
 	@Override
-	public UserEntity userLogin(String playground, String email) throws UserNotFoundException,RuntimeException {
+	public UserEntity userLogin(String playground, String email) throws RuntimeException {
 		UserEntity existingUser = getUser(playground,email);
 		if(!existingUser.isVerified())
-			throw new RuntimeException("User not verified");
+			throw new RuntimeException("The user "+ existingUser.getKey() + " is not verified");
 		return existingUser;
 	}
 	/////////////////////////////////////////////////////
