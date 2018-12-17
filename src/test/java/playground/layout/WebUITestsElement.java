@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import playground.logic.Location;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Services.PlaygroundElementService;
+import playground.logic.Services.PlaygroundUserService;
 import playground.logic.jpa.ElementAlreadyExistException;
 
 @RunWith(SpringRunner.class)
@@ -34,6 +35,9 @@ public class WebUITestsElement {
 	
 	@Autowired
 	private PlaygroundElementService elementService;
+	
+	@Autowired
+	private PlaygroundUserService userService;
 	
 
 	private RestTemplate restTemplate;
@@ -68,8 +72,9 @@ public class WebUITestsElement {
 
 	@After
 	public void teardown() {
-		// cleanup database
+		// cleanup databases
 		this.elementService.cleanup();
+		this.userService.cleanup();
 	}
 
 
@@ -104,7 +109,7 @@ public class WebUITestsElement {
 
 	// A
 	@Test
-	public void testGetAllElementsUsingPaginationWithDefaultSizeOfFirstPageSuccessfully() throws Exception {
+	public void TestGetAllTheElementsUsingPaginationWithDefaultSizeOfFirstPageWithValidPlayerAccountSuccessfully() throws Exception {
 
 		int DefaultSize = 10;
 		String userEmail = "talin@email.com";
@@ -127,7 +132,7 @@ public class WebUITestsElement {
 
 	// A
 	@Test
-	public void TestGetSomeElementsUsingPaginationSuccessfully() throws Exception {
+	public void TestGetSomeElementsUsingPaginationWithValidPlayerAccountSuccessfully() throws Exception {
 
 		int size = 3;
 		String userEmail = "talin@email.com";
@@ -149,7 +154,7 @@ public class WebUITestsElement {
 
 	// A
 	@Test
-	public void TestGetNoElementsUsingPaginationOf100PageSuccessfully() throws Exception {
+	public void TestGetNoElementsUsingPaginationOf100PageWithValidPlayerAccountSuccessfully() throws Exception {
 
 		int size = 3;
 		int page = 100;
@@ -171,7 +176,7 @@ public class WebUITestsElement {
 
 	// A
 	@Test
-	public void TestGetAllElementsUsingPaginationOfSecondPageSuccessfully() throws Exception {
+	public void TestGetAllElementsUsingPaginationOfSecondPageAndValidMangerAccountSuccessfully() throws Exception {
 
 		int size = 6;
 		int page = 1;
@@ -193,7 +198,27 @@ public class WebUITestsElement {
 
 	// A
 	@Test(expected = Exception.class)
-	public void testGetAllElementsWithIinvalidPageSize() {
+	public void testGetAllElementsWithIinvalidPageSizeAndValidMangerAccount() {
+		// when
+
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/all";
+
+		/*
+		 * Given Server is up And the database contains 20 Elements
+		 */
+		setElementsDatabase(20);
+
+		// When I Get /playground/elements/null/talin@email.com/all?size=-6&page=1
+		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class,userPlayground,userEmail, -6, 1);
+
+		// Then the response status is <> 2xx
+	}
+	
+	// A
+	@Test(expected = Exception.class)
+	public void TestGetAllTheElementsUsingPaginationWithDefaultSizeOfFirstPageWithInvalidPlayerAccount() {
 		// when
 
 		String userEmail = "talin@email.com";
@@ -213,7 +238,7 @@ public class WebUITestsElement {
 
 	// A
 	@Test
-	public void TesTGetAllTheNearElementsUsingPaginationWithDefaultSizeOfFirstPageSuccessfully() throws Exception {
+	public void TesTGetAllTheNearElementsWithValidPlayerAccountUsingPaginationWithDefaultSizeOfFirstPageSuccessfully() throws Exception {
 		int x = 10;
 		int y = 10;
 		int distance = 10;
@@ -240,7 +265,7 @@ public class WebUITestsElement {
 
 	// A
 	@Test
-	public void TestGetSomeOfTheNearElementsUsingPaginationSuccessfully() throws Exception {
+	public void TestGetSomeOfTheNearElementsWithValidPlayerAccountUsingPaginationSuccessfully() throws Exception {
 		int x = 5;
 		int y = 5;
 		int distance = 10;
@@ -269,7 +294,7 @@ public class WebUITestsElement {
 
 	// A
 	@Test
-	public void TestGetAllNearElementsUsingPaginationOfSecondPageSuccessfully() throws Exception {
+	public void TestGetAllNearElementsWithValidPlayerAccountUsingPaginationOfSecondPageSuccessfully() throws Exception {
 		int x = 5;
 		int y = 5;
 		int distance = 10;
@@ -297,7 +322,7 @@ public class WebUITestsElement {
 
 	// A
 	@Test
-	public void TestGetNoNearElementsUsingPaginationOf100PageSuccessfully() throws Exception {
+	public void TestGetNoNearElementsWithValidPlayerAccountUsingPaginationOf100PageSuccessfully() throws Exception {
 		int x = 5;
 		int y = 5;
 		int distance = 10;
@@ -323,7 +348,23 @@ public class WebUITestsElement {
 
 	// A
 	@Test(expected = Exception.class)
-	public void TestGetAllTheNearElementsWithInvalidPageSize() throws Exception {
+	public void TestGetAllTheNearElementsWithInvalidPageSizeAndValidPlayerAccount() throws Exception {
+		// when
+		int x = 5;
+		int y = 4;
+		int distance = 10;
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}";
+
+		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class,userPlayground,userEmail,x,y,distance, -6, 1);
+	}
+	
+	
+	// A
+	@Test(expected = Exception.class)
+	public void TestGetAllTheNearElementsWithInvalidPlayerAccountUsingPaginationWithDefaultSizeOfFirstPage() throws Exception {
 		// when
 		int x = 5;
 		int y = 4;
@@ -391,6 +432,32 @@ public class WebUITestsElement {
 	// A
 	@Test(expected = Exception.class)
 	public void testUpdateNonExistingElement() throws Exception {
+		String userEmail = "talin@email.com";
+		String userPlayground = "2019a.talin"; 
+		
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/2019a.talin/{ID}";
+		String ID = "0";
+
+		Map<String, Object> attributesForEntityInDataBase = new HashMap<String, Object>();
+		// Given server is up
+
+		// When I Put
+		ElementTO updatedElementTO = new ElementTO();
+		updatedElementTO.setId(ID);
+		updatedElementTO.setLocation(new Location(10, 10));
+		updatedElementTO.setName("Rex");
+		updatedElementTO.setType("Dog");
+		updatedElementTO.setAttributes(attributesForEntityInDataBase);
+		updatedElementTO.setCreationDate(null);
+
+		this.restTemplate.put(url, updatedElementTO,userPlayground,userEmail, ID);
+
+		// Then the response status <> 2xx
+	}
+	
+	// A
+	@Test(expected = Exception.class)
+	public void testUpdateAnElementWithPlayerAccount() throws Exception {
 		String userEmail = "talin@email.com";
 		String userPlayground = "2019a.talin"; 
 		

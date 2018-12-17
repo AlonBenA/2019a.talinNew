@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundUserService;
 
-@Component
+//@Component
 @Aspect
 public class ManagerGateway {
 
