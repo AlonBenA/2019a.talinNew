@@ -1,16 +1,12 @@
 package playground.aop;
 
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import playground.logic.Entities.ActivityEntity;
 import playground.logic.Services.PlaygroundElementService;
-import playground.logic.Services.PlaygroundUserService;
-import playground.logic.jpa.ElementNotFoundException;
 
 @Component
 @Aspect
@@ -23,11 +19,10 @@ public class ElementGateway {
 		this.Elements = Elements;
 	}
 	
-	@Around("@annotation(playground.aop.ElementExistCheck) && args(playground, email, ..)")
-	public void CheckIfElementExist (ProceedingJoinPoint pjp, String playground, String email) {
+	@Around("@annotation(playground.aop.ElementExistCheck) && args(playground, email, activityEntity,..)")
+	public void CheckIfElementExist (ProceedingJoinPoint pjp, String playground, String email,ActivityEntity activityEntity)  throws Throwable  {
 		
-		
-		//not sure we need it... it seem like a code that do the same thing Twice
+		Elements.getElement(playground, email, activityEntity.getElementId(), activityEntity.getElementPlayground());
 		
 	}
 	
