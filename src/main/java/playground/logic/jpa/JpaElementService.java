@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+
+import playground.aop.ManagerExistCheck;
+import playground.aop.UserVerifiedAndExistCheck;
 import playground.jpadal.ElementDao;
 import playground.jpadal.NumbersDao;
 import playground.logic.Entities.ElementEntity;
@@ -59,6 +62,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional(readOnly=true)
+	@UserVerifiedAndExistCheck
 	public List<ElementEntity> getAllElements(String userPlayground,String email,int size, int page) {
 		
 		////if it's a Client
@@ -81,6 +85,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional(readOnly=true)
+	@UserVerifiedAndExistCheck
 	public List<ElementEntity> getAllNearElements(String userPlayground,String email,double x, double y, double distance, int size, int page) {
 		
 		Double upperX = (x+distance);
@@ -114,6 +119,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional
+	@ManagerExistCheck
 	public void updateElement(String userPlayground,String email,ElementEntity updatedElementEntity, String playground, String id) throws Exception {
 		
 		ElementEntity existing = getElement( userPlayground,  email,id, playground);
