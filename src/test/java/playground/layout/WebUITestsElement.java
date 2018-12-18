@@ -628,11 +628,11 @@ public class WebUITestsElement {
 	
 	// I
 	@Test
-	public void TestElementCreatedSuccessfully() throws Exception {
+	public void TestElementCreatedWithManagerAccountSuccessfully() throws Exception {
 		// Given Server is up
 
 		String url = base_url + "/playground/elements/{userPlayground}/{email}";
-		String email = "tali@mail.com";
+		String email = "Manger@mail.com";
 		String name = "cat";
 		double x = 1.0;
 		double y = 1.0;
@@ -646,9 +646,11 @@ public class WebUITestsElement {
 		newElement.setAttributes(attributes);
 
 		// Given server is up
-
+		//database contains an manger:
+		createMangerAccount(email, playground);
+		
 		// When I POST
-		// http://localhost:8083/playground/elements/2019a.talin/talin@email.com
+		// http://localhost:8083/playground/elements/2019a.talin/Manger@mail.com
 		// And with body
 		// {
 		// “name”: “cat”,
@@ -668,17 +670,57 @@ public class WebUITestsElement {
 		// "x": 1,
 		// "y": 1
 		// "name": "Animal", "type": "Animal", "attributes": {},
-		// "creatorPlayground":"2019a.talin", "creatorEmail":"Talin@email.com"
+		// "creatorPlayground":"2019a.talin", "creatorEmail":"Manger@mail.com"
 		// }
 		ElementEntity elementEntityExist = this.elementService.getElement(elementAfterPost.getCreatorPlayground(),elementAfterPost.getCreatorEmail(),elementAfterPost.getId(), playground);
 
 		assertThat(elementEntityExist).extracting("name", "type", "x","y", "attributes").containsExactly(name, type,
 				x,y, attributes);
 	}
+	
+	// I
+	@Test(expected = Exception.class)
+	public void TestElementCreatedWithPlayerAccount() throws Exception {
+		// Given Server is up
+
+		String url = base_url + "/playground/elements/{userPlayground}/{email}";
+		String email = "Player@mail.com";
+		String name = "cat";
+		double x = 1.0;
+		double y = 1.0;
+		String type = "animal";
+		Map<String, Object> attributes = new HashMap<>();
+
+		ElementTO newElement = new ElementTO();
+		newElement.setName(name);
+		newElement.setLocation(new Location(x, y));
+		newElement.setType(type);
+		newElement.setAttributes(attributes);
+
+		// Given server is up
+		//database contains an player:
+		createPlayerAccount(email, playground);
+		
+		// When I POST
+		// http://localhost:8083/playground/elements/2019a.talin/Player@mail.com
+		// And with body
+		// {
+		// “name”: “cat”,
+		// “type”:”animal”
+		// “location”:{“x”:1.0,”y”:1.0},
+		// "attributes": {}
+		// }
+		// with headers:
+		// Accept: application/json
+		// Content-Type: application/json
+		this.restTemplate.postForObject(url, newElement, ElementTO.class, playground, email);
+		// Then the response status is <>2xx
+	}
 
 	// I
 	@Test
 	public void TestGetElementSuccessfully() throws Exception {
+
 		// Given Server is up
 		// And the database contains
 		// {
@@ -690,30 +732,34 @@ public class WebUITestsElement {
 		// "type": "Animal",
 		// "attributes": {},
 		// "creatorPlayground":"2019a.talin",
-		// "creatorEmail":”Talin@email.com"
+		// "creatorEmail":”R@mail.com"
 		// }
+
+		
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/{playground}/{id}";
 		String id ;
-		String email = "tali@mail.com";
+		String email = "R@mail.com";
 		String name = "cat";
 		double x = 1.0;
 		double y = 1.0;
 		String type = "animal";
-
+		//database contains an manager:
+		createMangerAccount(email, playground);
+		
 		ElementEntity newElement = new ElementEntity();
 		newElement.setName(name);
 		//newElement.setLocation(new Location(x, y));
 		newElement.setX(x);
 		newElement.setY(y);
-
 		newElement.setType(type);
+		newElement.setCreatorEmail(email);
 
 		newElement = this.elementService.addNewElement(newElement.getPlayground(),newElement.getCreatorEmail(),newElement);
 
 		
 		id = newElement.getId();
 		// When I Get
-		// http://localhost:8083/playground/elements/2019a.talin/talin@email.com/2019a.talin/x
+		// http://localhost:8083/playground/elements/2019a.talin/R@mail.com/2019a.talin/x
 		// with headers:
 		// Accept: application/json
 
@@ -730,7 +776,7 @@ public class WebUITestsElement {
 		// "y": 1
 		// },
 		// "name": "Animal", "type": "Animal", "attributes": {},
-		// "creatorPlayground":"2019a.talin", "creatorEmail":"Talin@email.com"
+		// "creatorPlayground":"2019a.talin", "creatorEmail":"R@mail.com"
 		// }
 		assertThat(actualElement).isNotNull().extracting("playground", "id", "name", "type", "location", "attributes")
 				.containsExactly(playground, id, name, type, new Location(x, y), new HashMap<>());
@@ -741,15 +787,66 @@ public class WebUITestsElement {
 	public void TestGetElementWithInvalidId() throws Exception {
 		// Given Server is up
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/{playground}/{id}";
-		String id = "123";
-		String email = "tali@mail.com";
-
+		String invalidId = "123";
+		String email = "R@mail.com";
+		
+		//database contains an manager:
+		createMangerAccount(email, playground);
+		
 		// When I GET
-		// http://localhost:8083/playground/elements/2019a.talin/null/2019a.talin/0
+		// http://localhost:8083/playground/elements/2019a.talin/R@mail.com/2019a.talin/123
 		// with headers:
 		// Accept: application/json
 		this.restTemplate.getForObject(url, ElementTO.class, playground, email, playground,
-				id);
+				invalidId);
+		// Then the response status is <> 2xx
+	}
+	
+	// I
+	@Test(expected = Exception.class)
+	public void TestGetElementWithInvalidUser() throws Exception {
+		//		Given Server is up
+		//        And the database contains 
+		//{
+		//“playground”:  2019a.talin”
+		//“ id”: x
+		//"x":  1,
+		//"y": 1
+		//"name": "cat",
+		//"type": "Animal",
+		//"attributes": {},
+		//"creatorPlayground":"2019a.talin",
+		//"creatorEmail":”Talin@email.com"
+		//}
+		//
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/{playground}/{id}";
+		String email = "Tali@mail.com";
+		String invalidEmail = "try@mail.com";
+
+		String name = "cat";
+		double x = 1.0;
+		double y = 1.0;
+		String type = "animal";
+		
+		//database contains an manager:
+		createMangerAccount(email, playground);
+		
+		ElementEntity newElement = new ElementEntity();
+		newElement.setName(name);
+		//newElement.setLocation(new Location(x, y));
+		newElement.setX(x);
+		newElement.setY(y);
+		newElement.setType(type);
+		newElement.setCreatorEmail(email);
+
+		newElement = this.elementService.addNewElement(newElement.getPlayground(),newElement.getCreatorEmail(),newElement);
+		
+		//When I GET http://localhost:8083/playground/elements/2019a.talin/try@mail.com/2019a.talin/x
+		//with headers:
+		//Accept: application/json
+		
+		this.restTemplate.getForObject(url, ElementTO.class, playground, invalidEmail, playground,
+				newElement.getId());
 		// Then the response status is <> 2xx
 	}
 

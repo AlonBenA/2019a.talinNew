@@ -32,6 +32,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional
+	@ManagerExistCheck
 	public ElementEntity addNewElement(String userPlayground, String email,ElementEntity elementEntity) throws ElementAlreadyExistException {
 		
 		if(!elements.existsById(elementEntity.getKey()))
@@ -50,6 +51,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional(readOnly=true)
+	@UserVerifiedAndExistCheck
 	public ElementEntity getElement(String userPlayground, String email,String element_id, String element_Playground) throws ElementNotFoundException {
 		// set key for element 
 		String element_key = element_Playground + "@@" +element_id;
