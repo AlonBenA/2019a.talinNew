@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundUserService;
 
-//@Component
+@Component
 @Aspect
 public class ManagerGateway {
 
@@ -22,7 +22,7 @@ public class ManagerGateway {
 		this.userService = userService;
 	}
 	
-	@Around("@annotation(playground.aop.ManagerCheck) && args(playground, email,..)")
+	@Around("@annotation(playground.aop.ManagerExistCheck) && args(playground, email,..)")
 	public Object checkIfPlayer(ProceedingJoinPoint pjp, String playground, String email) throws Throwable {
 		UserEntity userEntity = userService.userLogin(playground, email);
 		if(!"Manager".equals(userEntity.getRole()))

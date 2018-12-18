@@ -10,11 +10,12 @@ import org.springframework.stereotype.Component;
 import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundUserService;
 
-//@Component
+@Component
 @Aspect
 public class PlayerGateway {
 //	private Log log = LogFactory.getLog(LoggerAspect.class);
 	private PlaygroundUserService userService;
+	
 	
 	@Autowired
 	public PlayerGateway(PlaygroundUserService userService) {
@@ -22,11 +23,13 @@ public class PlayerGateway {
 		this.userService = userService;
 	}
 	
-	@Around("@annotation(playground.aop.PlayerCheck) && args(playground, email,..)")
+	
+	@Around("@annotation(playground.aop.PlayerExistCheck) && args(playground, email,..)")
 	public Object checkIfPlayer(ProceedingJoinPoint pjp, String playground, String email) throws Throwable {
 		UserEntity userEntity = userService.userLogin(playground, email);
 		if(!"Player".equals(userEntity.getRole()))
 				throw new RuntimeException("The user is not Player!");
 		return pjp.proceed();
 	}
+
 }
