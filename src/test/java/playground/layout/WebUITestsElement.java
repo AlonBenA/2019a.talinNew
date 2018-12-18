@@ -76,6 +76,17 @@ public class WebUITestsElement {
 		this.elementService.cleanup();
 		this.userService.cleanup();
 	}
+	
+	
+	private void createMangerAccount()
+	{
+		
+	}
+	
+	private void createPlayerAccount()
+	{
+		
+	}
 
 
 	private void setElementsDatabase(int numberOFElements) {
