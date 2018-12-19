@@ -4,6 +4,9 @@ package playground.logic.jpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import playground.aop.MyLogger;
+import playground.aop.PlayerExistCheck;
 import playground.jpadal.ActivityDao;
 import playground.jpadal.ElementDao;
 import playground.jpadal.NumbersDao;
@@ -29,6 +32,8 @@ public class JpaActivityService implements PlaygroundActivityService {
 
 	@Override
 	@Transactional
+	@PlayerExistCheck
+	@MyLogger
 	public ActivityEntity addNewActivity(String userPlayground, String userEmail, ActivityEntity activityEntity) {
 		if (!activities.existsById(activityEntity.getKey())) {
 			// check if the element to activate exists
@@ -50,6 +55,7 @@ public class JpaActivityService implements PlaygroundActivityService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@MyLogger
 	public ActivityEntity getActivity(String userPlayground, String userEmail, String activity_id, String playground) {
 		// set key for element
 		String activity_key = playground + "@@" + activity_id;
@@ -58,11 +64,12 @@ public class JpaActivityService implements PlaygroundActivityService {
 	}
 
 	@Override
+	@MyLogger
 	public boolean validateActivityType(String type) {
 		boolean result;
 
 		switch (type) {
-		case "ACO":
+		case "ECHO":
 			result = true;
 			break;
 
@@ -74,6 +81,7 @@ public class JpaActivityService implements PlaygroundActivityService {
 	}
 
 	@Override
+	@MyLogger
 	public synchronized void cleanup() {
 		this.activities.deleteAll();
 	}

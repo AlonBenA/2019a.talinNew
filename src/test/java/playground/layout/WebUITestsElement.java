@@ -863,6 +863,8 @@ public class WebUITestsElement {
 		 */
 
 		setElementsDatabase(20);
+		
+		createPlayerAccount(email, playground);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
@@ -880,6 +882,8 @@ public class WebUITestsElement {
 		/*
 		 * Given Server is up
 		 */
+		
+		createPlayerAccount(email, playground);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
@@ -898,6 +902,8 @@ public class WebUITestsElement {
 		/*
 		 * Given Server is up
 		 */
+		
+		createPlayerAccount(email, playground);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
@@ -918,6 +924,8 @@ public class WebUITestsElement {
 		 * Given Server is up And the database contains 10 elements with the name cat
 		 */
 		setElementsDatabase(10);
+		
+		createPlayerAccount(email, playground);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
@@ -940,6 +948,8 @@ public class WebUITestsElement {
 		 * Given Server is up And the database contains 10 elements with the name cat
 		 */
 		setElementsDatabase(10);
+		
+		createPlayerAccount(email, playground);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
@@ -963,6 +973,8 @@ public class WebUITestsElement {
 		 * Given Server is up And the database contains 10 elements with the name cat
 		 */
 		setElementsDatabase(10);
+		
+		createPlayerAccount(email, playground);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
@@ -981,6 +993,8 @@ public class WebUITestsElement {
 		/*
 		 * Given Server is up
 		 */
+		
+		createPlayerAccount(email, playground);
 
 		// When
 		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class,

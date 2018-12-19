@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 
 import playground.aop.ManagerExistCheck;
+import playground.aop.MyLogger;
 import playground.aop.UserVerifiedAndExistCheck;
 import playground.jpadal.ElementDao;
 import playground.jpadal.NumbersDao;
@@ -156,6 +157,7 @@ public class JpaElementService implements PlaygroundElementService {
 	}
 
 	@Override
+	@MyLogger
 	public void validateElementAttribteName(String name) throws ElementAttributeNotValidException {
 		if(!name.equals("name") && !name.equals("type"))
 			throw new ElementAttributeNotValidException("Invalid Attribute for searching elements");
@@ -163,34 +165,64 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional
+	@MyLogger
 	public void cleanup() {
 		
 		this.elements.deleteAll();
 	}
 
 	@Override
-	public List<ElementEntity> getElementsWithAttribute(String attributeName, String value, int size, int page) {
+	@UserVerifiedAndExistCheck
+	@MyLogger
+	public List<ElementEntity> getElementsWithAttribute(String userPlayground,String email, String attributeName, String value, int size, int page) {
 		// if attribute is "name"
-		if(attributeName.equals("name")) {
-			return this.elements.findAllByNameLike(
-					value,
-					PageRequest.of(
-					page, 
-					size, 
-					Direction.DESC, 
-					"creationDate"))
-			.getContent();	
-		}else {
-			// attribute is "type"
-			return this.elements.findAllByTypeLike(
-					value,
-					PageRequest.of(
-					page, 
-					size, 
-					Direction.DESC, 
-					"creationDate"))
-			.getContent();	
-		}
+		//if(isManager) {
+			if(attributeName.equals("name")) {
+				return this.elements.findAllByNameLike(
+						value,
+						PageRequest.of(
+						page, 
+						size, 
+						Direction.DESC, 
+						"creationDate"))
+				.getContent();	
+			}else {
+				// attribute is "type"
+				return this.elements.findAllByTypeLike(
+						value,
+						PageRequest.of(
+						page, 
+						size, 
+						Direction.DESC, 
+						"creationDate"))
+				.getContent();	
+			}
+		//}else { //Player
+/*			Date today = new Date();
+			if(attributeName.equals("name")) {
+				return this.elements.findAllByExirationDateIsNullAndNameLikeOrExirationDateAfterAndNameLike(
+						today,
+						value,
+						PageRequest.of(
+						page, 
+						size, 
+						Direction.DESC, 
+						"creationDate"))
+				.getContent();	
+			}else {
+				// attribute is "type"
+				return this.elements.findAllByExirationDateIsNullAndTypeLikeOrExirationDateAfterAndTypeLike(
+						today,
+						value,
+						PageRequest.of(
+						page, 
+						size, 
+						Direction.DESC, 
+						"creationDate"))
+				.getContent();	
+			}*/
+	//	}
+		
 	}
 	
 	

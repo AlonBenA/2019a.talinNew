@@ -23,6 +23,6 @@ public interface PlaygroundElementService {
 	
 	public void cleanup();
 
-	public List<ElementEntity> getElementsWithAttribute(String attributeName, String value, int size, int page);
+	public List<ElementEntity> getElementsWithAttribute(String userPlayground,String email, String attributeName, String value, int size, int page);
 
 }

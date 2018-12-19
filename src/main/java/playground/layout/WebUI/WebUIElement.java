@@ -56,7 +56,7 @@ public class WebUIElement {
 		// validate attribute
 		elementService.validateElementAttribteName(attributeName);
 		
-		return elementService.getElementsWithAttribute(attributeName, value, size, page)
+		return elementService.getElementsWithAttribute(userPlayground, email, attributeName, value, size, page)
 		.stream()
 		.map(ElementTO::new)
 		.collect(Collectors.toList())
