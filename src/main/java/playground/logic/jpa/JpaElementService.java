@@ -12,8 +12,10 @@ import playground.aop.MyLogger;
 import playground.aop.UserVerifiedAndExistCheck;
 import playground.jpadal.ElementDao;
 import playground.jpadal.NumbersDao;
+import playground.jpadal.UserDao;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.GeneratedNumber;
+import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundElementService;
 import java.util.Date;
 
@@ -23,11 +25,13 @@ public class JpaElementService implements PlaygroundElementService {
 			
 	private NumbersDao numbers;
 	private ElementDao elements;
+	private UserDao users;
 
 	@Autowired
-	public JpaElementService(NumbersDao numbers,ElementDao elements) {
+	public JpaElementService(NumbersDao numbers,ElementDao elements,UserDao users) {
 		super();
 		this.elements = elements;
+		this.users = users;
 		this.numbers = numbers;
 	}
 
@@ -66,63 +70,79 @@ public class JpaElementService implements PlaygroundElementService {
 	@Override
 	@Transactional(readOnly=true)
 	@UserVerifiedAndExistCheck
+	@MyLogger
 	public List<ElementEntity> getAllElements(String userPlayground,String email,int size, int page) {
 		
-		////if it's a Client
-		Date today = new Date();
-		return this.elements.findAllByExirationDateIsNullOrExirationDateAfter(
-				today
-				,PageRequest.of(
-				page, 
-				size, 
-				Direction.DESC, 
-				"creationDate"))
-		.getContent();
-		/*
-		//if it's a Manager
-		return 
-		this.elements.findAll(PageRequest.of(page, size, Direction.DESC, "creationDate"))
+		
+		if("Manager".equalsIgnoreCase(GetUserRole(userPlayground,email)))
+		{
+			//if it's a Manager
+			return 
+			this.elements.findAll(PageRequest.of(page, size, Direction.DESC, "creationDate"))
+				.getContent();
+		}
+		else
+		{
+			//if it's a Client
+			Date today = new Date();
+			return this.elements.findAllByExirationDateIsNullOrExirationDateAfter(
+					today
+					,PageRequest.of(
+					page, 
+					size, 
+					Direction.DESC, 
+					"creationDate"))
 			.getContent();
-		*/
+		}
+		
+
+
+
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	@UserVerifiedAndExistCheck
+	@MyLogger
 	public List<ElementEntity> getAllNearElements(String userPlayground,String email,double x, double y, double distance, int size, int page) {
 		
 		Double upperX = (x+distance);
 		Double lowerX = (x-distance);
 		Double upperY = (y+distance);
 		Double lowerY = (y-distance);
-		Date today = new Date();
+
 		
-		//if it's a Client
-		return this.elements.findAllByExirationDateIsNullAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThanOrExirationDateAfterAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX,lowerX,upperY,lowerY
-				,today,upperX,lowerX,upperY,lowerY
-				,PageRequest.of(
-				page, 
-				size, 
-				Direction.DESC, 
-				"creationDate"))
-		.getContent();
-		/*
-		 * if it's a Manager
-		 * 		return this.elements.findAllByXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX,lowerX,upperY,lowerY
-				,PageRequest.of(
-				page, 
-				size, 
-				Direction.DESC, 
-				"creationDate"))
-		.getContent();	
-		 * 
-		 */
+		if("Manager".equalsIgnoreCase(GetUserRole(userPlayground,email)))
+		{
+			//if it's a Manager
+			return this.elements.findAllByXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX,lowerX,upperY,lowerY
+					,PageRequest.of(
+					page, 
+					size, 
+					Direction.DESC, 
+					"creationDate"))
+			.getContent();	
+		}
+		else
+		{
+			//if it's a Client
+			Date today = new Date();
+			return this.elements.findAllByExirationDateIsNullAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThanOrExirationDateAfterAndXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX,lowerX,upperY,lowerY
+					,today,upperX,lowerX,upperY,lowerY
+					,PageRequest.of(
+					page, 
+					size, 
+					Direction.DESC, 
+					"creationDate"))
+			.getContent();
+		}
 				
 	}
 
 	@Override
 	@Transactional
 	@ManagerExistCheck
+	@MyLogger
 	public void updateElement(String userPlayground,String email,ElementEntity updatedElementEntity, String playground, String id) throws Exception {
 		
 		ElementEntity existing = getElement( userPlayground,  email,id, playground);
@@ -223,6 +243,15 @@ public class JpaElementService implements PlaygroundElementService {
 			}*/
 	//	}
 		
+	}
+
+	@Override
+	public String GetUserRole(String userPlayground, String email) throws UserNotFoundException {
+		String key = userPlayground+"@@"+email;
+		UserEntity User = this.users.findById(key)
+		.orElseThrow(()->new UserNotFoundException("no user found for: " + key));
+		
+		return User.getRole();
 	}
 	
 	
