@@ -27,7 +27,10 @@ public class WebUITestsUser {
 
 	@Autowired
 	private PlaygroundUserService userService;
-
+	
+	@Autowired
+	private testHelper testHelper;
+	
 	private RestTemplate restTemplate;
 
 	private String playground;
@@ -59,7 +62,8 @@ public class WebUITestsUser {
 	@After
 	public void teardown() {
 		// cleanup database
-		this.userService.cleanup();
+		//this.userService.cleanup();
+		testHelper.teardown();
 	}
 
 	
@@ -321,21 +325,17 @@ public class WebUITestsUser {
 	public void TestUpdateUserSuccessfully() throws Exception {
 
 		String url = base_url + "/playground/users/{playground}/{email}";
-
 		String email = "talin@email.com";
-		String username = "user2";
-		String avatar = "https://goo.gl/images/WqDt96";
-		String role = "Player";
+		String userName = "User1";
+		String role = "player";
 
 		String newAvatar = "https://moodle.afeka.ac.il/theme/image.jpg";
 		// Given server is up
-		// And the database contains the user database contains {"email":
-		// ”talin@email.com”,"playground": "2019a.Talin",
-		// "username": "user2","avatar": "https://goo.gl/images/WqDt96",
+		// And the database contains the user {"email":
+		// "talin@email.com","playground": "2019a.Talin",
+		// "username": "user1","avatar": "https://goo.gl/images/WqDt96",
 		// "role": "Player","points": 0,"code":null}
-		UserEntity userEnti = new UserEntity(email, username, avatar, role);
-		userEnti.setCode(null);
-		this.userService.addNewUser(userEnti);
+		testHelper.AddNewUser(email, playground, "Player", true);
 
 		// When I Put http://localhost:8083/playground/users/2019a.talin/talin@email.com
 		// And with body
@@ -351,24 +351,64 @@ public class WebUITestsUser {
 		// Accept: application/json
 		// Content-Type: application/json
 		UserTO updateUser = new UserTO();
-		updateUser.setRole(role);
-		updateUser.setUsername(username);
 		updateUser.setAvatar(newAvatar);
-
+		updateUser.setUsername(userName);
+		updateUser.setRole(role);
+		
 		this.restTemplate.put(url, updateUser, playground, email);
 
 		// Then the response status is 200
 		// And the database contains for email: ”talin@email.com” the object
 		// {"email": ”talin@email.com”,"playground": "2019a.Talin",
-		// "username":"user2","avatar":“https://moodle.afeka.ac.il/theme/image.jpg",
+		// "username":"user1","avatar":“https://moodle.afeka.ac.il/theme/image.jpg",
 		// "role": "Player","points": 0,"code":null
 		// }
 		UserEntity actualUser = this.userService.getUser(playground, email);
 
 		assertThat(actualUser).extracting("email", "playground", "username", "avatar", "role", "code")
-				.containsExactly(email, playground, username, newAvatar, role, null);
+				.containsExactly(email, playground, userName, newAvatar, role, null);
 	}
+	// I
+		@Test(expected = Exception.class)
+		public void TestUpdateUnvalidateUser() throws Exception {
 
+			String url = base_url + "/playground/users/{playground}/{email}";
+
+			String email = "talin@email.com";
+			String username = "user1";
+			String role = "Player";
+
+			String newAvatar = "https://moodle.afeka.ac.il/theme/image.jpg";
+			// Given server is up
+			// And the database contains the user database contains {"email":
+			// ”talin@email.com”,"playground": "2019a.Talin",
+			// "username": "user1","avatar": "https://goo.gl/images/WqDt96",
+			// "role": "Player","points": 0,"code":pinCode}
+			testHelper.AddNewUser(email, playground, role, false);
+
+
+			// When I Put http://localhost:8083/playground/users/2019a.talin/talin@email.com
+			// And with body
+			// {
+			// "email": ”talin@email.com”
+			// "playground": "2019a.Talin",
+			// "username": "user2",
+			// "avatar": “https://moodle.afeka.ac.il/theme/image.jpg",
+			// "role": "Player",
+			// "points": 0
+			// }
+			// with headers:
+			// Accept: application/json
+			// Content-Type: application/json
+			UserTO updateUser = new UserTO();
+			updateUser.setRole(role);
+			updateUser.setUsername(username);
+			updateUser.setAvatar(newAvatar);
+
+			this.restTemplate.put(url, updateUser, playground, email);
+
+			// Then the response status is <>200
+		}
 	// I
 	@Test(expected = Exception.class)
 	public void TestUpdateNonExistingUser() throws Exception {
