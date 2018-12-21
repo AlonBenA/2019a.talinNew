@@ -36,6 +36,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional
+	@MyLogger
 	@ManagerExistCheck
 	public ElementEntity addNewElement(String userPlayground, String email, ElementEntity elementEntity)
 			throws ElementAlreadyExistException {
@@ -55,6 +56,7 @@ public class JpaElementService implements PlaygroundElementService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@MyLogger
 	@UserVerifiedAndExistCheck
 	public ElementEntity getElement(String userPlayground, String email, String element_id, String element_Playground)
 			throws ElementNotFoundException {

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import playground.aop.MyLogger;
 import playground.aop.UserVerifiedAndExistCheck;
 import playground.jpadal.UserDao;
 import playground.logic.Entities.UserEntity;
@@ -66,6 +67,7 @@ public class JpaUserService implements PlaygroundUserService{
 
 	@Override
 	@Transactional
+	@MyLogger
 	public void updateUser(String playground,String email, UserEntity updatedUserEntity  ) throws Exception {
 		UserEntity existing = userLogin(playground,email);
 		if (updatedUserEntity.getUsername() != null) {
