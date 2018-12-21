@@ -24,22 +24,29 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 
 	@Override
 	public Object invokeAction(ActivityEntity activity) {
+		long points = 10;
 		String UserKey = activity.getPlayerPlayground() + "@@" + activity.getPlayerEmail();
 		UserEntity user = this.users.findById(UserKey)
 				.orElseThrow(() -> new UserNotFoundException("no user found for: " + UserKey));
-
+		// user verified check
+		if (!user.isVerified())
+			throw new RuntimeException("The user " + UserKey + " is not verified.");
+		// user player check
+		if ("Player".equalsIgnoreCase(user.getRole()))
+			throw new RuntimeException("The user " + UserKey + " is not player.");
 		// set key for element
 		String element_key = activity.getElementPlayground() + "@@" + activity.getElementId();
 		ElementEntity element = this.elements.findById(element_key)
 				.orElseThrow(() -> new ElementNotFoundException("no Element for: " + element_key));
 
 		if ("Animal".equalsIgnoreCase(element.getType())) {
-			// Add point to user
+			//add 10 points to user
+			user.increasePoints(points);
+			return new Message("the user " + UserKey +" pet a "+element.getName());
 		} else {
 			throw new RuntimeException("Not an Animal!");
 		}
 
-		return activity;
 	}
 
 }
