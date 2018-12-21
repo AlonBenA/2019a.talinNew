@@ -81,21 +81,6 @@ public class WebUITestsElement {
 		this.userService.cleanup();
 	}
 
-	private void createMangerAccount(String userEmail, String userPlayground) {
-		String username = "user1";
-		String avatar = "https://goo.gl/images/WqDt96";
-		String role = "Manager";
-		UserEntity user = new UserEntity(userEmail, username, avatar, role);
-		user.setPlayground(userPlayground);
-
-		// add the user to the database
-		user = userService.addNewUser(user);
-
-		// validate user to the database
-		userService.validateUser(user, user.getCode());
-
-	}
-
 	private void createPlayerAccount(String userEmail, String userPlayground) {
 		String username = "user1";
 		String avatar = "https://goo.gl/images/WqDt96";
@@ -119,8 +104,10 @@ public class WebUITestsElement {
 		String creatorEmail = "2019a.talin@Gmail.com";
 		final String name;
 
-		// Create the manger to add the elements
-		createMangerAccount(creatorEmail, creatorPlayground);
+		/*
+		 * Create the manger to add the elements
+		 */
+		testHelper.AddNewUser(creatorEmail, "Manager", true);
 
 		// location,value,exirationDate,type,attributes,creatorPlayground,creatorEmail
 		// add specific attribute
@@ -161,7 +148,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", true);
+		testHelper.AddNewUser(userEmail, "Player", true);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail);
@@ -188,7 +175,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", true);
+		testHelper.AddNewUser(userEmail, "Player", true);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail,
@@ -217,7 +204,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", true);
+		testHelper.AddNewUser(userEmail,"Player", true);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail,
@@ -246,7 +233,7 @@ public class WebUITestsElement {
 		 * And the database contains manger
 		 */
 
-		testHelper.AddNewUser(userEmail, userPlayground, "Manager", true);
+		testHelper.AddNewUser(userEmail, "Manager", true);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail,
@@ -273,7 +260,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains manger
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Manager", true);
+		testHelper.AddNewUser(userEmail, "Manager", true);
 
 		// When I Get /playground/elements/null/talin@email.com/all?size=-6&page=1
 		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class, userPlayground, userEmail,
@@ -317,7 +304,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains Unverified Player
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", false);
+		testHelper.AddNewUser(userEmail, "Player", false);
 
 		// when
 		this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail);
@@ -346,7 +333,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", true);
+		testHelper.AddNewUser(userEmail, "Player", true);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail, x,
@@ -380,7 +367,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", true);
+		testHelper.AddNewUser(userEmail, "Player", true);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail, x,
@@ -415,7 +402,7 @@ public class WebUITestsElement {
 		 * And the database contains player
 		 */
 
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", true);
+		testHelper.AddNewUser(userEmail, "Player", true);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail, x,
@@ -450,7 +437,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", true);
+		testHelper.AddNewUser(userEmail, "Player", true);
 
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail, x,
 				y, distance, size, page);
@@ -478,7 +465,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", true);
+		testHelper.AddNewUser(userEmail, "Player", true);
 
 		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}";
 
@@ -531,7 +518,7 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", false);
+		testHelper.AddNewUser(userEmail, "Player", false);
 
 		// when
 		this.restTemplate.getForObject(url, ElementTO[].class, userPlayground, userEmail, x, y, distance, size);
@@ -557,7 +544,7 @@ public class WebUITestsElement {
 		elementEntity.setCreationDate(null);
 
 		// database contains an manager:
-		testHelper.AddNewUser(userEmail, userPlayground, "Manager", true);
+		testHelper.AddNewUser(userEmail, "Manager", true);
 
 		// And the database contains an Element
 
@@ -648,7 +635,7 @@ public class WebUITestsElement {
 		elementEntity.setExirationDate(null);
 
 		// create a manger to add element
-		testHelper.AddNewUser(MangerEmail, userPlayground, "Manager", true);
+		testHelper.AddNewUser(MangerEmail, "Manager", true);
 
 		// And the database contains an Element
 
@@ -656,7 +643,7 @@ public class WebUITestsElement {
 				elementEntity.getCreatorEmail(), elementEntity);
 
 		// database contains an player
-		testHelper.AddNewUser(userEmail, userPlayground, "Player", true);
+		testHelper.AddNewUser(userEmail, "Player", true);
 
 		// When I Put
 		// http://localhost:8083/playground/elements/2019a.talin/Manger@mail.com/2019a.talin/ElementID
@@ -694,7 +681,7 @@ public class WebUITestsElement {
 		elementEntity.setCreationDate(null);
 
 		// database contains an Unverified manager:
-		testHelper.AddNewUser(userEmail, userPlayground, "Manager", false);
+		testHelper.AddNewUser(userEmail, "Manager", false);
 
 		// And the database contains an Element
 
@@ -741,7 +728,7 @@ public class WebUITestsElement {
 
 		// Given server is up
 		// database contains an manger:
-		testHelper.AddNewUser(email, playground, "Manager", true);
+		testHelper.AddNewUser(email, "Manager", true);
 
 		// When I POST
 		// http://localhost:8083/playground/elements/2019a.talin/Manger@mail.com
@@ -802,7 +789,7 @@ public class WebUITestsElement {
 
 		// Given server is up
 		// database contains an manger:
-		testHelper.AddNewUser(email, playground, "Manager", false);
+		testHelper.AddNewUser(email, "Manager", false);
 
 		// When I POST
 		// http://localhost:8083/playground/elements/2019a.talin/Manger@mail.com
@@ -849,7 +836,7 @@ public class WebUITestsElement {
 
 		// Given server is up
 		// database contains an player:
-		testHelper.AddNewUser(email, playground, "Player", true);
+		testHelper.AddNewUser(email, "Player", true);
 
 		// When I POST
 		// http://localhost:8083/playground/elements/2019a.talin/Player@mail.com
@@ -893,7 +880,7 @@ public class WebUITestsElement {
 		double y = 1.0;
 		String type = "animal";
 		// database contains an manager:
-		testHelper.AddNewUser(email, playground, "Manager", true);
+		testHelper.AddNewUser(email,"Manager", true);
 
 		ElementEntity newElement = new ElementEntity();
 		newElement.setName(name);
@@ -959,8 +946,8 @@ public class WebUITestsElement {
 		double y = 1.0;
 		String type = "animal";
 		// database contains an manager:
-		testHelper.AddNewUser(email, playground, "Manager", true);
-		testHelper.AddNewUser(unvalidateEmail, playground, "Manager", false);
+		testHelper.AddNewUser(email, "Manager", true);
+		testHelper.AddNewUser(unvalidateEmail, "Manager", false);
 
 		ElementEntity newElement = new ElementEntity();
 		newElement.setName(name);
@@ -993,7 +980,7 @@ public class WebUITestsElement {
 		String email = "R@mail.com";
 
 		// database contains an manager:
-		testHelper.AddNewUser(email, playground, "Manager", true);
+		testHelper.AddNewUser(email, "Manager", true);
 
 		// When I GET
 		// http://localhost:8083/playground/elements/2019a.talin/R@mail.com/2019a.talin/123
@@ -1030,7 +1017,7 @@ public class WebUITestsElement {
 		String type = "animal";
 
 		// database contains an manager:
-		testHelper.AddNewUser(email, playground, "Manager", true);
+		testHelper.AddNewUser(email, "Manager", true);
 
 		ElementEntity newElement = new ElementEntity();
 		newElement.setName(name);

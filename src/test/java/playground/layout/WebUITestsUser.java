@@ -335,7 +335,7 @@ public class WebUITestsUser {
 		// "talin@email.com","playground": "2019a.Talin",
 		// "username": "user1","avatar": "https://goo.gl/images/WqDt96",
 		// "role": "Player","points": 0,"code":null}
-		testHelper.AddNewUser(email, playground, "Player", true);
+		testHelper.AddNewUser(email, "Player", true);
 
 		// When I Put http://localhost:8083/playground/users/2019a.talin/talin@email.com
 		// And with body
@@ -384,7 +384,7 @@ public class WebUITestsUser {
 			// ”talin@email.com”,"playground": "2019a.Talin",
 			// "username": "user1","avatar": "https://goo.gl/images/WqDt96",
 			// "role": "Player","points": 0,"code":pinCode}
-			testHelper.AddNewUser(email, playground, role, false);
+			testHelper.AddNewUser(email, role, false);
 
 
 			// When I Put http://localhost:8083/playground/users/2019a.talin/talin@email.com

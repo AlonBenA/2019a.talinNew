@@ -20,6 +20,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.UserEntity;
@@ -38,10 +41,16 @@ public class WebUITestsActivity {
 	
 	@Autowired
 	private PlaygroundUserService userService;
+	
+	@Autowired
+	private testHelper testHelper;
 
 	private RestTemplate restTemplate;
 
 	private String playground;
+	
+	
+	private ObjectMapper jackson = new ObjectMapper();
 
 	
 	@Value("${playground}")	//set playground as "2019a.talin"
@@ -218,4 +227,89 @@ public class WebUITestsActivity {
 
 		// Then the response status is <> 2xx
 	}
+	
+	//A
+	//@test
+	public void testFeedActivateElementWithTypeAnimalSuccessfully() throws Exception
+	{
+		//create Manger to add element
+		String managerEmail = "manager@mail.com";
+		String userEmail = " user@email.com";
+		String playground = "2019a.talin";
+		ElementEntity Animal = new ElementEntity();
+		Animal.setType("Animal");
+		Long numberOfPointsToAdd = new Long(1);
+		
+		// Given Server is up
+		// database contains an manager to add element
+		testHelper.AddNewUser(managerEmail, "Manager", true);
+		
+		//And the database contains element 
+
+		elementService.addNewElement(playground, managerEmail, Animal);
+		
+		//And the database contains player
+		testHelper.AddNewUser(userEmail, "Player", true);
+		UserEntity user = userService.getUser(playground, userEmail);
+		Long OldNumberOfPoints = user.getPoints();
+		
+
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
+		
+		
+		ActivityTO newActivityTO = new ActivityTO();
+		newActivityTO.setElementId(Animal.getId());
+		newActivityTO.setElementPlayground(Animal.getPlayground());
+		newActivityTO.setType("Feed");
+		Object rv = this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		
+		//Then the response status is 2xx and 
+		
+		user = userService.getUser(playground, userEmail);
+		Long NewNumberOfPoints = user.getPoints();
+		Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(rv), Map.class);
+		
+		
+		//And the database contains user with Points + 1 
+		assertThat(OldNumberOfPoints + numberOfPointsToAdd).isEqualTo(NewNumberOfPoints);
+		
+		//and body is:
+		assertThat(rvMap.get("message")).isEqualTo("the user " + user.getUsername() +" feed "+ Animal.getName());
+	}
+	
+	//A
+	//@Test(expected = Exception.class)
+	public void testFeedActivateElementWithTypeBoard() throws Exception
+	{
+		//create Manger to add element
+		String managerEmail = "manager@mail.com";
+		String userEmail = " user@email.com";
+		String playground = "2019a.talin";
+		ElementEntity Board = new ElementEntity();
+		Board.setType("Board");
+		
+		// Given Server is up
+		// database contains an manager to add element
+		testHelper.AddNewUser(managerEmail, "Manager", true);
+		
+		//And the database contains element with type Board
+		elementService.addNewElement(playground, managerEmail, Board);
+		
+		//And the database contains player
+		testHelper.AddNewUser(userEmail, "Player", true);
+		UserEntity user = userService.getUser(playground, userEmail);
+
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
+		
+		
+		ActivityTO newActivityTO = new ActivityTO();
+		newActivityTO.setElementId(Board.getId());
+		newActivityTO.setElementPlayground(Board.getPlayground());
+		newActivityTO.setType("Feed");
+		
+		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		
+		
+	}
+
 }

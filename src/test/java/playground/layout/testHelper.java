@@ -12,13 +12,14 @@ public class testHelper {
 	
 
 	private PlaygroundUserService userService;
+	String userPlayground = "2019a.talin";
 	
 	@Autowired
 	public testHelper(PlaygroundUserService userService) {
 		this.userService = userService;
 	}
 	
-	public void AddNewUser(String userEmail,String userPlayground,String role,Boolean toValidate)
+	public void AddNewUser(String userEmail,String role,Boolean toValidate)
 	{
 		String username = "user1";
 		String avatar = "https://goo.gl/images/WqDt96";
