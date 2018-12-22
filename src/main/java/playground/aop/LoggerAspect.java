@@ -20,7 +20,7 @@ public class LoggerAspect {
 		String methodName = pjp.getSignature().getName();
 		String logOutput = className + "." + methodName + "()";
 		log.info(logOutput + " - start");
-
+		
 		try {
 			Object rv = pjp.proceed();
 			// after success

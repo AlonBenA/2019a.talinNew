@@ -235,7 +235,6 @@ public class WebUITestsActivity {
 		//create Manger to add element
 		String managerEmail = "manager@mail.com";
 		String userEmail = " user@email.com";
-		String playground = "2019a.talin";
 		ElementEntity Animal = new ElementEntity();
 		Animal.setType("Animal");
 		Long numberOfPointsToAdd = new Long(1);
@@ -284,7 +283,6 @@ public class WebUITestsActivity {
 		//create Manger to add element
 		String managerEmail = "manager@mail.com";
 		String userEmail = " user@email.com";
-		String playground = "2019a.talin";
 		ElementEntity Board = new ElementEntity();
 		Board.setType("Board");
 		
@@ -310,6 +308,77 @@ public class WebUITestsActivity {
 		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
 		
 		
+	}
+	
+	
+	// S
+	// @test
+	public void testPostMessageActivateElementWithTypeBoardSuccessfully() throws Exception {
+		// create Manger to add element
+		String managerEmail = "manager@mail.com";
+		String userEmail = " user@email.com";
+		ElementEntity board = new ElementEntity();
+		board.setType("Board");
+
+		// Given Server is up
+		// database contains an manager to add element
+		testHelper.AddNewUser(managerEmail, "Manager", true);
+
+		// And the database contains Board element
+
+		elementService.addNewElement(playground, managerEmail, board);
+
+		// And the database contains player
+		testHelper.AddNewUser(userEmail, "Player", true);
+		userService.getUser(playground, userEmail);
+
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
+
+		ActivityTO newActivityTO = new ActivityTO();
+		newActivityTO.setElementId(board.getId());
+		newActivityTO.setElementPlayground(board.getPlayground());
+		newActivityTO.setType("PostMessage");
+		Object rv = this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+
+		// Then the response status is 2xx
+
+		UserEntity user = userService.getUser(playground, userEmail);
+		Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(rv), Map.class);
+
+		// and body is:
+		assertThat(rvMap.get("message")).isEqualTo("the user " + user.getKey() +" posted a message in " + board.getKey() + " Board");
+	}
+
+	
+	// S
+	// @Test(expected = Exception.class)
+	public void testPostMessageActivateElementWithTypeAnimal() throws Exception {
+		// create Manger to add element
+		String managerEmail = "manager@mail.com";
+		String userEmail = " user@email.com";
+		ElementEntity animal = new ElementEntity();
+		animal.setType("Animal");
+
+		// Given Server is up
+		// database contains an manager to add element
+		testHelper.AddNewUser(managerEmail, "Manager", true);
+
+		// And the database contains element with type Board
+		elementService.addNewElement(playground, managerEmail, animal);
+
+		// And the database contains player
+		testHelper.AddNewUser(userEmail, "Player", true);
+		userService.getUser(playground, userEmail);
+
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
+
+		ActivityTO newActivityTO = new ActivityTO();
+		newActivityTO.setElementId(animal.getId());
+		newActivityTO.setElementPlayground(animal.getPlayground());
+		newActivityTO.setType("PostMessage");
+
+		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+
 	}
 
 }

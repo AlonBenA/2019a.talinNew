@@ -1,7 +1,7 @@
 package playground.layout;
 
-import org.junit.After;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import playground.logic.Entities.UserEntity;
@@ -11,8 +11,13 @@ import playground.logic.Services.PlaygroundUserService;
 public class testHelper {
 	
 
-	private PlaygroundUserService userService;
-	String userPlayground = "2019a.talin";
+	private PlaygroundUserService userService;	
+	private String userPlayground;
+	
+	@Value("${playground}")	//set playground as "2019a.talin"
+	private void setPlayground(String playground) {
+		this.userPlayground = playground;
+	}
 	
 	@Autowired
 	public testHelper(PlaygroundUserService userService) {
@@ -37,8 +42,8 @@ public class testHelper {
 
 	}
 	
+	// cleanup database
 	public void teardown() {
-		// cleanup databases
 		this.userService.cleanup();
 	}
 	

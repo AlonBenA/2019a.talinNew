@@ -23,6 +23,7 @@ public class JpaUserService implements PlaygroundUserService{
 	
 	@Override
 	@Transactional
+	@MyLogger
 	public UserEntity addNewUser(UserEntity userEntity) {
 		if (!this.users.existsById(userEntity.getKey())) {
 			System.err.println("user: " + userEntity.getPlayground() + "@@" + userEntity.getEmail() + " code: "
@@ -34,6 +35,7 @@ public class JpaUserService implements PlaygroundUserService{
 	}
 
 	@Override
+	@MyLogger
 	public UserEntity getUser(String playground, String email) throws UserNotFoundException {
 		String key = playground+"@@"+email;
 		return this.users.findById(key)
@@ -42,6 +44,7 @@ public class JpaUserService implements PlaygroundUserService{
 	}
 	
 	@Override
+	@MyLogger
 	public UserEntity validateUser(UserEntity userEntity, String code) throws UserNotFoundException {
 		UserEntity existingUser = getUser(userEntity.getPlayground(),userEntity.getEmail());
 		if (existingUser != null) {
@@ -55,15 +58,14 @@ public class JpaUserService implements PlaygroundUserService{
 		
 	}
 	
-	/////////////////////////////////////////////////////
 	@Override
+	@MyLogger
 	public UserEntity userLogin(String playground, String email) throws RuntimeException {
 		UserEntity existingUser = getUser(playground,email);
 		if(!existingUser.isVerified())
 			throw new RuntimeException("The user "+ existingUser.getKey() + " is not verified");
 		return existingUser;
 	}
-	/////////////////////////////////////////////////////
 
 	@Override
 	@Transactional
@@ -87,6 +89,7 @@ public class JpaUserService implements PlaygroundUserService{
 
 	@Override
 	@Transactional
+	@MyLogger
 	public void cleanup() {
 		this.users.deleteAll();
 	}
