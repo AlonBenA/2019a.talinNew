@@ -29,7 +29,7 @@ public class WebUITestsUser {
 	private PlaygroundUserService userService;
 	
 	@Autowired
-	private testHelper testHelper;
+	private TestHelper testHelper;
 	
 	private RestTemplate restTemplate;
 
@@ -58,12 +58,11 @@ public class WebUITestsUser {
 	public void setup() {
 
 	}
-
+	
+	// cleanup database
 	@After
 	public void teardown() {
-		// cleanup database
-		//this.userService.cleanup();
-		testHelper.teardown();
+		this.userService.cleanup();
 	}
 
 	
@@ -335,7 +334,7 @@ public class WebUITestsUser {
 		// "talin@email.com","playground": "2019a.Talin",
 		// "username": "user1","avatar": "https://goo.gl/images/WqDt96",
 		// "role": "Player","points": 0,"code":null}
-		testHelper.AddNewUser(email, "Player", true);
+		testHelper.addNewUser(email, "Player", true);
 
 		// When I Put http://localhost:8083/playground/users/2019a.talin/talin@email.com
 		// And with body
@@ -384,7 +383,7 @@ public class WebUITestsUser {
 			// ”talin@email.com”,"playground": "2019a.Talin",
 			// "username": "user1","avatar": "https://goo.gl/images/WqDt96",
 			// "role": "Player","points": 0,"code":pinCode}
-			testHelper.AddNewUser(email, role, false);
+			testHelper.addNewUser(email, role, false);
 
 
 			// When I Put http://localhost:8083/playground/users/2019a.talin/talin@email.com

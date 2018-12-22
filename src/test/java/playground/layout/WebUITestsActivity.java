@@ -43,7 +43,7 @@ public class WebUITestsActivity {
 	private PlaygroundUserService userService;
 	
 	@Autowired
-	private testHelper testHelper;
+	private TestHelper testHelper;
 
 	private RestTemplate restTemplate;
 
@@ -241,14 +241,14 @@ public class WebUITestsActivity {
 		
 		// Given Server is up
 		// database contains an manager to add element
-		testHelper.AddNewUser(managerEmail, "Manager", true);
+		testHelper.addNewUser(managerEmail, "Manager", true);
 		
 		//And the database contains element 
 
 		elementService.addNewElement(playground, managerEmail, Animal);
 		
 		//And the database contains player
-		testHelper.AddNewUser(userEmail, "Player", true);
+		testHelper.addNewUser(userEmail, "Player", true);
 		UserEntity user = userService.getUser(playground, userEmail);
 		Long OldNumberOfPoints = user.getPoints();
 		
@@ -288,13 +288,13 @@ public class WebUITestsActivity {
 		
 		// Given Server is up
 		// database contains an manager to add element
-		testHelper.AddNewUser(managerEmail, "Manager", true);
+		testHelper.addNewUser(managerEmail, "Manager", true);
 		
 		//And the database contains element with type Board
 		elementService.addNewElement(playground, managerEmail, Board);
 		
 		//And the database contains player
-		testHelper.AddNewUser(userEmail, "Player", true);
+		testHelper.addNewUser(userEmail, "Player", true);
 		UserEntity user = userService.getUser(playground, userEmail);
 
 		String url = base_url + "/playground/activities/{userPlayground}/{email}";
@@ -322,14 +322,14 @@ public class WebUITestsActivity {
 
 		// Given Server is up
 		// database contains an manager to add element
-		testHelper.AddNewUser(managerEmail, "Manager", true);
+		testHelper.addNewUser(managerEmail, "Manager", true);
 
 		// And the database contains Board element
 
 		elementService.addNewElement(playground, managerEmail, board);
 
 		// And the database contains player
-		testHelper.AddNewUser(userEmail, "Player", true);
+		testHelper.addNewUser(userEmail, "Player", true);
 		userService.getUser(playground, userEmail);
 
 		String url = base_url + "/playground/activities/{userPlayground}/{email}";
@@ -361,13 +361,13 @@ public class WebUITestsActivity {
 
 		// Given Server is up
 		// database contains an manager to add element
-		testHelper.AddNewUser(managerEmail, "Manager", true);
+		testHelper.addNewUser(managerEmail, "Manager", true);
 
 		// And the database contains element with type Board
 		elementService.addNewElement(playground, managerEmail, animal);
 
 		// And the database contains player
-		testHelper.AddNewUser(userEmail, "Player", true);
+		testHelper.addNewUser(userEmail, "Player", true);
 		userService.getUser(playground, userEmail);
 
 		String url = base_url + "/playground/activities/{userPlayground}/{email}";
