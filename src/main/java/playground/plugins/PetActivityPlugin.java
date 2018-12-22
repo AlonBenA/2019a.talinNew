@@ -42,6 +42,7 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 		if ("Animal".equalsIgnoreCase(element.getType())) {
 			//add 10 points to user
 			user.increasePoints(points);
+			users.save(user);
 			return new Message("the user " + UserKey +" pet a "+element.getName());
 		} else {
 			throw new RuntimeException("Not an Animal!");
