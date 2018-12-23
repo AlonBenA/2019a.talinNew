@@ -24,7 +24,7 @@ public class PostMessageAcitivtyPlugin implements PlaygroungActivityPlugin {
 	} 
 	
 	@Override
-	public Object invokeAction(ActivityEntity activity) {
+	public Object invokeAction(ActivityEntity activity,String activityId,ElementEntity element) {
 		String UserKey = activity.getPlayerPlayground() +"@@"+activity.getPlayerEmail(); 
 		
 		// user Exist check
@@ -36,7 +36,7 @@ public class PostMessageAcitivtyPlugin implements PlaygroungActivityPlugin {
 			throw new RuntimeException("The user " + UserKey+ " is not verified.");
 		
 		String element_key = activity.getElementPlayground() + "@@" +activity.getElementId();
-		ElementEntity element = this.elements.findById(element_key)
+		ElementEntity Element = this.elements.findById(element_key)
 		.orElseThrow(()->new ElementNotFoundException("no Element for: " + element_key));
 		
 		
@@ -45,6 +45,12 @@ public class PostMessageAcitivtyPlugin implements PlaygroungActivityPlugin {
 		
 		throw new RuntimeException("Cannot post a message in non Board element!");
 		
+	}
+
+	@Override
+	public ElementEntity checkAction(ActivityEntity activity) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

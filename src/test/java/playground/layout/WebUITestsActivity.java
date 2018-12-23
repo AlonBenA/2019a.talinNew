@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import playground.logic.Location;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.UserEntity;
@@ -245,7 +246,7 @@ public class WebUITestsActivity {
 		
 		//And the database contains element 
 
-		elementService.addNewElement(playground, managerEmail, Animal);
+		ElementEntity element = elementService.addNewElement(playground, managerEmail, Animal);
 		
 		//And the database contains player
 		testHelper.addNewUser(userEmail, "Player", true);
@@ -263,17 +264,24 @@ public class WebUITestsActivity {
 		Object rv = this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
 		
 		//Then the response status is 2xx and 
+		//And the database contains user with Points + 1 
 		
 		user = userService.getUser(playground, userEmail);
 		Long NewNumberOfPoints = user.getPoints();
 		Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(rv), Map.class);
-		
-		
-		//And the database contains user with Points + 1 
 		assertThat(OldNumberOfPoints + numberOfPointsToAdd).isEqualTo(NewNumberOfPoints);
+		
 		
 		//and body is:
 		assertThat(rvMap.get("message")).isEqualTo("the user " + user.getUsername() +" feed "+ Animal.getName());
+		
+		
+		//and the database contains activity:
+		String activity_id = rvMap.get("id") + "";
+		ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);
+		
+		assertThat(Activity).isNotNull().extracting("playground", "id", "elementPlayground", "elementId", "type")
+		.containsExactly(playground,activity_id,playground,element.getId(),"feed");
 	}
 	
 	//A

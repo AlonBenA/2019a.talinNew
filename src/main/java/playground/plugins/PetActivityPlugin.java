@@ -23,7 +23,7 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 	}
 
 	@Override
-	public Object invokeAction(ActivityEntity activity) {
+	public Object invokeAction(ActivityEntity activity,String activityId,ElementEntity element) {
 		long points = 10;
 		String UserKey = activity.getPlayerPlayground() + "@@" + activity.getPlayerEmail();
 		UserEntity user = this.users.findById(UserKey)
@@ -36,7 +36,7 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 			throw new RuntimeException("The user " + UserKey + " is not player.");
 		// set key for element
 		String element_key = activity.getElementPlayground() + "@@" + activity.getElementId();
-		ElementEntity element = this.elements.findById(element_key)
+		ElementEntity Element = this.elements.findById(element_key)
 				.orElseThrow(() -> new ElementNotFoundException("no Element for: " + element_key));
 
 		if ("Animal".equalsIgnoreCase(element.getType())) {
@@ -48,6 +48,12 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 			throw new RuntimeException("Not an Animal!");
 		}
 
+	}
+
+	@Override
+	public ElementEntity checkAction(ActivityEntity activity) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -24,30 +24,35 @@ public class FeedAcitivtyPlugin implements PlaygroungActivityPlugin {
 	} 
 
 	@Override
-	public Object invokeAction(ActivityEntity activity) {
+	public Object invokeAction(ActivityEntity activity,String activityId,ElementEntity element) {
+		
 		String UserKey = activity.getPlayerPlayground() +"@@"+activity.getPlayerEmail(); 
 		UserEntity user = this.users.findById(UserKey)
 		.orElseThrow(()->new UserNotFoundException("no user found for: " + UserKey));
-		
-		// Set key for element 
-		String element_key = activity.getElementPlayground() + "@@" +activity.getElementId();
-		ElementEntity element = this.elements.findById(element_key)
-		.orElseThrow(()->new ElementNotFoundException("no Element for: " + element_key));
-		
-		
-		if("Animal".equalsIgnoreCase(element.getType()))
-		{
+				
+
 			//Add point to user and save the activity
 			user.increasePoints(new Long(1));
 			users.save(user);
 			
-			return new Message("the user " + user.getUsername() +" feed "+ element.getName());
-		}
-		else
-		{
-			throw new RuntimeException("Not an Animal!");
-		}
+			return new Message(activityId,"the user " + user.getUsername() +" feed "+ element.getName());
 	
+	}
+
+	@Override
+	public ElementEntity checkAction(ActivityEntity activity) {
+		
+		// Set key for element 
+				String element_key = activity.getElementPlayground() + "@@" +activity.getElementId();
+				ElementEntity element = this.elements.findById(element_key)
+				.orElseThrow(()->new ElementNotFoundException("no Element for: " + element_key));
+				
+				if(!"Animal".equalsIgnoreCase(element.getType()))
+				{
+					throw new RuntimeException("Not an Animal!");
+				}
+		
+				return element;
 	}
 	
 	
