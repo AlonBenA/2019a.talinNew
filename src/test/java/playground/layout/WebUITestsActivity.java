@@ -307,7 +307,7 @@ public class WebUITestsActivity {
 		
 		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
 		
-		
+		 // Then the response status <> 2xx
 	}
 	
 	
