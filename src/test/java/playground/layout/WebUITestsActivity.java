@@ -249,7 +249,7 @@ public class WebUITestsActivity {
 		newActivityTO.setElementId(board.getId());
 		newActivityTO.setElementPlayground(board.getPlayground());
 		newActivityTO.setType("PostMessage");
-		Object rv = this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		Object rv = this.restTemplate.postForObject(url, newActivityTO, Message.class, playground, userEmail);
 
 		// Then the response status is 2xx
 
@@ -295,7 +295,7 @@ public class WebUITestsActivity {
 		newActivityTO.setElementPlayground(animal.getPlayground());
 		newActivityTO.setType("PostMessage");
 
-		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		this.restTemplate.postForObject(url, newActivityTO, Message.class, playground, userEmail);
 
 	}
 
