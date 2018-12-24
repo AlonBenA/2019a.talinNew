@@ -54,7 +54,7 @@ public class JpaActivityService implements PlaygroundActivityService {
 				if (activityEntity.getType() != null) {
 					try {
 						String type = activityEntity.getType();
-						String targetClassName = "playground.plugins." + type + "Plugin";
+						String targetClassName = "playground.plugins." + type + "ActivityPlugin";
 						Class<?> pluginClass = Class.forName(targetClassName);
 						// autowire plugin
 						PlaygroungActivityPlugin plugin = (PlaygroungActivityPlugin) this.spring.getBean(pluginClass);
@@ -92,7 +92,16 @@ public class JpaActivityService implements PlaygroundActivityService {
 		boolean result;
 
 		switch (type) {
-		case "ECHO":
+		case "Feed":
+			result = true;
+			break;
+		case "Pet":
+			result = true;
+			break;
+		case "PostMessage":
+			result = true;
+			break;
+		case "ReadFromBoard":
 			result = true;
 			break;
 
