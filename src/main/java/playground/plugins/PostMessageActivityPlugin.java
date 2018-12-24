@@ -30,7 +30,7 @@ public class PostMessageActivityPlugin implements PlaygroungActivityPlugin {
 		.orElseThrow(()->new ElementNotFoundException("no Element for: " + element_key));
 		
 		if(!"Board".equalsIgnoreCase(element.getType()))
-			throw new RuntimeException("Not an Animal!");
+			throw new RuntimeException("Not a Board!");
 		
 		return element;
 	}

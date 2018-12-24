@@ -13,12 +13,12 @@ import playground.logic.jpa.ElementNotFoundException;
 import playground.logic.jpa.UserNotFoundException;
 
 @Component
-public class FeedAcitivtyPlugin implements PlaygroungActivityPlugin {
+public class FeedActivityPlugin implements PlaygroungActivityPlugin {
 	private UserDao users;
 	private ElementDao elements;
 	
 	@Autowired
-	public FeedAcitivtyPlugin(UserDao users,ElementDao elements) {
+	public FeedActivityPlugin(UserDao users,ElementDao elements) {
 		this.users = users;
 		this.elements = elements;
 	} 
@@ -34,8 +34,10 @@ public class FeedAcitivtyPlugin implements PlaygroungActivityPlugin {
 			//Add point to user and save the activity
 			user.increasePoints(new Long(1));
 			users.save(user);
-			
-			return new Message(activityId,"the user " + user.getUsername() +" feed "+ element.getName());
+			Message message = new Message();
+			message.setId(activityId);
+			message.setMessage("the user " + user.getUsername() +" feed "+ element.getName());
+			return message;
 	
 	}
 

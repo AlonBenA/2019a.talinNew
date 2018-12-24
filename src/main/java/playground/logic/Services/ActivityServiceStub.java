@@ -42,6 +42,9 @@ public class ActivityServiceStub implements PlaygroundActivityService {
 		case "ACO":
 			result = true;
 			break;
+		case "feed": 
+			result = true;
+			break;
 
 		default:
 			result = false;
