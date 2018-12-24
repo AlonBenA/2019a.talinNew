@@ -12,8 +12,8 @@ public class Message {
 	}
 	
 	public Message(String id, String message) {
-		this.message = message;
 		this.id = id;
+		this.message = message;
 	}
 	
 	public String getId() {

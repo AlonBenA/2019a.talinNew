@@ -22,6 +22,7 @@ import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundActivityService;
 import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundUserService;
+import playground.plugins.Message;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -68,6 +69,7 @@ public class WebUITestsActivity {
 	@After
 	public void teardown() {
 		// cleanup database
+		testHelper.teardown();
 		this.activityService.cleanup();
 		this.elementService.cleanup();
 	}
@@ -137,7 +139,7 @@ public class WebUITestsActivity {
 	}
 
 	// A
-	// @test
+	@Test
 	public void testFeedActivateElementWithTypeAnimalSuccessfully() throws Exception {
 		// create Manger to add element
 		String managerEmail = "manager@mail.com";
@@ -165,7 +167,7 @@ public class WebUITestsActivity {
 		newActivityTO.setElementId(Animal.getId());
 		newActivityTO.setElementPlayground(Animal.getPlayground());
 		newActivityTO.setType("Feed");
-		Object rv = this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		Object rv = this.restTemplate.postForObject(url, newActivityTO, Message.class, playground, userEmail);
 
 		// Then the response status is 2xx and
 		// And the database contains user with Points + 1
@@ -173,6 +175,7 @@ public class WebUITestsActivity {
 		user = userService.getUser(playground, userEmail);
 		Long NewNumberOfPoints = user.getPoints();
 		Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(rv), Map.class);
+
 		assertThat(OldNumberOfPoints + numberOfPointsToAdd).isEqualTo(NewNumberOfPoints);
 
 		// and body is:
@@ -183,11 +186,11 @@ public class WebUITestsActivity {
 		ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);
 
 		assertThat(Activity).isNotNull().extracting("playground", "id", "elementPlayground", "elementId", "type")
-				.containsExactly(playground, activity_id, playground, element.getId(), "feed");
+				.containsExactly(playground, activity_id, playground, element.getId(), "Feed");
 	}
 
 	// A
-	// @Test(expected = Exception.class)
+	@Test(expected = Exception.class)
 	public void testFeedActivateElementWithTypeBoard() throws Exception {
 		// create Manger to add element
 		String managerEmail = "manager@mail.com";
@@ -213,7 +216,7 @@ public class WebUITestsActivity {
 		newActivityTO.setElementPlayground(Board.getPlayground());
 		newActivityTO.setType("Feed");
 
-		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		this.restTemplate.postForObject(url, newActivityTO, Message.class, playground, userEmail);
 
 		// Then the response status <> 2xx
 	}
