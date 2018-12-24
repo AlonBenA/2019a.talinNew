@@ -28,12 +28,6 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 		UserEntity user = this.users.findById(UserKey)
 				.orElseThrow(() -> new UserNotFoundException("no user found for: " + UserKey));
 
-//		// user verified check
-//		if (!user.isVerified())
-//			throw new RuntimeException("The user " + UserKey + " is not verified.");
-//		// user player check
-//		if (!"Player".equalsIgnoreCase(user.getRole()))
-//			throw new RuntimeException("The user " + UserKey + " is not player.");
 		// Add point to user and save the activity
 		user.increasePoints(new Long(10));
 		users.save(user);
