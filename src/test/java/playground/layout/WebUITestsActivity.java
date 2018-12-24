@@ -219,12 +219,13 @@ public class WebUITestsActivity {
 	}
 
 	// S
-	// @test
+	@Test
 	public void testPostMessageActivateElementWithTypeBoardSuccessfully() throws Exception {
 		// create Manger to add element
 		String managerEmail = "manager@mail.com";
 		String userEmail = " user@email.com";
 		ElementEntity board = new ElementEntity();
+		board.setName("Lost Animals Board");
 		board.setType("Board");
 
 		// Given Server is up
@@ -233,11 +234,11 @@ public class WebUITestsActivity {
 
 		// And the database contains Board element
 
-		elementService.addNewElement(playground, managerEmail, board);
+		ElementEntity element = elementService.addNewElement(playground, managerEmail, board);
 
 		// And the database contains player
 		testHelper.addNewUser(userEmail, "Player", true);
-		userService.getUser(playground, userEmail);
+		UserEntity user = userService.getUser(playground, userEmail);
 
 		String url = base_url + "/playground/activities/{userPlayground}/{email}";
 
@@ -249,16 +250,23 @@ public class WebUITestsActivity {
 
 		// Then the response status is 2xx
 
-		UserEntity user = userService.getUser(playground, userEmail);
 		Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(rv), Map.class);
 
 		// and body is:
 		assertThat(rvMap.get("message"))
-				.isEqualTo("the user " + user.getKey() + " posted a message in " + board.getKey() + " Board");
+				.isEqualTo("the user " + user.getUsername() +" posted a message in " + board.getName());
+		
+		// and the database contains activity:
+		String activity_id = rvMap.get("id") + "";
+		ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);
+
+		assertThat(Activity).isNotNull().extracting("playground", "id", "elementPlayground", "elementId", "type")
+				.containsExactly(playground, activity_id, playground, element.getId(), "PostMessage");
+
 	}
 
 	// S
-	// @Test(expected = Exception.class)
+	@Test(expected = Exception.class)
 	public void testPostMessageActivateElementWithTypeAnimal() throws Exception {
 		// create Manger to add element
 		String managerEmail = "manager@mail.com";
