@@ -128,10 +128,7 @@ public class WebUITestsActivity {
 		// When I POST activity with
 		String elementId = "0";
 		String elementPlayground = playground;
-		String type = "ECHO";
-
-		// check that element exists
-		this.elementService.getElement(userPlayground, userEmail, elementId, elementPlayground);
+		String type = "Feed";
 
 		ActivityTO newActivityTO = new ActivityTO();
 		newActivityTO.setElementId(elementId);
@@ -450,5 +447,103 @@ public class WebUITestsActivity {
 		}
 		
 	}
+	
+	// T
+	@Test
+	public void testReadFromBoardUsingPaginationSuccessfully() throws Exception {
+		int defaultSize = 10;
 
+		// create Manger to add element
+		String managerEmail = "manager@mail.com";
+		String userEmail = " user@email.com";
+		ElementEntity Board = new ElementEntity();
+		Board.setType("Board");
+
+		// Given Server is up
+		// database contains a manager
+		testHelper.addNewUser(managerEmail, "Manager", true);
+
+		// And the database contains element with type Board
+		ElementEntity element = elementService.addNewElement(playground, managerEmail, Board);
+
+		// And the database contains player
+		testHelper.addNewUser(userEmail, "Player", true);
+
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
+
+		// And the database contains 10 messages posted to this board
+		for (int i = 0; i < defaultSize; i++) {
+			ActivityTO newActivityTO = new ActivityTO();
+			newActivityTO.setElementId(Board.getId());
+			newActivityTO.setElementPlayground(Board.getPlayground());
+			newActivityTO.setType("PostMessage");
+			this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		}
+
+		// When I Post Activity to read all messages of board x
+		ActivityTO newActivityTO = new ActivityTO();
+		newActivityTO.setElementId(Board.getId());
+		newActivityTO.setElementPlayground(Board.getPlayground());
+		newActivityTO.setType("ReadFromBoard");
+
+		newActivityTO.getAttributes().put("page", 2);
+		newActivityTO.getAttributes().put("size", 4);
+
+		List<String> readmessages = null;
+
+		try {
+			ReadFromBoardResult rv = this.restTemplate.postForObject(url, newActivityTO, ReadFromBoardResult.class,
+					playground, userEmail);
+			readmessages = (List<String>) rv.getResults();
+
+			// Then the response status is 2xx and
+			// body contains 10 messages
+			assertThat(readmessages).hasSize(2);
+
+			// and the database contains activity:
+			String activity_id = rv.getActivity_id();
+			ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);
+
+			assertThat(Activity).isNotNull().extracting("playground", "id", "elementPlayground", "elementId", "type")
+					.containsExactly(playground, activity_id, playground, element.getId(), "ReadFromBoard");
+
+		} catch (HttpServerErrorException e) {
+			System.err.println(e.getResponseBodyAsString());
+			throw e;
+		}
+
+	}
+
+	// T
+	@Test(expected = Exception.class)
+	public void testReadFromBoardWithInvalidElementType() throws Exception {
+		// create Manger to add element
+		String managerEmail = "manager@mail.com";
+		String userEmail = " user@email.com";
+		ElementEntity animal = new ElementEntity();
+		animal.setType("Animal");
+
+		// Given Server is up
+		// database contains a manager
+		testHelper.addNewUser(managerEmail, "Manager", true);
+
+		// And the database contains element with type Animal
+		ElementEntity element = elementService.addNewElement(playground, managerEmail, animal);
+
+		// And the database contains player
+		testHelper.addNewUser(userEmail, "Player", true);
+
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
+
+
+		// When I Post Activity to read all messages from this element
+		ActivityTO newActivityTO = new ActivityTO();
+		newActivityTO.setElementId(element.getId());
+		newActivityTO.setElementPlayground(element.getPlayground());
+		newActivityTO.setType("ReadFromBoard");
+
+		ReadFromBoardResult rv = this.restTemplate.postForObject(url, newActivityTO, ReadFromBoardResult.class,
+				playground, userEmail);
+		// Then the response status is <> 2xx
+	}
 }

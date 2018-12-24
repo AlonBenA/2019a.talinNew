@@ -79,20 +79,6 @@ public class WebUITestsElement {
 		this.userService.cleanup();
 	}
 
-	private void createPlayerAccount(String userEmail, String userPlayground) {
-		String username = "user1";
-		String avatar = "https://goo.gl/images/WqDt96";
-		String role = "Player";
-		UserEntity user = new UserEntity(userEmail, username, avatar, role);
-		user.setPlayground(userPlayground);
-
-		// add the user to the database
-		user = userService.addNewUser(user);
-
-		// validate user to the database
-		userService.validateUser(user, user.getCode());
-	}
-
 	private void setElementsDatabase(int numberOFElements) {
 
 		Date exirationDate = null;
@@ -1021,7 +1007,7 @@ public class WebUITestsElement {
 
 	// T
 	@Test
-	public void testGetEementsWithThisAttributeValueUsingDefaultPagination() throws Exception {
+	public void testGetEementsWithThisAttributeValueUsingDefaultPaginationAndValidPlayerAcountSuccessfully() throws Exception {
 
 		int DefaultSize = 10;
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
@@ -1047,7 +1033,7 @@ public class WebUITestsElement {
 
 	// T
 	@Test
-	public void testGetElementsWithAttributeValueThatNotExistsUsingDefaultPagination() throws Exception {
+	public void testGetElementsWithAttributeValueThatNotExistsUsingDefaultPaginationAndValidPlayerAccount() throws Exception {
 
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
 		String email = "tali@mail.com";
@@ -1069,7 +1055,7 @@ public class WebUITestsElement {
 
 	// T
 	@Test(expected = Exception.class)
-	public void testGetElementsWithInvalidAttributeUsingDefaultPagination() throws Exception {
+	public void testGetElementsWithInvalidAttributeUsingDefaultPaginationAndValidPlayerAccount() throws Exception {
 		int DefaultSize = 10;
 		String email = "tali@mail.com";
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/Momo/cat";
@@ -1144,7 +1130,7 @@ public class WebUITestsElement {
 
 	// T
 	@Test
-	public void testGetElementsWithThisAttributeValueUsingPaginationOfSecondPageSuccessfully() throws Exception {
+	public void testGetElementsWithThisAttributeValueUsingPaginationOfSecondPageAndValidManagerAcountSuccessfully() throws Exception {
 
 		int size = 6;
 		int page = 1;
@@ -1159,9 +1145,9 @@ public class WebUITestsElement {
 		setElementsDatabase(10);
 
 		/*
-		 * And the database contains player
+		 * And the database contains manager
 		 */
-		testHelper.addNewUser(email, "Player", true);
+		testHelper.addNewUser(email, "Manager", true);
 
 		// when
 		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
@@ -1172,7 +1158,7 @@ public class WebUITestsElement {
 
 	// T
 	@Test(expected = Exception.class)
-	public void testGetElementsWithThisAttributeValueWithInvalidPageSize() {
+	public void testGetElementsWithThisAttributeValueWithInvalidPageSizeAndValidManagerAcount() {
 		String email = "tali@mail.com";
 		// when
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
@@ -1184,11 +1170,53 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.addNewUser(email, "Player", true);
+		testHelper.addNewUser(email, "Manager", true);
 
 		// When
 		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class, playground, email, -6, 1);
 
 		// Then the response status is <> 2xx
+	}
+	
+	// T
+	@Test(expected = Exception.class)
+	public void testGetEementsWithThisAttributeValueUsingDefaultPaginationWithInvalidPlayerAccount() throws Exception {
+
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
+		String email = "tali@mail.com";
+
+		/*
+		 * Given Server is up And the database contains 20 elements with the name cat
+		 */
+
+		setElementsDatabase(20);
+
+		// when
+		this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
+
+		// Then the response status is <> 2xx
+		
+	}
+	
+	// T
+	@Test(expected = Exception.class)
+	public void testGetEementsWithThisAttributeValueUsingDefaultPaginationWithUnverifiedUserAccount() throws Exception {
+
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
+		String email = "tali@mail.com";
+
+		/*
+		 * Given Server is up And the database contains 20 elements with the name cat
+		 */
+
+		setElementsDatabase(20);
+		
+		// and database contains an Unverified manager:
+		testHelper.addNewUser(email, "Manager", false);
+
+		// when
+		this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
+		// Then the response status is <> 2xx
+		
 	}
 }
