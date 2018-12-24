@@ -1,10 +1,14 @@
 package playground.logic.jpa;
 
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import playground.aop.MyLogger;
 import playground.aop.PlayerExistCheck;
@@ -24,6 +28,7 @@ public class JpaActivityService implements PlaygroundActivityService {
 	private ActivityDao activities;
 	private NumbersDao numbers;
 	private ElementDao elements;
+	private ObjectMapper jackson; 
 	
 	private ConfigurableApplicationContext spring;
 
@@ -34,6 +39,7 @@ public class JpaActivityService implements PlaygroundActivityService {
 		this.elements = elements;
 		this.numbers = numbers;
 		this.spring = spring;
+		this.jackson = new ObjectMapper();
 	}
 
 	@Override
@@ -60,7 +66,9 @@ public class JpaActivityService implements PlaygroundActivityService {
 						PlaygroungActivityPlugin plugin = (PlaygroungActivityPlugin) this.spring.getBean(pluginClass);
 						ElementEntity elementToActivate = plugin.checkAction(activityEntity);
 						rv = plugin.invokeAction(activityEntity, activityEntity.getId(), elementToActivate);
-						activityEntity.getAttributes().put("Message", rv);
+						Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(rv), Map.class);
+						activityEntity.getAttributes().putAll(rvMap);
+						System.err.println(activityEntity.getAttributes());
 						this.activities.save(activityEntity);
 						
 					} catch (Exception e) {

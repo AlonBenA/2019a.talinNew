@@ -5,6 +5,8 @@ public class PluginPageable {
 	private int page;
 	
 	public PluginPageable() {
+		page = 0;
+		size = 10;
 	}
 
 	public int getSize() {

@@ -1,6 +1,9 @@
 package playground.layout;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.junit.After;
@@ -15,6 +18,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ServerErrorException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
@@ -22,6 +27,8 @@ import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundActivityService;
 import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundUserService;
+import playground.plugins.PluginPageable;
+import playground.plugins.ReadFromBoardResult;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -376,6 +383,72 @@ public class WebUITestsActivity {
 		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
 
 		// Then the response status <> 2xx
+	}
+	
+	// T
+	@Test
+	public void testReadFromBoardWithDefaultPaginationSuccessfully() throws Exception {
+		int defaultSize = 10;
+		
+		// create Manger to add element
+		String managerEmail = "manager@mail.com";
+		String userEmail = " user@email.com";
+		ElementEntity Board = new ElementEntity();
+		Board.setType("Board");
+
+		// Given Server is up
+		// database contains a manager
+		testHelper.addNewUser(managerEmail, "Manager", true);
+
+		// And the database contains element with type Board
+		ElementEntity element = elementService.addNewElement(playground, managerEmail, Board);
+
+		// And the database contains player
+		testHelper.addNewUser(userEmail, "Player", true);
+
+		String url = base_url + "/playground/activities/{userPlayground}/{email}";
+
+		//  And the database contains 10 messages posted to this board
+		for(int i = 0; i < defaultSize; i++)
+		{
+			ActivityTO newActivityTO = new ActivityTO();
+			newActivityTO.setElementId(Board.getId());
+			newActivityTO.setElementPlayground(Board.getPlayground());
+			newActivityTO.setType("PostMessage");
+			this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		}
+		
+		// When I Post Activity to read all messages of board x
+		ActivityTO newActivityTO = new ActivityTO();
+		newActivityTO.setElementId(Board.getId());
+		newActivityTO.setElementPlayground(Board.getPlayground());
+		newActivityTO.setType("ReadFromBoard");
+		
+		//newActivityTO.getAttributes().put("page", 1);
+		//newActivityTO.getAttributes().put("size", 2);
+		
+		List<String> readmessages = null; 
+		
+		try {
+			ReadFromBoardResult rv = this.restTemplate.postForObject(url, newActivityTO, ReadFromBoardResult.class, playground, userEmail);
+			readmessages = (List<String>) rv.getResults();
+			
+			// Then the response status is 2xx and
+			// body contains 10 messages
+			assertThat(readmessages).hasSize(defaultSize);
+			
+			// and the database contains activity:
+			String activity_id = rv.getActivity_id();
+			ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);
+
+			assertThat(Activity).isNotNull().extracting("playground", "id", "elementPlayground", "elementId", "type")
+					.containsExactly(playground, activity_id, playground, element.getId(), "ReadFromBoard");
+			
+		}catch (HttpServerErrorException e) {
+			System.err.println(e.getResponseBodyAsString());
+			throw e;
+		}
+		
 	}
 
 }

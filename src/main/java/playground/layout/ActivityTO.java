@@ -26,7 +26,6 @@ public class ActivityTO {
 		this.playerPlayground = "2019a.talin";
 		this.playerEmail = "email@gmail.com";
 		this.attributes = new HashMap<>();
-		this.attributes.put("eat", "meat");
 	}
 	
 	public ActivityTO(String elementPlayground, String elementId, String type,
