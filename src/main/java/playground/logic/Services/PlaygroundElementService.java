@@ -25,6 +25,6 @@ public interface PlaygroundElementService {
 
 	public List<ElementEntity> getElementsWithAttribute(String userPlayground,String email, String attributeName, String value, int size, int page);
 	
-	public String GetUserRole(String userPlayground,String email);
+	public String getUserRole(String userPlayground,String email);
 
 }

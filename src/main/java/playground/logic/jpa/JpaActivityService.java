@@ -2,6 +2,7 @@ package playground.logic.jpa;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,8 +12,10 @@ import playground.jpadal.ActivityDao;
 import playground.jpadal.ElementDao;
 import playground.jpadal.NumbersDao;
 import playground.logic.Entities.ActivityEntity;
+import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.GeneratedNumber;
 import playground.logic.Services.PlaygroundActivityService;
+import playground.plugins.PlaygroungActivityPlugin;
 
 
 @Service
@@ -21,20 +24,23 @@ public class JpaActivityService implements PlaygroundActivityService {
 	private ActivityDao activities;
 	private NumbersDao numbers;
 	private ElementDao elements;
+	
+	private ConfigurableApplicationContext spring;
 
 	@Autowired
-	public JpaActivityService(ActivityDao activities, NumbersDao numbers, ElementDao elements) {
+	public JpaActivityService(ActivityDao activities, NumbersDao numbers, ElementDao elements, ConfigurableApplicationContext spring) {
 		super();
 		this.activities = activities;
 		this.elements = elements;
 		this.numbers = numbers;
+		this.spring = spring;
 	}
 
 	@Override
 	@Transactional
 	@PlayerExistCheck
 	@MyLogger
-	public ActivityEntity addNewActivity(String userPlayground, String userEmail, ActivityEntity activityEntity) {
+	public Object addNewActivity(String userPlayground, String userEmail, ActivityEntity activityEntity) {
 		if (!activities.existsById(activityEntity.getKey())) {
 			// check if the element to activate exists
 			String element_key = activityEntity.getElementPlayground() + "@@" + activityEntity.getElementId();
@@ -43,8 +49,25 @@ public class JpaActivityService implements PlaygroundActivityService {
 				long number = this.numbers.save(new GeneratedNumber()).getNextValue();
 				this.numbers.deleteById(number);
 				activityEntity.setId(number + "");
-
-				return this.activities.save(activityEntity);
+				Object rv = null;
+				// Make the Action
+				if (activityEntity.getType() != null) {
+					try {
+						String type = activityEntity.getType();
+						String targetClassName = "playground.plugins." + type + "Plugin";
+						Class<?> pluginClass = Class.forName(targetClassName);
+						// autowire plugin
+						PlaygroungActivityPlugin plugin = (PlaygroungActivityPlugin) this.spring.getBean(pluginClass);
+						ElementEntity elementToActivate = plugin.checkAction(activityEntity);
+						rv = plugin.invokeAction(activityEntity, activityEntity.getId(), elementToActivate);
+						activityEntity.getAttributes().put("Message", rv);
+						this.activities.save(activityEntity);
+						
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
+				return rv;
 			} else
 				throw new RuntimeException("The element to activate with key: " + element_key + " not exsists");
 

@@ -10,7 +10,7 @@ import playground.logic.jpa.UserNotFoundException;
 
 public interface PlaygroundActivityService {
 	
-	public ActivityEntity addNewActivity(String userPlayground, String email, ActivityEntity activityEntity);
+	public Object addNewActivity(String userPlayground, String email, ActivityEntity activityEntity);
 	
 	public ActivityEntity getActivity(String userPlayground, String email, String activity_id, String playground) throws Exception;
 	

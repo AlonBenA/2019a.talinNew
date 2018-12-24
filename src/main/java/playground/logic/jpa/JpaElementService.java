@@ -17,6 +17,8 @@ import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.GeneratedNumber;
 import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundElementService;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 @Service
@@ -62,7 +64,7 @@ public class JpaElementService implements PlaygroundElementService {
 			throws ElementNotFoundException {
 		// set key for element
 		String element_key = element_Playground + "@@" + element_id;
-		if ("Manager".equalsIgnoreCase(GetUserRole(userPlayground, email))) {
+		if ("Manager".equalsIgnoreCase(getUserRole(userPlayground, email))) {
 			return this.elements.findById(element_key)
 					.orElseThrow(() -> new ElementNotFoundException("no Element for: " + element_key));
 		} else {
@@ -80,7 +82,7 @@ public class JpaElementService implements PlaygroundElementService {
 	@MyLogger
 	public List<ElementEntity> getAllElements(String userPlayground, String email, int size, int page) {
 
-		if ("Manager".equalsIgnoreCase(GetUserRole(userPlayground, email))) {
+		if ("Manager".equalsIgnoreCase(getUserRole(userPlayground, email))) {
 			// if it's a Manager
 			return this.elements.findAll(PageRequest.of(page, size, Direction.DESC, "creationDate")).getContent();
 		} else {
@@ -104,7 +106,7 @@ public class JpaElementService implements PlaygroundElementService {
 		Double upperY = (y + distance);
 		Double lowerY = (y - distance);
 
-		if ("Manager".equalsIgnoreCase(GetUserRole(userPlayground, email))) {
+		if ("Manager".equalsIgnoreCase(getUserRole(userPlayground, email))) {
 			// if it's a Manager
 			return this.elements.findAllByXLessThanAndXGreaterThanAndYLessThanAndYGreaterThan(upperX, lowerX, upperY,
 					lowerY, PageRequest.of(page, size, Direction.DESC, "creationDate")).getContent();
@@ -177,33 +179,50 @@ public class JpaElementService implements PlaygroundElementService {
 	@MyLogger
 	public List<ElementEntity> getElementsWithAttribute(String userPlayground, String email, String attributeName,
 			String value, int size, int page) {
-		// if attribute is "name"
-		// if(isManager) {
-		if (attributeName.equals("name")) {
-			return this.elements.findAllByNameLike(value, PageRequest.of(page, size, Direction.DESC, "creationDate"))
-					.getContent();
-		} else {
-			// attribute is "type"
-			return this.elements.findAllByTypeLike(value, PageRequest.of(page, size, Direction.DESC, "creationDate"))
-					.getContent();
+		
+		if("Manager".equalsIgnoreCase(getUserRole(userPlayground, email))) { //Manager
+			// if attribute is "name"
+			if (attributeName.equals("name")) {
+				return this.elements.findAllByNameLike(value, PageRequest.of(page, size, Direction.DESC, "creationDate"))
+						.getContent();
+			} else {
+				// attribute is "type"
+				return this.elements.findAllByTypeLike(value, PageRequest.of(page, size, Direction.DESC, "creationDate"))
+						.getContent();
+			}
+		}else { //Player
+		
+		  Date today = new Date(); 
+		  if(attributeName.equals("name")) {
+			  List<ElementEntity> elementsList = new ArrayList<>();
+			  elementsList.addAll(this.elements.
+					  findAllByExirationDateIsNullAndNameLike(
+							 value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
+					  .getContent());
+			  elementsList.addAll(this.elements.
+					  findAllByExirationDateAfterAndNameLike(
+							 today, value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
+					  .getContent());
+			  return elementsList;
+			  
+		  }else { // attribute is "type" 
+				  List<ElementEntity> elementsList = new ArrayList<>();
+				  elementsList.addAll(this.elements.
+						  findAllByExirationDateIsNullAndTypeLike(
+								 value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
+						  .getContent());
+				  elementsList.addAll(this.elements.
+						  findAllByExirationDateAfterAndTypeLike(
+								 today, value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
+						  .getContent());
+				  return elementsList;
+			  }
 		}
-		// }else { //Player
-		/*
-		 * Date today = new Date(); if(attributeName.equals("name")) { return
-		 * this.elements.
-		 * findAllByExirationDateIsNullAndNameLikeOrExirationDateAfterAndNameLike(
-		 * today, value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
-		 * .getContent(); }else { // attribute is "type" return this.elements.
-		 * findAllByExirationDateIsNullAndTypeLikeOrExirationDateAfterAndTypeLike(
-		 * today, value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
-		 * .getContent(); }
-		 */
-		// }
 
 	}
 
 	@Override
-	public String GetUserRole(String userPlayground, String email) throws UserNotFoundException {
+	public String getUserRole(String userPlayground, String email) throws UserNotFoundException {
 		String key = userPlayground + "@@" + email;
 		UserEntity User = this.users.findById(key)
 				.orElseThrow(() -> new UserNotFoundException("no user found for: " + key));

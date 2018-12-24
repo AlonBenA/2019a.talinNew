@@ -49,10 +49,6 @@ public class WebUIElement {
 			@RequestParam(name="size", required=false, defaultValue="10") int size, 
 			@RequestParam(name="page", required=false, defaultValue="0") int page) throws Exception {
 		
-		//validate user
-		validateNull(email);
-		validateNull(userPlayground);
-		
 		// validate attribute
 		elementService.validateElementAttribteName(attributeName);
 		

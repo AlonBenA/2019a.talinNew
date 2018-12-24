@@ -156,7 +156,7 @@ public class ElementServiceStub implements PlaygroundElementService  {
 	}
 
 	@Override
-	public String GetUserRole(String userPlayground, String email) {
+	public String getUserRole(String userPlayground, String email) {
 		// TODO Auto-generated method stub
 		return "Player";
 	}

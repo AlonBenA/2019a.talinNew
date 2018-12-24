@@ -33,12 +33,6 @@ public class WebUIActivity {
 	}
 
 
-	private void validateNull(String name) throws Exception {
-		if ("null".equals(name) || name == null) {
-			throw new Exception("user not found");
-		}
-	}
-
 	
 	//Sprint2: Write the /playground/activities/{userPlayground}/{email} 
 	@RequestMapping(
@@ -50,18 +44,13 @@ public class WebUIActivity {
 			@PathVariable("userPlayground") String userPlayground,
 			@PathVariable("email") String email, @RequestBody ActivityTO activityTo) throws Exception {
 		
-		//validate user
-		validateNull(email);
-		validateNull(userPlayground);
-		
-		boolean activityResult =  activityService.validateActivityType(activityTo.getType());
+		//boolean activityResult =  activityService.validateActivityType(activityTo.getType());
 		
 		//update attributes that come from url
 		activityTo.setPlayerEmail(email);
 		activityTo.setPlayerPlayground(userPlayground);
 		ActivityEntity activityEntity = activityTo.convertFromActivityTOToActivityEntity();
-		return new ActivityTO(
-				this.activityService.addNewActivity(userPlayground, email, activityEntity));
+		return this.activityService.addNewActivity(userPlayground, email, activityEntity);
 	}
 	
 	

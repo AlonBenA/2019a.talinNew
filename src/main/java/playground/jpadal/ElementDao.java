@@ -47,13 +47,20 @@ public interface ElementDao extends PagingAndSortingRepository<ElementEntity, St
 			Pageable pageable);
 
 
-	public Page<ElementEntity> findAllByExirationDateIsNullAndNameLikeOrExirationDateAfterAndNameLike(
+	public Page<ElementEntity> findAllByExirationDateIsNullAndNameLike(
+			@Param("value") String value,
+			Pageable pageable);
+	
+	public Page<ElementEntity> findAllByExirationDateAfterAndNameLike(
 			@Param("today") Date today,
 			@Param("value") String value,
 			Pageable pageable);
-
-
-	public Page<ElementEntity> findAllByExirationDateIsNullAndTypeLikeOrExirationDateAfterAndTypeLike(
+	
+	public Page<ElementEntity> findAllByExirationDateIsNullAndTypeLike(
+			@Param("value") String value,
+			Pageable pageable);
+	
+	public Page<ElementEntity> findAllByExirationDateAfterAndTypeLike(
 			@Param("today") Date today,
 			@Param("value") String value,
 			Pageable pageable);
