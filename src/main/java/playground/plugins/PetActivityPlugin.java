@@ -23,37 +23,36 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 	}
 
 	@Override
-	public Object invokeAction(ActivityEntity activity,String activityId,ElementEntity element) {
-		long points = 10;
+	public Object invokeAction(ActivityEntity activity, String activityId, ElementEntity element) {
 		String UserKey = activity.getPlayerPlayground() + "@@" + activity.getPlayerEmail();
 		UserEntity user = this.users.findById(UserKey)
 				.orElseThrow(() -> new UserNotFoundException("no user found for: " + UserKey));
-		// user verified check
-		if (!user.isVerified())
-			throw new RuntimeException("The user " + UserKey + " is not verified.");
-		// user player check
-		if ("Player".equalsIgnoreCase(user.getRole()))
-			throw new RuntimeException("The user " + UserKey + " is not player.");
-		// set key for element
-		String element_key = activity.getElementPlayground() + "@@" + activity.getElementId();
-		ElementEntity Element = this.elements.findById(element_key)
-				.orElseThrow(() -> new ElementNotFoundException("no Element for: " + element_key));
 
-		if ("Animal".equalsIgnoreCase(element.getType())) {
-			//add 10 points to user
-			user.increasePoints(points);
-			users.save(user);
-			return new Message("the user " + UserKey +" pet a "+element.getName());
-		} else {
-			throw new RuntimeException("Not an Animal!");
-		}
+//		// user verified check
+//		if (!user.isVerified())
+//			throw new RuntimeException("The user " + UserKey + " is not verified.");
+//		// user player check
+//		if (!"Player".equalsIgnoreCase(user.getRole()))
+//			throw new RuntimeException("The user " + UserKey + " is not player.");
+		// Add point to user and save the activity
+		user.increasePoints(new Long(10));
+		users.save(user);
 
+		return new Message(activityId, "the user " + user.getUsername() + " pet " + element.getName());
 	}
 
 	@Override
 	public ElementEntity checkAction(ActivityEntity activity) {
-		// TODO Auto-generated method stub
-		return null;
+		// Set key for element
+		String element_key = activity.getElementPlayground() + "@@" + activity.getElementId();
+		ElementEntity element = this.elements.findById(element_key)
+				.orElseThrow(() -> new ElementNotFoundException("no Element for: " + element_key));
+
+		if (!"Animal".equalsIgnoreCase(element.getType())) {
+			throw new RuntimeException("Not an Animal!");
+		}
+
+		return element;
 	}
 
 }

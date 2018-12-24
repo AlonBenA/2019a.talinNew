@@ -30,7 +30,7 @@ public class JpaUserService implements PlaygroundUserService{
 					+ userEntity.getCode()); // "send" code
 			return this.users.save(userEntity);
 		}
-		throw new UserAlreadyExistsException("message exists with: " + userEntity.getKey()); 
+		throw new UserAlreadyExistsException("User exists with: " + userEntity.getKey()); 
 		
 	}
 
