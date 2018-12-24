@@ -26,6 +26,8 @@ import playground.logic.Services.PlaygroundUserService;
 import playground.plugins.ReadFromBoardResult;
 import playground.plugins.Message;
 
+
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class WebUITestsActivity {
