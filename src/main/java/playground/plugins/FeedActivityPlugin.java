@@ -36,7 +36,7 @@ public class FeedActivityPlugin implements PlaygroungActivityPlugin {
 			users.save(user);
 			Message message = new Message();
 			message.setId(activityId);
-			message.setMessage("the user " + user.getUsername() +" feed "+ element.getName());
+			message.setMessage("the user " + user.getUsername() +" feed "+ element.getName() + " and got 1 point" );
 			return message;
 	
 	}
