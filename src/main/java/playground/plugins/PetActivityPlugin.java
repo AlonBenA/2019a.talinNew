@@ -27,14 +27,15 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 		String UserKey = activity.getPlayerPlayground() + "@@" + activity.getPlayerEmail();
 		UserEntity user = this.users.findById(UserKey)
 				.orElseThrow(() -> new UserNotFoundException("no user found for: " + UserKey));
-
+		Long numberOfPointsToAdd= new Long(10);
+		
 		// Add point to user and save the activity
-		user.increasePoints(new Long(10));
+		user.increasePoints(numberOfPointsToAdd);
 		users.save(user);
 		
 		Message message = new Message();
 		message.setId(activityId);
-		message.setMessage("the user " + user.getUsername() +" pet "+ element.getName());
+		message.setMessage("the user " + user.getUsername() +" pet "+ element.getName()+ " and got"+ numberOfPointsToAdd+" point");
 		return message;
 	}
 
