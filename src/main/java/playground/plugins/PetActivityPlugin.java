@@ -31,8 +31,11 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 		// Add point to user and save the activity
 		user.increasePoints(new Long(10));
 		users.save(user);
-
-		return new Message(activityId, "the user " + user.getUsername() + " pet " + element.getName());
+		
+		Message message = new Message();
+		message.setId(activityId);
+		message.setMessage("the user " + user.getUsername() +" pet "+ element.getName());
+		return message;
 	}
 
 	@Override

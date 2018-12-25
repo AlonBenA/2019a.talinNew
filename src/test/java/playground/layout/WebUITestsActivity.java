@@ -26,8 +26,6 @@ import playground.logic.Services.PlaygroundUserService;
 import playground.plugins.ReadFromBoardResult;
 import playground.plugins.Message;
 
-
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class WebUITestsActivity {
@@ -77,7 +75,6 @@ public class WebUITestsActivity {
 		this.activityService.cleanup();
 		this.elementService.cleanup();
 	}
-
 
 	@Test(expected = Exception.class)
 	public void testActivateElementWithInvalidActivityType() throws Exception {
@@ -258,8 +255,8 @@ public class WebUITestsActivity {
 
 		// and body is:
 		assertThat(rvMap.get("message"))
-				.isEqualTo("the user " + user.getUsername() +" posted a message in " + board.getName());
-		
+				.isEqualTo("the user " + user.getUsername() + " posted a message in " + board.getName());
+
 		// and the database contains activity:
 		String activity_id = rvMap.get("id") + "";
 		ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);
@@ -301,11 +298,11 @@ public class WebUITestsActivity {
 	}
 
 	// I
-	//@Test
+	@Test
 	public void testPetActivateElementWithTypeAnimalSuccessfully() throws Exception {
 		// create Manger to add element
-		String managerEmail = "testmanager@mail.com";
-		String userEmail = "testtuser@email.com";
+		String managerEmail = "manager@mail.com";
+		String userEmail = " user@email.com";
 		ElementEntity Animal = new ElementEntity();
 		Animal.setType("Animal");
 		Long numberOfPointsToAdd = new Long(10);
@@ -329,7 +326,7 @@ public class WebUITestsActivity {
 		newActivityTO.setElementId(Animal.getId());
 		newActivityTO.setElementPlayground(Animal.getPlayground());
 		newActivityTO.setType("Pet");
-		Object rv = this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		Object rv = this.restTemplate.postForObject(url, newActivityTO, Message.class, playground, userEmail);
 
 		// Then the response status is 2xx and
 		// And the database contains user with Points + 10
@@ -337,21 +334,22 @@ public class WebUITestsActivity {
 		user = userService.getUser(playground, userEmail);
 		Long NewNumberOfPoints = user.getPoints();
 		Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(rv), Map.class);
+
 		assertThat(OldNumberOfPoints + numberOfPointsToAdd).isEqualTo(NewNumberOfPoints);
 
 		// and body is:
-		assertThat(rvMap.get("message")).isEqualTo("the user " + user.getUsername() + " feed " + Animal.getName());
+		assertThat(rvMap.get("message")).isEqualTo("the user " + user.getUsername() + " pet " + Animal.getName());
 
 		// and the database contains activity:
 		String activity_id = rvMap.get("id") + "";
 		ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);
 
 		assertThat(Activity).isNotNull().extracting("playground", "id", "elementPlayground", "elementId", "type")
-				.containsExactly(playground, activity_id, playground, element.getId(), "pet");
+				.containsExactly(playground, activity_id, playground, element.getId(), "Pet");
 	}
 
 	// I
-	//@Test(expected = Exception.class)
+	@Test(expected = Exception.class)
 	public void testPetActivateElementWithTypeBoard() throws Exception {
 		// create Manger to add element
 		String managerEmail = "manager@mail.com";
@@ -368,7 +366,6 @@ public class WebUITestsActivity {
 
 		// And the database contains player
 		testHelper.addNewUser(userEmail, "Player", true);
-		//UserEntity user = userService.getUser(playground, userEmail);
 
 		String url = base_url + "/playground/activities/{userPlayground}/{email}";
 
@@ -377,16 +374,16 @@ public class WebUITestsActivity {
 		newActivityTO.setElementPlayground(Board.getPlayground());
 		newActivityTO.setType("Pet");
 
-		this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
+		this.restTemplate.postForObject(url, newActivityTO, Message.class, playground, userEmail);
 
 		// Then the response status <> 2xx
 	}
-	
+
 	// T
 	@Test
 	public void testReadFromBoardWithDefaultPaginationSuccessfully() throws Exception {
 		int defaultSize = 10;
-		
+
 		// create Manger to add element
 		String managerEmail = "manager@mail.com";
 		String userEmail = " user@email.com";
@@ -405,49 +402,49 @@ public class WebUITestsActivity {
 
 		String url = base_url + "/playground/activities/{userPlayground}/{email}";
 
-		//  And the database contains 10 messages posted to this board
-		for(int i = 0; i < defaultSize; i++)
-		{
+		// And the database contains 10 messages posted to this board
+		for (int i = 0; i < defaultSize; i++) {
 			ActivityTO newActivityTO = new ActivityTO();
 			newActivityTO.setElementId(Board.getId());
 			newActivityTO.setElementPlayground(Board.getPlayground());
 			newActivityTO.setType("PostMessage");
 			this.restTemplate.postForObject(url, newActivityTO, ActivityTO.class, playground, userEmail);
 		}
-		
+
 		// When I Post Activity to read all messages of board x
 		ActivityTO newActivityTO = new ActivityTO();
 		newActivityTO.setElementId(Board.getId());
 		newActivityTO.setElementPlayground(Board.getPlayground());
 		newActivityTO.setType("ReadFromBoard");
-		
-		//newActivityTO.getAttributes().put("page", 1);
-		//newActivityTO.getAttributes().put("size", 2);
-		
-		List<String> readmessages = null; 
-		
+
+		// newActivityTO.getAttributes().put("page", 1);
+		// newActivityTO.getAttributes().put("size", 2);
+
+		List<String> readmessages = null;
+
 		try {
-			ReadFromBoardResult rv = this.restTemplate.postForObject(url, newActivityTO, ReadFromBoardResult.class, playground, userEmail);
+			ReadFromBoardResult rv = this.restTemplate.postForObject(url, newActivityTO, ReadFromBoardResult.class,
+					playground, userEmail);
 			readmessages = (List<String>) rv.getResults();
-			
+
 			// Then the response status is 2xx and
 			// body contains 10 messages
 			assertThat(readmessages).hasSize(defaultSize);
-			
+
 			// and the database contains activity:
 			String activity_id = rv.getActivity_id();
 			ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);
 
 			assertThat(Activity).isNotNull().extracting("playground", "id", "elementPlayground", "elementId", "type")
 					.containsExactly(playground, activity_id, playground, element.getId(), "ReadFromBoard");
-			
-		}catch (HttpServerErrorException e) {
+
+		} catch (HttpServerErrorException e) {
 			System.err.println(e.getResponseBodyAsString());
 			throw e;
 		}
-		
+
 	}
-	
+
 	// T
 	@Test
 	public void testReadFromBoardUsingPaginationSuccessfully() throws Exception {
@@ -534,7 +531,6 @@ public class WebUITestsActivity {
 		testHelper.addNewUser(userEmail, "Player", true);
 
 		String url = base_url + "/playground/activities/{userPlayground}/{email}";
-
 
 		// When I Post Activity to read all messages from this element
 		ActivityTO newActivityTO = new ActivityTO();
