@@ -8,16 +8,19 @@ import playground.aop.MyLogger;
 import playground.aop.UserVerifiedAndExistCheck;
 import playground.jpadal.UserDao;
 import playground.logic.Entities.UserEntity;
+import playground.logic.Services.EmailService;
 import playground.logic.Services.PlaygroundUserService;
 
 @Service
 public class JpaUserService implements PlaygroundUserService{
 	private UserDao users;
+	private EmailService emailService;
 	
 	@Autowired
-	public JpaUserService(UserDao users) {
+	public JpaUserService(UserDao users, EmailService emailService) {
 		super();
 		this.users = users;
+		this.emailService = emailService;
 	}
 	
 	
@@ -26,8 +29,12 @@ public class JpaUserService implements PlaygroundUserService{
 	@MyLogger
 	public UserEntity addNewUser(UserEntity userEntity) {
 		if (!this.users.existsById(userEntity.getKey())) {
+			// print in console
 			System.err.println("user: " + userEntity.getPlayground() + "@@" + userEntity.getEmail() + " code: "
 					+ userEntity.getCode()); // "send" code
+			// send to mail
+			emailService.sendSimpleMessage(userEntity);
+			
 			return this.users.save(userEntity);
 		}
 		throw new UserAlreadyExistsException("User exists with: " + userEntity.getKey()); 
