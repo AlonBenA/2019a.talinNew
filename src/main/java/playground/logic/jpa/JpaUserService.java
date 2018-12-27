@@ -1,6 +1,7 @@
 package playground.logic.jpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +30,18 @@ public class JpaUserService implements PlaygroundUserService{
 	@MyLogger
 	public UserEntity addNewUser(UserEntity userEntity) {
 		if (!this.users.existsById(userEntity.getKey())) {
+			
 			// print in console
 			System.err.println("user: " + userEntity.getPlayground() + "@@" + userEntity.getEmail() + " code: "
 					+ userEntity.getCode()); // "send" code
-			// send to mail
-			emailService.sendSimpleMessage(userEntity);
+			
+			try {
+				// send to mail
+				emailService.sendSimpleMessage(userEntity);
+			} catch (MailException e) {
+				System.err.println("The mail sending was unsuccessful");
+			}
+			
 			
 			return this.users.save(userEntity);
 		}
