@@ -177,7 +177,9 @@ public class WebUITestsActivity {
 		assertThat(OldNumberOfPoints + numberOfPointsToAdd).isEqualTo(NewNumberOfPoints);
 
 		// and body is:
-		assertThat(rvMap.get("message")).isEqualTo("the user " + user.getUsername() + " feed " + Animal.getName() + " and got 1 point");
+		
+		
+		assertThat(rvMap.get("message")).isEqualTo(numberOfPointsToAdd+" point to" + user.getUsername() + " for feed " + Animal.getName());
 
 		// and the database contains activity:
 		String activity_id = rvMap.get("id") + "";
