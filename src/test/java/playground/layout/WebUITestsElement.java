@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.corba.se.impl.protocol.AddressingDispositionException;
 
 import playground.logic.Location;
 import playground.logic.Entities.ElementEntity;
@@ -43,8 +44,6 @@ public class WebUITestsElement {
 
 	private RestTemplate restTemplate;
 
-//	private final String PLAYGROUND = "2019a.talin";
-
 	private String playground;
 
 	@Value("${playground}") // set playground as "2019a.talin"
@@ -57,12 +56,9 @@ public class WebUITestsElement {
 
 	private String base_url;
 
-	private ObjectMapper jackson;
-
 	@PostConstruct
 	public void init() {
 		this.restTemplate = new RestTemplate();
-		this.jackson = new ObjectMapper();
 		base_url = "http://localhost:" + port;
 	}
 
@@ -1133,6 +1129,75 @@ public class WebUITestsElement {
 		// then
 		assertThat(actualElement).isNotNull().hasSize(DefaultSize);
 	}
+	
+	// T
+		@Test
+		public void testGetOnlyNotExpiredEementsWithThisAttributeValueAndPlayerAccountSuccessfully() throws Exception {
+
+			int DefaultSize = 10;
+			String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
+			String playerEmail = "tali@mail.com";
+			String managerEmail = "tali2@mail.com";
+
+			/*
+			 * Given Server is up And the database contains 20 elements with the name cat
+			 */
+
+			setElementsDatabase(5);
+			
+			/*
+			 * and the database contains one expired element with the name cat
+			 */
+			ElementEntity newElement = new ElementEntity();
+			newElement.setName("cat");
+			// set yesterday date as expiration date
+			newElement.setExirationDate(new Date(System.currentTimeMillis()-24*60*60*1000));
+			testHelper.addNewUser(managerEmail, "Manager", true);
+			elementService.addNewElement(playground, managerEmail, newElement);
+
+			/*
+			 * And the database contains player
+			 */
+			testHelper.addNewUser(playerEmail, "Player", true);
+
+			// when
+			ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, playerEmail);
+
+			// then the body contains only not expired elements, 5 elements 
+			assertThat(actualElement).isNotNull().hasSize(DefaultSize/2);
+		}
+		
+		// T
+		@Test
+		public void testGetAlsotExpiredEementsWithThisAttributeValueAndManagerAccountSuccessfully() throws Exception {
+
+			int DefaultSize = 10;
+			String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
+			String managerEmail = "tali2@mail.com";
+
+			/*
+			 * Given Server is up And the database contains 20 elements with the name cat
+			 */
+
+			setElementsDatabase(5);
+			
+			/*
+			 * and the database contains one expired element with the name cat
+			 */
+			ElementEntity newElement = new ElementEntity();
+			newElement.setName("cat");
+			// set yesterday date as expiration date
+			newElement.setExirationDate(new Date(System.currentTimeMillis()-24*60*60*1000));
+			testHelper.addNewUser(managerEmail, "Manager", true);
+			elementService.addNewElement(playground, managerEmail, newElement);
+
+			// when
+			ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, managerEmail);
+
+			// then the body contains only not expired elements, 5 elements 
+			assertThat(actualElement).isNotNull().hasSize(DefaultSize/2 + 1);
+		}
+
 
 	// T
 	@Test
@@ -1178,6 +1243,7 @@ public class WebUITestsElement {
 		// then
 		assertThat(actualElement).hasSize(DefaultSize);
 	}
+	
 
 	// T
 	@Test
