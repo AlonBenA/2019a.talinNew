@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.corba.se.impl.protocol.AddressingDispositionException;
+//import com.sun.corba.se.impl.protocol.AddressingDispositionException;
 
 import playground.logic.Location;
 import playground.logic.Entities.ElementEntity;
@@ -156,8 +156,7 @@ public class WebUITestsElement {
 		testHelper.addNewUser(userEmail, "Player", true);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail,
-				size);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, size);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(size);
@@ -181,11 +180,11 @@ public class WebUITestsElement {
 		/*
 		 * And the database contains player
 		 */
-		testHelper.addNewUser(userEmail,"Player", true);
+		testHelper.addNewUser(userEmail, "Player", true);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail,
-				size, page);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, size,
+				page);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(0);
@@ -212,60 +211,56 @@ public class WebUITestsElement {
 		testHelper.addNewUser(userEmail, "Manager", true);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail,
-				size, page);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, size,
+				page);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(size);
 	}
-	
+
 	// A
 	@Test
 	public void TestGetAllTheElementsWithValidExpirationDateWithPlayerAccount() throws Exception {
 
-			int size = 10;
-			int page = 0;
-			String userEmail = "user@Gmail.com";
-			String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/all?size={size}&page={page}";
+		int size = 10;
+		int page = 0;
+		String userEmail = "user@Gmail.com";
+		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/all?size={size}&page={page}";
 
-			
-			String creatorPlayground = playground;
-			String creatorEmail = "2019a.talin@Gmail.com";
+		String creatorPlayground = playground;
+		String creatorEmail = "2019a.talin@Gmail.com";
 
-			/*
-			 * Create the manger to add the elements
-			 */
-			testHelper.addNewUser(creatorEmail, "Manager", true);
-			
-			
-			//And the database contains 2 Elements
-			ElementEntity elementEntityWithNull = new ElementEntity();
-			elementEntityWithNull.setExirationDate(null);
-			ElementEntity elementEntityWithDate = new ElementEntity();
-			elementEntityWithDate.setExirationDate(new Date());
-			
-			elementService.addNewElement(creatorPlayground, creatorEmail, elementEntityWithNull);
-			elementService.addNewElement(creatorPlayground, creatorEmail, elementEntityWithDate);
-			
+		/*
+		 * Create the manger to add the elements
+		 */
+		testHelper.addNewUser(creatorEmail, "Manager", true);
 
-			/*
-			 * And the database contains player
-			 */
+		// And the database contains 2 Elements
+		ElementEntity elementEntityWithNull = new ElementEntity();
+		elementEntityWithNull.setExirationDate(null);
+		ElementEntity elementEntityWithDate = new ElementEntity();
+		elementEntityWithDate.setExirationDate(new Date());
 
-			testHelper.addNewUser(userEmail, "Player", true);
-			
-			//When I GET /playground/elements/2019a.talin/user@email.com/all?size=6&page=0 with headers Accept:application/json
-					
-			
-			// when
-			ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail,
-					size, page);	
-			
-			// Then the response status is 200 and body contains 1 Elements.
-			assertThat(actualElement).isNotNull().hasSize(1);
-			
-			
-		}
+		elementService.addNewElement(creatorPlayground, creatorEmail, elementEntityWithNull);
+		elementService.addNewElement(creatorPlayground, creatorEmail, elementEntityWithDate);
+
+		/*
+		 * And the database contains player
+		 */
+
+		testHelper.addNewUser(userEmail, "Player", true);
+
+		// When I GET /playground/elements/2019a.talin/user@email.com/all?size=6&page=0
+		// with headers Accept:application/json
+
+		// when
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, size,
+				page);
+
+		// Then the response status is 200 and body contains 1 Elements.
+		assertThat(actualElement).isNotNull().hasSize(1);
+
+	}
 
 	// A
 	@Test(expected = Exception.class)
@@ -286,8 +281,8 @@ public class WebUITestsElement {
 		testHelper.addNewUser(userEmail, "Manager", true);
 
 		// When I Get /playground/elements/null/talin@email.com/all?size=-6&page=1
-		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class, playground, userEmail,
-				-6, 1);
+		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class, playground, userEmail, -6,
+				1);
 
 		// Then the response status is <> 2xx
 	}
@@ -356,8 +351,8 @@ public class WebUITestsElement {
 		testHelper.addNewUser(userEmail, "Player", true);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x,
-				y, distance);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x, y,
+				distance);
 
 		// how to check near Elements
 		// Then the response status is 2xx and body contains 10 near Elements
@@ -389,8 +384,8 @@ public class WebUITestsElement {
 		testHelper.addNewUser(userEmail, "Player", true);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x,
-				y, distance, size);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x, y,
+				distance, size);
 
 		// Then the response status is 2xx and body contains 3 near Elements
 
@@ -423,8 +418,8 @@ public class WebUITestsElement {
 		testHelper.addNewUser(userEmail, "Player", true);
 
 		// when
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x,
-				y, distance, size, page);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x, y,
+				distance, size, page);
 
 		// Then the response status is 2xx and body contains 3 near Elements
 
@@ -456,67 +451,65 @@ public class WebUITestsElement {
 		 */
 		testHelper.addNewUser(userEmail, "Player", true);
 
-		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x,
-				y, distance, size, page);
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x, y,
+				distance, size, page);
 
 		// then
 		assertThat(actualElement).isNotNull().hasSize(0);
 	}
-	
-	
+
 	// A
 	@Test
 	public void TestGetAllTheNearElementsWithValidExpirationDateWithPlayerAccount() throws Exception {
 
-			int size = 6;
-			int page = 0;
-			int x = 5;
-			int y = 5;
-			int distance = 10;
-			
-			String userEmail = "user@Gmail.com";
-			String url = base_url
-					+ "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}?size={size}&page={page}";
+		int size = 6;
+		int page = 0;
+		int x = 5;
+		int y = 5;
+		int distance = 10;
 
-			
-			String creatorPlayground = playground;
-			String creatorEmail = "2019a.talin@Gmail.com";
+		String userEmail = "user@Gmail.com";
+		String url = base_url
+				+ "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}?size={size}&page={page}";
 
-			/*
-			 * Create the manger to add the elements
-			 */
-			testHelper.addNewUser(creatorEmail, "Manager", true);
-			
-			
-			//And the database contains 2 Elements
-			ElementEntity elementEntityWithNull = new ElementEntity();
-			elementEntityWithNull.setExirationDate(null);
-			elementEntityWithNull.setX(0.0);
-			elementEntityWithNull.setY(0.0);
-			ElementEntity elementEntityWithDate = new ElementEntity();
-			elementEntityWithDate.setExirationDate(new Date());
-			elementEntityWithDate.setX(0.0);
-			elementEntityWithDate.setY(0.0);
-			
-			elementService.addNewElement(creatorPlayground, creatorEmail, elementEntityWithNull);
-			elementService.addNewElement(creatorPlayground, creatorEmail, elementEntityWithDate);
-			
+		String creatorPlayground = playground;
+		String creatorEmail = "2019a.talin@Gmail.com";
 
-			/*
-			 * And the database contains player
-			 */
+		/*
+		 * Create the manger to add the elements
+		 */
+		testHelper.addNewUser(creatorEmail, "Manager", true);
 
-			testHelper.addNewUser(userEmail, "Player", true);
-			
-			//When I GET /playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}?size={size}&page={page} with headers Accept:application/json
-					
-			ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x,
-					y, distance, size, page);
-			
-			// Then the response status is 200 and body contains 1 Elements.
-			assertThat(actualElement).isNotNull().hasSize(1);
-			
-		}
+		// And the database contains 2 Elements
+		ElementEntity elementEntityWithNull = new ElementEntity();
+		elementEntityWithNull.setExirationDate(null);
+		elementEntityWithNull.setX(0.0);
+		elementEntityWithNull.setY(0.0);
+		ElementEntity elementEntityWithDate = new ElementEntity();
+		elementEntityWithDate.setExirationDate(new Date());
+		elementEntityWithDate.setX(0.0);
+		elementEntityWithDate.setY(0.0);
+
+		elementService.addNewElement(creatorPlayground, creatorEmail, elementEntityWithNull);
+		elementService.addNewElement(creatorPlayground, creatorEmail, elementEntityWithDate);
+
+		/*
+		 * And the database contains player
+		 */
+
+		testHelper.addNewUser(userEmail, "Player", true);
+
+		// When I GET
+		// /playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}?size={size}&page={page}
+		// with headers Accept:application/json
+
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, userEmail, x, y,
+				distance, size, page);
+
+		// Then the response status is 200 and body contains 1 Elements.
+		assertThat(actualElement).isNotNull().hasSize(1);
+
+	}
 
 	// A
 	@Test(expected = Exception.class)
@@ -540,8 +533,8 @@ public class WebUITestsElement {
 
 		String url = base_url + "/playground/elements/{userPlayground}/{userEmail}/near/{x}/{y}/{distance}";
 
-		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class, playground, userEmail,
-				x, y, distance, -6, 1);
+		this.restTemplate.getForObject(url + "?size={size}&page={page}", ElementTO[].class, playground, userEmail, x, y,
+				distance, -6, 1);
 
 		// Then the response status <> 2xx
 	}
@@ -945,7 +938,7 @@ public class WebUITestsElement {
 		double y = 1.0;
 		String type = "animal";
 		// database contains an manager:
-		testHelper.addNewUser(email,"Manager", true);
+		testHelper.addNewUser(email, "Manager", true);
 
 		ElementEntity newElement = new ElementEntity();
 		newElement.setName(name);
@@ -1104,9 +1097,143 @@ public class WebUITestsElement {
 		// Then the response status is <> 2xx
 	}
 
+	// I
+	@Test(expected = Exception.class)
+	public void TestGetElementWithInValidExpirationDateWithPlayerAccount() throws ElementAlreadyExistException {
+		// Given Server is up
+		// And the database contains
+		//		 {
+		//		 “playground”: 2019a.talin”
+		//		 “ id”: x
+		//		 "x": 1,
+		//		 "y": 1
+		//		 "name": "cat",
+		//		 "type": "Animal",
+		//		 "expirationDate":date that pass
+		//		 "attributes": {},
+		//		 "creatorPlayground":"2019a.talin",
+		//		 "creatorEmail":”R@mail.com"
+		//		 }
+		//And the database contains an user:
+		//		 {
+		//		 “Email” :” Player@mail.com”,
+		//		 “playground” :”2019a.talin”,
+		//		 “role”: “Player”,
+		//		 “code” :pinCode
+		//		 }
+
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/{playground}/{id}";
+		String id;
+		String email = "R@mail.com";
+		String playerEmail = "player@mail.com";
+
+		String name = "cat";
+		double x = 1.0;
+		double y = 1.0;
+		String type = "animal";
+		testHelper.addNewUser(email, "Manager", true);
+		// database contains an player:
+		testHelper.addNewUser(playerEmail, "Player", true);
+
+		ElementEntity newElement = new ElementEntity();
+		newElement.setName(name);
+		// newElement.setLocation(new Location(x, y));
+		newElement.setX(x);
+		newElement.setY(y);
+		newElement.setType(type);
+		newElement.setCreatorEmail(email);
+		newElement.setExirationDate(new Date());
+
+		newElement = this.elementService.addNewElement(newElement.getPlayground(), newElement.getCreatorEmail(),
+				newElement);
+
+		id = newElement.getId();
+		// When I Get
+		// http://localhost:8083/playground/elements/2019a.talin/R@mail.com/2019a.talin/x
+		// with headers:
+		// Accept: application/json
+
+		this.restTemplate.getForObject(url, ElementTO.class, playground, playerEmail, playground, id);
+
+		// Then the response status is <>2xx
+	}
+	// I
+	@Test
+	public void TestGetElementWithValidExpirationDateWithPlayerAccount() throws ElementAlreadyExistException {
+		// Given Server is up
+		// And the database contains
+		//		 {
+		//		 “playground”: 2019a.talin”
+		//		 “ id”: x
+		//		 "x": 1,
+		//		 "y": 1
+		//		 "name": "cat",
+		//		 "type": "Animal",
+		//		 "expirationDate":null
+		//		 "attributes": {},
+		//		 "creatorPlayground":"2019a.talin",
+		//		 "creatorEmail":”R@mail.com"
+		//		 }
+		//And the database contains an user:
+		//		 {
+		//		 “Email” :” Player@mail.com”,
+		//		 “playground” :”2019a.talin”,
+		//		 “role”: “Player”,
+		//		 “code” :pinCode
+		//		 }
+
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/{playground}/{id}";
+		String id;
+		String email = "R@mail.com";
+		String playerEmail = "player@mail.com";
+
+		String name = "cat";
+		double x = 1.0;
+		double y = 1.0;
+		String type = "animal";
+		testHelper.addNewUser(email, "Manager", true);
+		// database contains an player:
+		testHelper.addNewUser(playerEmail, "Player", true);
+
+		ElementEntity newElement = new ElementEntity();
+		newElement.setName(name);
+		// newElement.setLocation(new Location(x, y));
+		newElement.setX(x);
+		newElement.setY(y);
+		newElement.setType(type);
+		newElement.setCreatorEmail(email);
+
+		newElement = this.elementService.addNewElement(newElement.getPlayground(), newElement.getCreatorEmail(),
+				newElement);
+
+		id = newElement.getId();
+		// When I Get
+		// http://localhost:8083/playground/elements/2019a.talin/R@mail.com/2019a.talin/x
+		// with headers:
+		// Accept: application/json
+
+		ElementTO actualElement = this.restTemplate.getForObject(url, ElementTO.class, playground, playerEmail, playground,
+				id);
+
+		// Then the response status is 2xx and body is
+
+		// {
+		// “playground”: 2019a.talin”
+		// “ id”: x
+		// "location": {
+		// "x": 1,
+		// "y": 1
+		// },
+		// "name": "Animal", "type": "Animal", "attributes": {},
+		// "creatorPlayground":"2019a.talin", "creatorEmail":"R@mail.com"
+		// }
+		assertThat(actualElement).isNotNull().extracting("playground", "id", "name", "type", "location", "attributes")
+				.containsExactly(playground, id, name, type, new Location(x, y), new HashMap<>());
+	}
 	// T
 	@Test
-	public void testGetEementsWithThisAttributeValueUsingDefaultPaginationAndValidPlayerAcountSuccessfully() throws Exception {
+	public void testGetEementsWithThisAttributeValueUsingDefaultPaginationAndValidPlayerAcountSuccessfully()
+			throws Exception {
 
 		int DefaultSize = 10;
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
@@ -1129,79 +1256,79 @@ public class WebUITestsElement {
 		// then
 		assertThat(actualElement).isNotNull().hasSize(DefaultSize);
 	}
-	
-	// T
-		@Test
-		public void testGetOnlyNotExpiredEementsWithThisAttributeValueAndPlayerAccountSuccessfully() throws Exception {
-
-			int DefaultSize = 10;
-			String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
-			String playerEmail = "tali@mail.com";
-			String managerEmail = "tali2@mail.com";
-
-			/*
-			 * Given Server is up And the database contains 20 elements with the name cat
-			 */
-
-			setElementsDatabase(5);
-			
-			/*
-			 * and the database contains one expired element with the name cat
-			 */
-			ElementEntity newElement = new ElementEntity();
-			newElement.setName("cat");
-			// set yesterday date as expiration date
-			newElement.setExirationDate(new Date(System.currentTimeMillis()-24*60*60*1000));
-			testHelper.addNewUser(managerEmail, "Manager", true);
-			elementService.addNewElement(playground, managerEmail, newElement);
-
-			/*
-			 * And the database contains player
-			 */
-			testHelper.addNewUser(playerEmail, "Player", true);
-
-			// when
-			ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, playerEmail);
-
-			// then the body contains only not expired elements, 5 elements 
-			assertThat(actualElement).isNotNull().hasSize(DefaultSize/2);
-		}
-		
-		// T
-		@Test
-		public void testGetAlsotExpiredEementsWithThisAttributeValueAndManagerAccountSuccessfully() throws Exception {
-
-			int DefaultSize = 10;
-			String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
-			String managerEmail = "tali2@mail.com";
-
-			/*
-			 * Given Server is up And the database contains 20 elements with the name cat
-			 */
-
-			setElementsDatabase(5);
-			
-			/*
-			 * and the database contains one expired element with the name cat
-			 */
-			ElementEntity newElement = new ElementEntity();
-			newElement.setName("cat");
-			// set yesterday date as expiration date
-			newElement.setExirationDate(new Date(System.currentTimeMillis()-24*60*60*1000));
-			testHelper.addNewUser(managerEmail, "Manager", true);
-			elementService.addNewElement(playground, managerEmail, newElement);
-
-			// when
-			ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, managerEmail);
-
-			// then the body contains only not expired elements, 5 elements 
-			assertThat(actualElement).isNotNull().hasSize(DefaultSize/2 + 1);
-		}
-
 
 	// T
 	@Test
-	public void testGetElementsWithAttributeValueThatNotExistsUsingDefaultPaginationAndValidPlayerAccount() throws Exception {
+	public void testGetOnlyNotExpiredEementsWithThisAttributeValueAndPlayerAccountSuccessfully() throws Exception {
+
+		int DefaultSize = 10;
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
+		String playerEmail = "tali@mail.com";
+		String managerEmail = "tali2@mail.com";
+
+		/*
+		 * Given Server is up And the database contains 20 elements with the name cat
+		 */
+
+		setElementsDatabase(5);
+
+		/*
+		 * and the database contains one expired element with the name cat
+		 */
+		ElementEntity newElement = new ElementEntity();
+		newElement.setName("cat");
+		// set yesterday date as expiration date
+		newElement.setExirationDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
+		testHelper.addNewUser(managerEmail, "Manager", true);
+		elementService.addNewElement(playground, managerEmail, newElement);
+
+		/*
+		 * And the database contains player
+		 */
+		testHelper.addNewUser(playerEmail, "Player", true);
+
+		// when
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, playerEmail);
+
+		// then the body contains only not expired elements, 5 elements
+		assertThat(actualElement).isNotNull().hasSize(DefaultSize / 2);
+	}
+
+	// T
+	@Test
+	public void testGetAlsotExpiredEementsWithThisAttributeValueAndManagerAccountSuccessfully() throws Exception {
+
+		int DefaultSize = 10;
+		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
+		String managerEmail = "tali2@mail.com";
+
+		/*
+		 * Given Server is up And the database contains 20 elements with the name cat
+		 */
+
+		setElementsDatabase(5);
+
+		/*
+		 * and the database contains one expired element with the name cat
+		 */
+		ElementEntity newElement = new ElementEntity();
+		newElement.setName("cat");
+		// set yesterday date as expiration date
+		newElement.setExirationDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
+		testHelper.addNewUser(managerEmail, "Manager", true);
+		elementService.addNewElement(playground, managerEmail, newElement);
+
+		// when
+		ElementTO[] actualElement = this.restTemplate.getForObject(url, ElementTO[].class, playground, managerEmail);
+
+		// then the body contains only not expired elements, 5 elements
+		assertThat(actualElement).isNotNull().hasSize(DefaultSize / 2 + 1);
+	}
+
+	// T
+	@Test
+	public void testGetElementsWithAttributeValueThatNotExistsUsingDefaultPaginationAndValidPlayerAccount()
+			throws Exception {
 
 		String url = base_url + "/playground/elements/{userPlayground}/{email}/search/name/cat";
 		String email = "tali@mail.com";
@@ -1243,7 +1370,6 @@ public class WebUITestsElement {
 		// then
 		assertThat(actualElement).hasSize(DefaultSize);
 	}
-	
 
 	// T
 	@Test
@@ -1299,7 +1425,8 @@ public class WebUITestsElement {
 
 	// T
 	@Test
-	public void testGetElementsWithThisAttributeValueUsingPaginationOfSecondPageAndValidManagerAcountSuccessfully() throws Exception {
+	public void testGetElementsWithThisAttributeValueUsingPaginationOfSecondPageAndValidManagerAcountSuccessfully()
+			throws Exception {
 
 		int size = 6;
 		int page = 1;
@@ -1346,7 +1473,7 @@ public class WebUITestsElement {
 
 		// Then the response status is <> 2xx
 	}
-	
+
 	// T
 	@Test(expected = Exception.class)
 	public void testGetEementsWithThisAttributeValueUsingDefaultPaginationWithInvalidPlayerAccount() throws Exception {
@@ -1364,9 +1491,9 @@ public class WebUITestsElement {
 		this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
 
 		// Then the response status is <> 2xx
-		
+
 	}
-	
+
 	// T
 	@Test(expected = Exception.class)
 	public void testGetEementsWithThisAttributeValueUsingDefaultPaginationWithUnverifiedUserAccount() throws Exception {
@@ -1379,13 +1506,13 @@ public class WebUITestsElement {
 		 */
 
 		setElementsDatabase(20);
-		
+
 		// and database contains an Unverified manager:
 		testHelper.addNewUser(email, "Manager", false);
 
 		// when
 		this.restTemplate.getForObject(url, ElementTO[].class, playground, email);
 		// Then the response status is <> 2xx
-		
+
 	}
 }

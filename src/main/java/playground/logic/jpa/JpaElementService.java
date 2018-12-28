@@ -64,16 +64,16 @@ public class JpaElementService implements PlaygroundElementService {
 			throws ElementNotFoundException {
 		// set key for element
 		String element_key = element_Playground + "@@" + element_id;
-		if ("Manager".equalsIgnoreCase(getUserRole(userPlayground, email))) {
-			return this.elements.findById(element_key)
-					.orElseThrow(() -> new ElementNotFoundException("no Element for: " + element_key));
-		} else {
-			// if it's a Client
-			Date today = new Date();
-			return this.elements.findAllByExirationDateIsNullOrExirationDateAfter(today,
-					PageRequest.of(0, 1, Direction.DESC, "creationDate")).getContent().get(0);
-		}
+		ElementEntity elementExist = this.elements.findById(element_key)
+				.orElseThrow(() -> new ElementNotFoundException("no Element for: " + element_key));
 
+		if ("Player".equalsIgnoreCase(getUserRole(userPlayground, email)) && elementExist.getExirationDate()!=null) {
+			Date today = new Date();
+			
+			if (elementExist.getExirationDate().before(today))
+				throw new ElementNotFoundException("no Element for: " + element_key);
+		}
+		return elementExist;
 	}
 
 	@Override
@@ -179,44 +179,38 @@ public class JpaElementService implements PlaygroundElementService {
 	@MyLogger
 	public List<ElementEntity> getElementsWithAttribute(String userPlayground, String email, String attributeName,
 			String value, int size, int page) {
-		
-		if("Manager".equalsIgnoreCase(getUserRole(userPlayground, email))) { //Manager
+
+		if ("Manager".equalsIgnoreCase(getUserRole(userPlayground, email))) { // Manager
 			// if attribute is "name"
 			if (attributeName.equals("name")) {
-				return this.elements.findAllByNameLike(value, PageRequest.of(page, size, Direction.DESC, "creationDate"))
+				return this.elements
+						.findAllByNameLike(value, PageRequest.of(page, size, Direction.DESC, "creationDate"))
 						.getContent();
 			} else {
 				// attribute is "type"
-				return this.elements.findAllByTypeLike(value, PageRequest.of(page, size, Direction.DESC, "creationDate"))
+				return this.elements
+						.findAllByTypeLike(value, PageRequest.of(page, size, Direction.DESC, "creationDate"))
 						.getContent();
 			}
-		}else { //Player
-		
-		  Date today = new Date(); 
-		  if(attributeName.equals("name")) {
-			  List<ElementEntity> elementsList = new ArrayList<>();
-			  elementsList.addAll(this.elements.
-					  findAllByExirationDateIsNullAndNameLike(
-							 value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
-					  .getContent());
-			  elementsList.addAll(this.elements.
-					  findAllByExirationDateAfterAndNameLike(
-							 today, value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
-					  .getContent());
-			  return elementsList;
-			  
-		  }else { // attribute is "type" 
-				  List<ElementEntity> elementsList = new ArrayList<>();
-				  elementsList.addAll(this.elements.
-						  findAllByExirationDateIsNullAndTypeLike(
-								 value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
-						  .getContent());
-				  elementsList.addAll(this.elements.
-						  findAllByExirationDateAfterAndTypeLike(
-								 today, value, PageRequest.of( page, size, Direction.DESC, "creationDate"))
-						  .getContent());
-				  return elementsList;
-			  }
+		} else { // Player
+
+			Date today = new Date();
+			if (attributeName.equals("name")) {
+				List<ElementEntity> elementsList = new ArrayList<>();
+				elementsList.addAll(this.elements.findAllByExirationDateIsNullAndNameLike(value,
+						PageRequest.of(page, size, Direction.DESC, "creationDate")).getContent());
+				elementsList.addAll(this.elements.findAllByExirationDateAfterAndNameLike(today, value,
+						PageRequest.of(page, size, Direction.DESC, "creationDate")).getContent());
+				return elementsList;
+
+			} else { // attribute is "type"
+				List<ElementEntity> elementsList = new ArrayList<>();
+				elementsList.addAll(this.elements.findAllByExirationDateIsNullAndTypeLike(value,
+						PageRequest.of(page, size, Direction.DESC, "creationDate")).getContent());
+				elementsList.addAll(this.elements.findAllByExirationDateAfterAndTypeLike(today, value,
+						PageRequest.of(page, size, Direction.DESC, "creationDate")).getContent());
+				return elementsList;
+			}
 		}
 
 	}
