@@ -305,8 +305,8 @@ public class WebUITestsActivity {
 		// create Manger to add element
 		String managerEmail = "manager@mail.com";
 		String userEmail = " user@email.com";
-		ElementEntity Animal = new ElementEntity();
-		Animal.setType("Animal");
+		ElementEntity animal = new ElementEntity();
+		animal.setType("Animal");
 		Long numberOfPointsToAdd = new Long(10);
 
 		// Given Server is up
@@ -315,7 +315,7 @@ public class WebUITestsActivity {
 
 		// And the database contains element
 
-		ElementEntity element = elementService.addNewElement(playground, managerEmail, Animal);
+		ElementEntity element = elementService.addNewElement(playground, managerEmail, animal);
 
 		// And the database contains player
 		testHelper.addNewUser(userEmail, "Player", true);
@@ -325,8 +325,8 @@ public class WebUITestsActivity {
 		String url = base_url + "/playground/activities/{userPlayground}/{email}";
 
 		ActivityTO newActivityTO = new ActivityTO();
-		newActivityTO.setElementId(Animal.getId());
-		newActivityTO.setElementPlayground(Animal.getPlayground());
+		newActivityTO.setElementId(animal.getId());
+		newActivityTO.setElementPlayground(animal.getPlayground());
 		newActivityTO.setType("Pet");
 		Object rv = this.restTemplate.postForObject(url, newActivityTO, Message.class, playground, userEmail);
 
@@ -340,8 +340,7 @@ public class WebUITestsActivity {
 		assertThat(OldNumberOfPoints + numberOfPointsToAdd).isEqualTo(NewNumberOfPoints);
 
 		// and body is:
-		assertThat(rvMap.get("message")).isEqualTo("the user " + user.getUsername() + " pet " + Animal.getName() + " and got"+ numberOfPointsToAdd+" point");
-
+		assertThat(rvMap.get("message")).isEqualTo(numberOfPointsToAdd+ " point to" + user.getUsername() + " for pet " + animal.getName());
 		// and the database contains activity:
 		String activity_id = rvMap.get("id") + "";
 		ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);
