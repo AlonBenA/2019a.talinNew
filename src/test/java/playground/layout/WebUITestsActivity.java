@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -28,6 +29,7 @@ import playground.plugins.Message;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@TestPropertySource(properties={"spring.profiles.active=default"})
 public class WebUITestsActivity {
 	@Autowired
 	private PlaygroundActivityService activityService;
@@ -179,7 +181,7 @@ public class WebUITestsActivity {
 		// and body is:
 		
 		
-		assertThat(rvMap.get("message")).isEqualTo(numberOfPointsToAdd+" point to" + user.getUsername() + " for feed " + Animal.getName());
+		assertThat(rvMap.get("message")).isEqualTo(numberOfPointsToAdd+" point to " + user.getUsername() + " for feed " + Animal.getName());
 
 		// and the database contains activity:
 		String activity_id = rvMap.get("id") + "";
