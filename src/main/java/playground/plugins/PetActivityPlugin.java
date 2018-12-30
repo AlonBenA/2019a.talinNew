@@ -36,7 +36,7 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 			
 		if(element.getAttributes().containsKey(numberOfPet) && element.getAttributes().containsKey(DateOfPet))
 		{
-			Date date = (Date) element.getAttributes().get(DateOfPet);
+			Date date = new Date((Long)(element.getAttributes().get(DateOfPet)));
 			int numberOfPetInt = (int) element.getAttributes().get(numberOfPet);
 			if(DateUtils.isToday(date) && numberOfPetInt > 20)
 			{

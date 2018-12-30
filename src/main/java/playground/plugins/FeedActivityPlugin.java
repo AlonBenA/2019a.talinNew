@@ -38,7 +38,7 @@ public class FeedActivityPlugin implements PlaygroungActivityPlugin {
 			
 		if(element.getAttributes().containsKey(numberOfFeed) && element.getAttributes().containsKey(DateOfFeed))
 		{
-			Date date = (Date) element.getAttributes().get(DateOfFeed);
+			Date date = new Date((Long)(element.getAttributes().get(DateOfFeed)));
 			int numberOfFeedInt = (int) element.getAttributes().get(numberOfFeed);
 			if(DateUtils.isToday(date) && numberOfFeedInt > 3)
 			{
