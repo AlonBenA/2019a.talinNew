@@ -83,9 +83,6 @@ public class WebUIComplexTest1 {
 				playground, "player1", "Player", avatar);
 		UserTO player2 = userSignupValidatenAndLogin(url, "player2@usermail.com",
 				playground, "player2", "Player", avatar);
-		//// because of the confirmation check, userService was cleaned up
-		testHelper.addNewUser(manager1.getEmail(), manager1.getRole(), true);
-		testHelper.addNewUser(player1.getEmail(), player1.getRole(), true);
 		
 		// manager1 update his username
 		// When I Put http://localhost:8083/playground/users/userPlayground/userEmail
@@ -302,14 +299,12 @@ public class WebUIComplexTest1 {
 	//		When user wants to sign up
 			//POST http://localhost:8083/playground/users with 
 			NewUserForm newUserForm = new NewUserForm(email, username, avatar, role);
-			this.restTemplate.postForObject(url, newUserForm, UserTO.class);
+			UserTO userTO = this.restTemplate.postForObject(url, newUserForm, UserTO.class);
 			
 			
 			// preparation for testing confirmation 
-			userService.cleanup();
-			UserEntity userEntity = new UserEntity(email, username, avatar, role);
+			UserEntity userEntity = userService.getUser(userTO.getPlayground(), userTO.getEmail());
 			String code = userEntity.getCode();
-			this.userService.addNewUser(userEntity);
 			
 	//		When user confirm himself
 			//GET http://localhost:8083/playground/users/confirm/userPlayground/email/code

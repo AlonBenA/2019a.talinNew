@@ -106,6 +106,23 @@ public class DummyInitializer {
 						e.printStackTrace();
 					}
 				});
+		
+		
+		Date eDate = new Date();
+	
+		
+		ElementEntity e = new ElementEntity(new Location(11, 11),
+				(name == null) ? "animal #" + 11 : name, eDate, type, attributes, playground,
+				creatorEmail);
+		
+		try {
+			elementService.addNewElement(playground, creatorEmail, e);
+		} catch (ElementAlreadyExistException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+
 	}
 	
 	

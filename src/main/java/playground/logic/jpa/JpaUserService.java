@@ -37,7 +37,7 @@ public class JpaUserService implements PlaygroundUserService{
 			
 			try {
 				// send to mail
-				//emailService.sendSimpleMessage(userEntity);
+				emailService.sendSimpleMessage(userEntity);
 			} catch (MailException e) {
 				System.err.println("The mail sending was unsuccessful");
 			}
