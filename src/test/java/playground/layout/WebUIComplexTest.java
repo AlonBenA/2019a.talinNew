@@ -32,7 +32,7 @@ import playground.plugins.ReadFromBoardResult;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties={"spring.profiles.active=default"})
-public class WebUIComplexTest1 {
+public class WebUIComplexTest {
 	@Autowired
 	private PlaygroundActivityService activityService;
 
