@@ -47,10 +47,8 @@ public class PostMessageActivityPlugin implements PlaygroungActivityPlugin {
 //		if(!user.isVerified())
 //			throw new RuntimeException("The user " + UserKey+ " is not verified.");
 		
-		
 		return new Message(activityId, "the user " + user.getUsername() +" posted a message in " + element.getName());
-		
-		
+	
 	}
 
 }

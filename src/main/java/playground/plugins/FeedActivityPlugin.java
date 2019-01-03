@@ -45,7 +45,7 @@ public class FeedActivityPlugin implements PlaygroungActivityPlugin {
 				
 					Message message = new Message();
 					message.setId(activityId);					
-					message.setMessage("You can't feed that" + element.getName() + " anymore \n");
+					message.setContent("You can't feed that" + element.getName() + " anymore \n");
 					return message;
 			}
 			else
@@ -61,7 +61,7 @@ public class FeedActivityPlugin implements PlaygroungActivityPlugin {
 				
 				Message message = new Message();
 				message.setId(activityId);
-				message.setMessage(numberOfPointsForFeed+ " point to " + user.getUsername() + " for feed " + element.getName());
+				message.setContent(numberOfPointsForFeed+ " point to " + user.getUsername() + " for feed " + element.getName());
 			
 				return message;
 			
@@ -80,7 +80,7 @@ public class FeedActivityPlugin implements PlaygroungActivityPlugin {
 			
 			Message message = new Message();
 			message.setId(activityId);
-			message.setMessage(numberOfPointsForFeed+ " point to " + user.getUsername() + " for feed " + element.getName());
+			message.setContent(numberOfPointsForFeed+ " point to " + user.getUsername() + " for feed " + element.getName());
 		
 			return message;
 

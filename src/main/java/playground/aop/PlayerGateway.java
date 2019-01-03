@@ -13,16 +13,14 @@ import playground.logic.Services.PlaygroundUserService;
 @Component
 @Aspect
 public class PlayerGateway {
-//	private Log log = LogFactory.getLog(LoggerAspect.class);
-	private PlaygroundUserService userService;
 	
+	private PlaygroundUserService userService;
 	
 	@Autowired
 	public PlayerGateway(PlaygroundUserService userService) {
 		super();
 		this.userService = userService;
 	}
-	
 	
 	@Around("@annotation(playground.aop.PlayerExistCheck) && args(playground, email,..)")
 	public Object checkIfPlayer(ProceedingJoinPoint pjp, String playground, String email) throws Throwable {

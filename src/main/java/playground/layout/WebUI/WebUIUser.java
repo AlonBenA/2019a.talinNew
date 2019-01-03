@@ -29,7 +29,7 @@ public class WebUIUser {
 		this.userService = userService;
 	}
 	
-	// Rest api 1 - Sapir 
+	// Rest api 1 - userSignup 
 	@RequestMapping(
 			method=RequestMethod.POST,
 			path="/playground/users",
@@ -43,7 +43,7 @@ public class WebUIUser {
 		return new UserTO(userEntity);
 	}
 	
-	// Rest api 2 - Sapir
+	// Rest api 2 - userValidate
 	@RequestMapping(
 			method=RequestMethod.GET,
 			path="/playground/users/confirm/{playground}/{email}/{code}",
@@ -54,7 +54,7 @@ public class WebUIUser {
 		return new UserTO(verified_UserEntity);
 	}
 	
-	// Rest api 3 - Sapir  // check Exception!!!!!!!!!!!!!!!!!!!!!
+	// Rest api 3 - userLogin
 	@RequestMapping(
 			method=RequestMethod.GET,
 			path="/playground/users/login/{playground}/{email}",

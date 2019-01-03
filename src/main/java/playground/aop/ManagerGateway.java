@@ -13,7 +13,6 @@ import playground.logic.Services.PlaygroundUserService;
 @Aspect
 public class ManagerGateway {
 
-//	private Log log = LogFactory.getLog(LoggerAspect.class);
 	private PlaygroundUserService userService;
 	
 	@Autowired

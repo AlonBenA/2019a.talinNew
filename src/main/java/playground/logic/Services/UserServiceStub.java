@@ -56,16 +56,12 @@ public class UserServiceStub implements PlaygroundUserService {
 		
 	}
 	
-	/////////////////////////////////////////////////////
 	@Override
 	public UserEntity userLogin(String playground, String email) throws UserNotFoundException {
 		// TODO
 		return null;
 	
 	}
-	/////////////////////////////////////////////////////
-	
-	
 
 	@Override
 	public synchronized void updateUser(String playground,String email, UserEntity updatedUserEntity) throws Exception {

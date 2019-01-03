@@ -2,18 +2,18 @@ package playground.plugins;
 
 public class Message {
 	private String id;
-	private String message;
+	private String content;
 	
 	public Message() {
 	}
 	
-	public Message(String message) {
-		this.message = message;
+	public Message(String content) {
+		this.content = content;
 	}
 	
-	public Message(String id, String message) {
+	public Message(String id, String content) {
 		this.id = id;
-		this.message = message;
+		this.content = content;
 	}
 	
 	public String getId() {
@@ -24,11 +24,11 @@ public class Message {
 		this.id = id;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getContent() {
+		return content;
 	}
 	
-	public void setMessage(String message) {
-		this.message = message;
+	public void setContent(String content) {
+		this.content = content;
 	}
 }

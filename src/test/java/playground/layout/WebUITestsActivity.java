@@ -181,7 +181,7 @@ public class WebUITestsActivity {
 		// and body is:
 		
 		
-		assertThat(rvMap.get("message")).isEqualTo(numberOfPointsToAdd+" point to " + user.getUsername() + " for feed " + Animal.getName());
+		assertThat(rvMap.get("content")).isEqualTo(numberOfPointsToAdd+" point to " + user.getUsername() + " for feed " + Animal.getName());
 
 		// and the database contains activity:
 		String activity_id = rvMap.get("id") + "";
@@ -258,7 +258,7 @@ public class WebUITestsActivity {
 		Map<String, Object> rvMap = this.jackson.readValue(this.jackson.writeValueAsString(rv), Map.class);
 
 		// and body is:
-		assertThat(rvMap.get("message"))
+		assertThat(rvMap.get("content"))
 				.isEqualTo("the user " + user.getUsername() + " posted a message in " + board.getName());
 
 		// and the database contains activity:
@@ -342,7 +342,7 @@ public class WebUITestsActivity {
 		assertThat(OldNumberOfPoints + numberOfPointsToAdd).isEqualTo(NewNumberOfPoints);
 
 		// and body is:
-		assertThat(rvMap.get("message")).isEqualTo(numberOfPointsToAdd+ " point to" + user.getUsername() + " for pet " + animal.getName());
+		assertThat(rvMap.get("content")).isEqualTo(numberOfPointsToAdd+ " point to" + user.getUsername() + " for pet " + animal.getName());
 		// and the database contains activity:
 		String activity_id = rvMap.get("id") + "";
 		ActivityEntity Activity = this.activityService.getActivity(playground, userEmail, activity_id, playground);

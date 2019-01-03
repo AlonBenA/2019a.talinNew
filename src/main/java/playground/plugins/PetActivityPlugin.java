@@ -43,7 +43,7 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 				
 					Message message = new Message();
 					message.setId(activityId);					
-					message.setMessage("You can't pet that" + element.getName() + " anymore \n");
+					message.setContent("You can't pet that" + element.getName() + " anymore \n");
 					return message;
 			}
 			else
@@ -65,7 +65,7 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 			users.save(user);			
 			Message message = new Message();
 			message.setId(activityId);
-			message.setMessage(numberOfPointsForPet+ " point to" + user.getUsername() + " for pet " + element.getName());
+			message.setContent(numberOfPointsForPet+ " point to" + user.getUsername() + " for pet " + element.getName());
 		
 			return message;
 

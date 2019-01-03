@@ -11,7 +11,7 @@ import playground.logic.Services.PlaygroundUserService;
 @Component
 @Aspect
 public class UserVerifiedAndExistGateway {
-//	private Log log = LogFactory.getLog(LoggerAspect.class);
+	
 	private PlaygroundUserService userService;
 	
 	@Autowired
