@@ -86,10 +86,13 @@ public class WebUIComplexTest1 {
 		
 		// manager1 update his username
 		// When I Put http://localhost:8083/playground/users/userPlayground/userEmail
-		manager1.setUsername("GreatManager");
+		String username = "GreatManager";
+		manager1.setUsername(username);
 		url = base_url + "/playground/users/{playground}/{email}";
 		try {
 			this.restTemplate.put(url, manager1, playground, manager1.getEmail());
+			UserEntity updatedUser = userService.getUser(playground, "manager1@usermail.com");
+			assertThat(updatedUser.getUsername()).contains(username);
 		}catch (HttpClientErrorException e) {
 			System.err.println(e.getResponseBodyAsString());
 			throw e;
@@ -142,6 +145,7 @@ public class WebUIComplexTest1 {
 		url = base_url + "/playground/elements/{userPlayground}/{email}/{playground}/{id}";
 		ElementTO actualElement = this.restTemplate.getForObject(url, ElementTO.class, manager1.getPlayground(), manager1.getEmail(),
 				updatedElementTO.getPlayground(), updatedElementTO.getId());
+		assertThat(actualElement).isEqualToComparingFieldByField(updatedElementTO);
 		System.err.println(actualElement);
 		
 		// player1 posts 3 messages to board #1
