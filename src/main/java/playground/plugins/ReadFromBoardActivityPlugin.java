@@ -3,6 +3,7 @@ package playground.plugins;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,10 @@ public class ReadFromBoardActivityPlugin implements PlaygroungActivityPlugin {
 	@Override
 	public Object invokeAction(ActivityEntity activity, String activityId, ElementEntity element) {
 		try {
-			PluginPageable page = this.jackson.readValue(activity.getAttributesJson(), PluginPageable.class); 
+			Map<String,Integer> mapOfSizeAndPage = getSizeAndPage(activity);
+			String mapOfSizeAndPageJson = this.jackson.writeValueAsString(mapOfSizeAndPage);
+			
+			PluginPageable page = this.jackson.readValue(mapOfSizeAndPageJson, PluginPageable.class); 
 			List<ActivityEntity> activitiesWithMessages = this.activities
 						.findAllByTypeLikeAndElementIdLikeAndElementPlaygroundLike("PostMessage", element.getId(),
 								element.getPlayground(), PageRequest.of(page.getPage(), page.getSize())).getContent();
@@ -68,6 +72,38 @@ public class ReadFromBoardActivityPlugin implements PlaygroungActivityPlugin {
 		}
 		
 		
+	}
+	
+	
+	private Map<String,Integer> getSizeAndPage(ActivityEntity activity)
+	{
+		Map<String,Integer> mapOfSizeAndPage = new HashMap<String, Integer>();
+		String size = "size";
+		int defultSize = 10;
+		String page = "page";
+		int defultPage = 0;
+		
+		if(mapOfSizeAndPage.containsKey(size))
+		{
+			mapOfSizeAndPage.put(size, (Integer) activity.getAttributes().get(size));
+		}
+		else
+		{
+			mapOfSizeAndPage.put(size, defultSize);
+		}
+		
+		
+		if(mapOfSizeAndPage.containsKey(page))
+		{
+			mapOfSizeAndPage.put(page, (Integer) activity.getAttributes().get(page));
+		}
+		else
+		{
+			mapOfSizeAndPage.put(page, defultPage);
+		}
+		
+		
+		return mapOfSizeAndPage;
 	}
 
 }

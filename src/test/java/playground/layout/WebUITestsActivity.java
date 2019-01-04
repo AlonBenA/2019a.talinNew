@@ -498,7 +498,7 @@ public class WebUITestsActivity {
 
 			// Then the response status is 2xx and
 			// body contains 10 messages
-			assertThat(readmessages).hasSize(2);
+			assertThat(readmessages).hasSize(10);
 
 			// and the database contains activity:
 			String activity_id = rv.getActivity_id();
