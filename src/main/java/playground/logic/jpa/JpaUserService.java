@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import playground.aop.MyLogger;
-import playground.aop.UserVerifiedAndExistCheck;
 import playground.jpadal.UserDao;
 import playground.logic.Entities.UserEntity;
 import playground.logic.Services.EmailService;

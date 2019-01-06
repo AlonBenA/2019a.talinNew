@@ -10,24 +10,19 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import playground.jpadal.ActivityDao;
 import playground.jpadal.ElementDao;
-import playground.jpadal.UserDao;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Entities.ElementEntity;
-import playground.logic.Entities.UserEntity;
 import playground.logic.jpa.ElementNotFoundException;
-import playground.logic.jpa.UserNotFoundException;
 
 @Component
 public class ReadFromBoardActivityPlugin implements PlaygroungActivityPlugin {
 	
-	private UserDao users;
 	private ElementDao elements;
 	private ActivityDao activities;
 	private ObjectMapper jackson;
 	
 	@Autowired
-	public ReadFromBoardActivityPlugin(UserDao users,ElementDao elements, ActivityDao activities) {
-		this.users = users;
+	public ReadFromBoardActivityPlugin(ElementDao elements, ActivityDao activities) {
 		this.elements = elements;
 		this.activities = activities;
 		this.jackson = new ObjectMapper();

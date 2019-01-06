@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-//import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +14,7 @@ public class LoggerAspect {
 
 	@Around("@annotation(playground.aop.MyLogger)")
 	public Object log(ProceedingJoinPoint pjp) throws Throwable {
-		// bofore
+		// before
 		String className = pjp.getTarget().getClass().getSimpleName();
 		String methodName = pjp.getSignature().getName();
 		String logOutput = className + "." + methodName + "()";

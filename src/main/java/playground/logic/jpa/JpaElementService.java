@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
-
 import playground.aop.ManagerExistCheck;
 import playground.aop.MyLogger;
 import playground.aop.UserVerifiedAndExistCheck;
@@ -17,7 +16,6 @@ import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.GeneratedNumber;
 import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundElementService;
-
 import java.util.ArrayList;
 import java.util.Date;
 

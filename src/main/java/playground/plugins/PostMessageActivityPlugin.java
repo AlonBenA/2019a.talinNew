@@ -2,7 +2,6 @@ package playground.plugins;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import playground.jpadal.ElementDao;
 import playground.jpadal.UserDao;
 import playground.logic.Entities.ActivityEntity;

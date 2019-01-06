@@ -121,7 +121,6 @@ public class WebUITestsActivity {
 
 		// create Player to post Activity
 		String userEmail = "player2@email.com";
-		String userPlayground = "2019a.talin";
 		testHelper.addNewUser(userEmail, "Player", true);
 
 		// When I POST activity with
@@ -541,7 +540,7 @@ public class WebUITestsActivity {
 		newActivityTO.setElementPlayground(element.getPlayground());
 		newActivityTO.setType("ReadFromBoard");
 
-		ReadFromBoardResult rv = this.restTemplate.postForObject(url, newActivityTO, ReadFromBoardResult.class,
+		this.restTemplate.postForObject(url, newActivityTO, ReadFromBoardResult.class,
 				playground, userEmail);
 		// Then the response status is <> 2xx
 	}

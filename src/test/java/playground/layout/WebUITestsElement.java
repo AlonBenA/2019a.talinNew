@@ -21,7 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 import playground.logic.Location;
 import playground.logic.Entities.ElementEntity;
-import playground.logic.Entities.UserEntity;
 import playground.logic.Services.PlaygroundElementService;
 import playground.logic.Services.PlaygroundUserService;
 import playground.logic.jpa.ElementAlreadyExistException;

@@ -29,14 +29,7 @@ public class WebUIElement {
 	public void setPlaygroundService(PlaygroundElementService elementService) {
 		this.elementService = elementService;
 	}
-
 	
-	private void validateNull(String name) throws Exception {
-		if ("null".equals(name) || name == null) {
-			throw new Exception("user not found");
-		}
-	}
-
 	//Sprint2: Write the GET/playground/elements/{userPlayground}/{email}/search/{attributeNa me}/{value} 
 	@RequestMapping(
 			method=RequestMethod.GET,
