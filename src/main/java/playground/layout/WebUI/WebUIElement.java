@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import playground.layout.ElementTO;
 import playground.layout.ErrorMessage;
 import playground.logic.Services.PlaygroundElementService;
-import playground.logic.jpa.ElementAttributeNotValidException;
 import playground.logic.jpa.ElementNotFoundException;
 import playground.logic.jpa.UserNotFoundException;
 

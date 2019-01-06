@@ -14,7 +14,6 @@ import playground.layout.ActivityTO;
 import playground.layout.ErrorMessage;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Services.PlaygroundActivityService;
-import playground.logic.jpa.ActivityTypeNotSupportedException;
 import playground.logic.jpa.ElementNotFoundException;
 import playground.logic.jpa.UserNotFoundException;
 

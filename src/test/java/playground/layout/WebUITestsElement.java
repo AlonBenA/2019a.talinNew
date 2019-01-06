@@ -19,10 +19,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.sun.corba.se.impl.protocol.AddressingDispositionException;
-
 import playground.logic.Location;
 import playground.logic.Entities.ElementEntity;
 import playground.logic.Entities.UserEntity;

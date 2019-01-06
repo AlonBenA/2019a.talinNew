@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
-
-import org.springframework.stereotype.Service;
-
 import playground.logic.Entities.ElementEntity;
 import playground.logic.jpa.ElementAttributeNotValidException;
 import playground.logic.jpa.ElementNotFoundException;
