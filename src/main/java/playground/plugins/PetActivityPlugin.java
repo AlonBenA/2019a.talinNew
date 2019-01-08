@@ -64,7 +64,7 @@ public class PetActivityPlugin implements PlaygroungActivityPlugin {
 			users.save(user);			
 			Message message = new Message();
 			message.setId(activityId);
-			message.setContent(numberOfPointsForPet+ " point to" + user.getUsername() + " for pet " + element.getName());
+			message.setContent(numberOfPointsForPet+ " point to " + user.getUsername() + " for pet " + element.getName());
 		
 			return message;
 
