@@ -1,4 +1,4 @@
-package playground.layout;
+package playground.layout.WebUI;
 
 public class ErrorMessage {
 	private String message;

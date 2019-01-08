@@ -42,10 +42,6 @@ public class PostMessageActivityPlugin implements PlaygroungActivityPlugin {
 		UserEntity user = this.users.findById(UserKey)
 		.orElseThrow(()->new UserNotFoundException("no user found for: " + UserKey));
 		
-		// user verified check
-//		if(!user.isVerified())
-//			throw new RuntimeException("The user " + UserKey+ " is not verified.");
-		
 		return new Message(activityId, "the user " + user.getUsername() +" posted a message in " + element.getName());
 	
 	}

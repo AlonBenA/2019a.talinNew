@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import playground.layout.ActivityTO;
-import playground.layout.ErrorMessage;
 import playground.logic.Entities.ActivityEntity;
 import playground.logic.Services.PlaygroundActivityService;
 import playground.logic.jpa.ElementNotFoundException;

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import playground.layout.ErrorMessage;
+
 import playground.layout.NewUserForm;
 import playground.layout.UserTO;
 import playground.logic.Entities.UserEntity;
