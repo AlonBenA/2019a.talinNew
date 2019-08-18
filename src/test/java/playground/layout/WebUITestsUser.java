@@ -65,7 +65,6 @@ public class WebUITestsUser {
 		this.userService.cleanup();
 	}
 
-	
 	@Test
 	public void testUserSignupSuccessfully() throws Exception {
 		String url = base_url + "/playground/users";
