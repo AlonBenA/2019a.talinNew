@@ -11,7 +11,7 @@ import playground.logic.Services.PlaygroundUserService;
 @Component
 @Aspect
 public class ManagerGateway {
-
+	
 	private PlaygroundUserService userService;
 	
 	@Autowired
